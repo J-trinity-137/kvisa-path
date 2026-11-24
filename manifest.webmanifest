@@ -1,0 +1,9 @@
+{
+  "name": "K-Visa 학생 입학전형 · 진로 스킬트리",
+  "short_name": "K-Visa Path",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1b64da",
+  "description": "이주배경 중·고등학생 맞춤 고입·대입 특별전형, TOPIK 장학금, 비자 스킬트리 및 서울시교육청 진로 병목 분석 웹앱"
+}
