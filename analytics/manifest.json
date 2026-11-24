@@ -1,0 +1,11 @@
+{
+  "virtual_schools": 6,
+  "virtual_students": 432,
+  "weeks": 12,
+  "seed_count": 20,
+  "opportunities_per_run": 5184,
+  "integrity_errors": 0,
+  "mean_treatment_did_pp": 15.47,
+  "effect_recovery_rate_pct": 100.0,
+  "null_false_alarm_rate_pct": 15.0
+}

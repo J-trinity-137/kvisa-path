@@ -1,0 +1,41 @@
+{
+  "method": "char 2-4gram TF-IDF + cosine centroid (document-level split)",
+  "train_docs": 12,
+  "test_docs": 6,
+  "train_phrases": 24,
+  "test_phrases": 18,
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "per_topic": {
+    "검정고시·학력인정": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "비자·체류자격 전환": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "시간제 취업·알바": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "장학금·비용 지원": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "전형 유형·정원 규정": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "해외 학력 인증 서류": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  }
+}

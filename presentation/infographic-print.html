@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>K-Visa Path 전체 기능 &amp; 데이터 선순환 인포그래픽 보고서</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 12mm 12mm 12mm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      color: #191f28;
+      font-family: 'Malgun Gothic', '맑은 고딕', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11px;
+      line-height: 1.5;
+      word-break: keep-all;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      page-break-after: always;
+      padding: 2px 0;
+    }
+    .page:last-child { page-break-after: auto; }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #1b64da;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 700;
+      background: #f2f4f6;
+      color: #1b64da;
+      border: 1px solid #d1d6db;
+    }
+    .badge-red { color: #c92a2a; border-color: #c92a2a; background: #ffffff; }
+    .badge-green { color: #0e7c55; border-color: #0e7c55; background: #ffffff; }
+    .badge-amber { color: #b25e09; border-color: #b25e09; background: #ffffff; }
+    h1 { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.3; }
+    h2 { margin: 14px 0 6px; font-size: 13.5px; font-weight: 800; color: #191f28; border-left: 3.5px solid #1b64da; padding-left: 8px; }
+    h3 { margin: 0 0 4px; font-size: 11.5px; font-weight: 700; }
+    p { margin: 3px 0; }
+    .muted { color: #656f7c; font-size: 10px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .card {
+      border: 1px solid #e5e8eb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #ffffff;
+    }
+    .card-soft {
+      border: 1px solid #e5e8eb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #f2f4f6;
+    }
+    .kpi-val { font-size: 18px; font-weight: 800; margin: 3px 0 2px; color: #1b64da; }
+    .kpi-val.red { color: #c92a2a; }
+    .kpi-val.green { color: #0e7c55; }
+    ul { margin: 4px 0 0; padding-left: 15px; }
+    li { margin-bottom: 3px; }
+    table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 6px; }
+    th, td { padding: 5px 6px; border-bottom: 1px solid #e5e8eb; text-align: left; }
+    th { background: #f2f4f6; font-weight: 700; color: #191f28; }
+    th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .bar-wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; height: 8px; margin-top: 3px; }
+    .bar-seg { border-radius: 2px; background: #e5e8eb; }
+    .bar-on { background: #1b64da; }
+    .bar-on-2 { background: #0e7c55; }
+    .svg-box { width: 100%; border: 1px solid #e5e8eb; border-radius: 10px; padding: 8px; background: #ffffff; }
+    .qa-item { border: 1px solid #e5e8eb; border-radius: 8px; padding: 7px 10px; margin-bottom: 6px; background: #ffffff; }
+    .qa-q { font-weight: 700; color: #1b64da; margin-bottom: 2px; }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PAGE 1: 개요 · 통계 · 공모전 적합성 · 데이터 선순환 ================= -->
+  <section class="page">
+    <div class="top-bar">
+      <span class="badge">K-VISA PATH · 인포그래픽 설명 보고서</span>
+      <span class="muted">PAGE 01 / 04 · 2025~2026 공식 팩트 기반</span>
+    </div>
+
+    <h1>K-Visa Path: 이주배경 중·고등학생 입학전형 · 비자 스킬트리 &amp; 데이터 선순환 웹앱</h1>
+    <p class="muted" style="margin-top:4px;">
+      외국인가정·중도입국·다문화 학생의 입시·비자·서류 장벽을 해결하고, 그 탐색 과정에서 쌓이는 익명 정형·비정형 데이터로 교사의 행정오류 예방과 서울시교육청 정책 환류를 구현한 플랫폼
+    </p>
+
+    <div class="grid-4">
+      <div class="card-soft">
+        <div class="muted">2026 이주배경학생</div>
+        <div class="kpi-val">210,838명</div>
+        <div class="muted">전체 4.3% · 역대 최다</div>
+      </div>
+      <div class="card-soft">
+        <div class="muted">고교 학업중단율</div>
+        <div class="kpi-val red">2.20%</div>
+        <div class="muted">5년 새 3.4배↑ (부적응 74%)</div>
+      </div>
+      <div class="card-soft">
+        <div class="muted">개입 전후 DiD 효과</div>
+        <div class="kpi-val green">+15.47%p</div>
+        <div class="muted">6개 가상교 432명 검증</div>
+      </div>
+      <div class="card-soft">
+        <div class="muted">프라이버시 원칙</div>
+        <div class="kpi-val" style="color:#191f28;font-size:15px;margin-top:6px;">Zero-Tracking</div>
+        <div class="muted">비자 미저장 · k-익명성</div>
+      </div>
+    </div>
+
+    <h2>1. 「2026년 서울교육 AI 활용 공모전」 적합성 분석 (서울동부교육지원청 감사팀 주최)</h2>
+    <div class="grid-2">
+      <div class="card" style="border-color:#c92a2a;">
+        <h3 style="color:#c92a2a;">① 행정오류 예방 (감사팀 핵심 평가 포인트)</h3>
+        <ul>
+          <li><strong>검정고시 오안내 차단:</strong> 외국 국적 학생이 검정고시 선택 시 시립·과기·외대 순수외국인 전형 자격 박탈 경고</li>
+          <li><strong>마이스터고 오안내 차단:</strong> 대입 특성화고 특별전형 제외 규정 자동 표시</li>
+          <li><strong>아포스티유 오안내 차단:</strong> 베트남(2026.9 발효)·중국=아포스티유 vs 태국(~2027.2)·캄보디아=영사확인 자동 분기</li>
+          <li><strong>법령 위반 예방:</strong> 미등록 아동 통보의무 면제(출입국관리법 제84조) &amp; 고교생 알바 금지 사전 안내</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:#1b64da;">
+        <h3 style="color:#1b64da;">② 교직원 반복업무 경감 &amp; AI 데이터 활용</h3>
+        <ul>
+          <li><strong>상담 시간 90% 단축:</strong> 4번 클릭으로 맞춤 고입·대입 전형·TOPIK 장학금·비자·서류를 21개 언어로 즉시 출력</li>
+          <li><strong>상담용 1장 요약 PDF:</strong> 학부모·담임 전달용 A4 상담지 원클릭 인쇄 + 큰 글씨 TTS 소통 카드</li>
+          <li><strong>AI·NLP 분석:</strong> 문자 2~4그램 TF-IDF 질문 자동 분류(macro-F1 1.0) &amp; 평활화 병목률(p̃) 기반 개입 추천</li>
+          <li><strong>참가 자격 주의:</strong> 서울교육청·각급 학교 소속 교직원 대상(2026.11.16~12.11) → 교직원 자격 또는 현장 교사 협업 시 즉시 출품 가능</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>2. 전체 데이터 선순환(Data Flywheel) 구조</h2>
+    <div class="svg-box">
+      <svg viewBox="0 0 760 155" width="100%" height="auto">
+        <defs>
+          <marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#1b64da" />
+          </marker>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0e7c55" />
+          </marker>
+        </defs>
+        <rect x="6" y="10" width="168" height="106" rx="10" fill="#f2f4f6" stroke="#d1d6db" />
+        <text x="18" y="30" font-size="9.5" font-weight="700" fill="#1b64da">STEP 1 · 공공 Open API</text>
+        <text x="18" y="48" font-size="11" font-weight="700" fill="#191f28">실시간 공식 데이터</text>
+        <text x="18" y="66" font-size="9.5" fill="#656f7c">• NEIS 특성화고 학과</text>
+        <text x="18" y="81" font-size="9.5" fill="#656f7c">• 커리어넷 직업·학과</text>
+        <text x="18" y="96" font-size="9.5" fill="#656f7c">• 가족센터 통역사 배치</text>
+        <text x="18" y="110" font-size="9.5" fill="#656f7c">• 2026 입시·비자 룰셋</text>
+
+        <line x1="174" y1="63" x2="196" y2="63" stroke="#1b64da" stroke-width="1.8" marker-end="url(#arr1)" />
+
+        <rect x="200" y="10" width="174" height="106" rx="10" fill="#ffffff" stroke="#1b64da" stroke-width="1.8" />
+        <text x="212" y="30" font-size="9.5" font-weight="700" fill="#1b64da">STEP 2 · 학생 10초 사용</text>
+        <text x="212" y="48" font-size="11" font-weight="700" fill="#191f28">탐색 = 자연 데이터 수집</text>
+        <text x="212" y="66" font-size="9.5" fill="#191f28">• 난해 용어 '?' 터치 (비정형)</text>
+        <text x="212" y="81" font-size="9.5" fill="#191f28">• 서류 장애 · O/X 최초 답</text>
+        <text x="212" y="96" font-size="9.5" fill="#191f28">• 1줄 자유 질문 (텍스트)</text>
+        <text x="212" y="110" font-size="9.5" font-weight="700" fill="#0e7c55">※ 비자·실명 DB 미저장</text>
+
+        <line x1="374" y1="63" x2="396" y2="63" stroke="#1b64da" stroke-width="1.8" marker-end="url(#arr1)" />
+
+        <rect x="400" y="10" width="168" height="106" rx="10" fill="#f2f4f6" stroke="#d1d6db" />
+        <text x="412" y="30" font-size="9.5" font-weight="700" fill="#1b64da">STEP 3 · 통계·NLP 분석</text>
+        <text x="412" y="48" font-size="11" font-weight="700" fill="#191f28">병목 측정 &amp; 인과 검증</text>
+        <text x="412" y="66" font-size="9.5" fill="#656f7c">• 평활화 병목률 p̃</text>
+        <text x="412" y="81" font-size="9.5" fill="#656f7c">• 문자 2~4그램 TF-IDF</text>
+        <text x="412" y="96" font-size="9.5" fill="#656f7c">• 조기 vs 지연 DiD 검증</text>
+        <text x="412" y="110" font-size="9.5" fill="#656f7c">• 7일 퍼널 · k-익명성</text>
+
+        <line x1="568" y1="63" x2="590" y2="63" stroke="#1b64da" stroke-width="1.8" marker-end="url(#arr1)" />
+
+        <rect x="594" y="10" width="160" height="106" rx="10" fill="#ffffff" stroke="#0e7c55" stroke-width="1.8" />
+        <text x="606" y="30" font-size="9.5" font-weight="700" fill="#0e7c55">STEP 4 · 현장 환류</text>
+        <text x="606" y="48" font-size="11" font-weight="700" fill="#191f28">교사 · 서울시교육청</text>
+        <text x="606" y="66" font-size="9.5" fill="#191f28">• 쉬운 카드 배포(개입)</text>
+        <text x="606" y="81" font-size="9.5" fill="#191f28">• 1주 뒤 정답률 재측정</text>
+        <text x="606" y="96" font-size="9.5" fill="#191f28">• 통역 0명 구 우선 배치</text>
+        <text x="606" y="110" font-size="9.5" fill="#191f28">• 2026 제2센터 연계</text>
+
+        <path d="M 674 116 L 674 142 L 287 142 L 287 122" fill="none" stroke="#0e7c55" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr2)" />
+        <text x="480" y="137" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0e7c55">개입·정책 개선 결과가 다시 학생 화면으로 환류되는 닫힌 고리</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 2: 전체 기능 아키텍처 다이어그램 ================= -->
+  <section class="page">
+    <div class="top-bar">
+      <span class="badge">SYSTEM ARCHITECTURE · FULL FEATURE MAP</span>
+      <span class="muted">PAGE 02 / 04 · 전체 기능 한눈에 보기</span>
+    </div>
+
+    <h1>K-Visa Path 전체 기능 아키텍처 다이어그램</h1>
+    <p class="muted" style="margin-top:3px;">공통 코어(kbridge-core) 위에서 4개 화면 탭, 공공 API 계층, Python 검증 배치, Supabase Zero-Tracking 스키마가 유기적으로 연결됩니다.</p>
+
+    <div class="svg-box" style="margin-top:10px;">
+      <svg viewBox="0 0 760 595" width="100%" height="auto">
+        <!-- Layer 1: Common Core -->
+        <rect x="10" y="8" width="740" height="72" rx="10" fill="#f2f4f6" stroke="#1b64da" stroke-width="1.5" />
+        <text x="24" y="29" font-size="11" font-weight="800" fill="#1b64da">공통 코어 라이브러리 · kbridge-core (5종 니치 앱 시리즈 공유)</text>
+        <rect x="24" y="38" width="170" height="30" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="109" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">21개 언어 i18n · 아랍어 RTL</text>
+        <rect x="204" y="38" width="170" height="30" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="289" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">하우스 UI · ActionBar · TTS</text>
+        <rect x="384" y="38" width="170" height="30" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="469" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">Zero-PII 익명 이벤트 로거</text>
+        <rect x="564" y="38" width="172" height="30" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="650" y="57" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">k-익명성(&lt;10명) 마스킹</text>
+
+        <!-- Layer 2: 4 Tabs -->
+        <!-- Tab 1 -->
+        <rect x="10" y="96" width="362" height="196" rx="10" fill="#ffffff" stroke="#1b64da" stroke-width="1.5" />
+        <rect x="10" y="96" width="362" height="28" rx="10" fill="#1b64da" />
+        <text x="24" y="114" font-size="10.5" font-weight="800" fill="#ffffff">탭 1 · 입학전형 &amp; 비자 조회 (학생·학부모 핵심)</text>
+        <text x="24" y="142" font-size="9.8" font-weight="700" fill="#191f28">1) 무상태(Stateless) 4단계 조건 선택</text>
+        <text x="34" y="156" font-size="9" fill="#656f7c">학교급 · 배경(비자 미저장) · TOPIK · 관심 계열</text>
+        <text x="24" y="174" font-size="9.8" font-weight="700" fill="#c92a2a">2) 사전 경고(Red Alert) 3대 함정 차단</text>
+        <text x="34" y="188" font-size="9" fill="#656f7c">검정고시 박탈 · 마이스터고 제외 · 고교생 알바 금지</text>
+        <text x="24" y="206" font-size="9.8" font-weight="700" fill="#191f28">3) 맞춤 전형 · Gap 진단 · 난해 용어 '?' 터치</text>
+        <text x="34" y="220" font-size="9" fill="#656f7c">서울 특성화고 12교 · 대학 12교 TOPIK 장학금 · 외부장학</text>
+        <text x="24" y="238" font-size="9.8" font-weight="700" fill="#191f28">4) 2026.9 아포스티유 판정 · 비자 스킬트리</text>
+        <text x="34" y="252" font-size="9" fill="#656f7c">E-7-Y · E-7-M · D-10(3년) · F-2-R · 미등록 구제(~2028.3)</text>
+        <text x="24" y="270" font-size="9.8" font-weight="700" fill="#0e7c55">5) 자치구 통역센터 · 1장 PDF 인쇄 · TTS 카드</text>
+        <text x="34" y="284" font-size="9" fill="#656f7c">상담 필요→연결됨→실패 1탭 기록 (퍼널 연동)</text>
+
+        <!-- Tab 2 -->
+        <rect x="388" y="96" width="362" height="196" rx="10" fill="#ffffff" stroke="#1b64da" stroke-width="1.5" />
+        <rect x="388" y="96" width="362" height="28" rx="10" fill="#1b64da" />
+        <text x="402" y="114" font-size="10.5" font-weight="800" fill="#ffffff">탭 2 · 서류 · 퀴즈 · 질문 · 알바 (실전 준비)</text>
+        <text x="402" y="142" font-size="9.8" font-weight="700" fill="#191f28">1) 5대 입시 서류 체크리스트 (localStorage 유지)</text>
+        <text x="412" y="156" font-size="9" fill="#656f7c">발급처 가이드 + '구하기 어려움' 4대 장애 사유 수집</text>
+        <text x="402" y="178" font-size="9.8" font-weight="700" fill="#191f28">2) 1분 입시 O/X 확인 퀴즈 (4문항)</text>
+        <text x="412" y="192" font-size="9" fill="#656f7c">최초 답안만 실측 기록 + 쉬운 한국어 즉시 해설</text>
+        <text x="402" y="214" font-size="9.8" font-weight="700" fill="#191f28">3) 1줄 자유 질문함 (비정형 텍스트 수집)</text>
+        <text x="412" y="228" font-size="9" fill="#656f7c">6개 토픽 자동 분류 + 즉시 맞춤 가이드 카드 출력</text>
+        <text x="402" y="250" font-size="9.8" font-weight="700" fill="#191f28">4) 입시·TOPIK D-Day &amp; 계열별 직업 탐색</text>
+        <text x="402" y="272" font-size="9.8" font-weight="700" fill="#0e7c55">5) TOPIK 만료일(2년) &amp; 합법 알바 시간 계산기</text>
+        <text x="412" y="285" font-size="9" fill="#656f7c">과정×TOPIK별 주 0~35시간 · 금지업종 자동 판정</text>
+
+        <!-- Tab 3 -->
+        <rect x="10" y="308" width="362" height="170" rx="10" fill="#ffffff" stroke="#0e7c55" stroke-width="1.5" />
+        <rect x="10" y="308" width="362" height="28" rx="10" fill="#0e7c55" />
+        <text x="24" y="326" font-size="10.5" font-weight="800" fill="#ffffff">탭 3 · 학생 데이터 분석 대시보드 (교사·교육청)</text>
+        <text x="24" y="354" font-size="9.8" font-weight="700" fill="#191f28">1) 입시 용어 평활화 병목률(p̃) &amp; 개입 시뮬레이션</text>
+        <text x="34" y="368" font-size="9" fill="#656f7c">'쉬운 카드 배포' 클릭 시 예상 감소 인원 즉시 산출</text>
+        <text x="24" y="388" font-size="9.8" font-weight="700" fill="#191f28">2) 조기(6주) vs 지연(9주) DiD 검증 SVG 차트</text>
+        <text x="34" y="402" font-size="9" fill="#656f7c">4·8주 시험주간 응답률 하락(선택 편향) 분리 표시</text>
+        <text x="24" y="422" font-size="9.8" font-weight="700" fill="#191f28">3) 서울시교육청 7일 상담 퍼널 &amp; 권역 필터</text>
+        <text x="34" y="436" font-size="9" fill="#656f7c">남부 3구 vs 중부권 · 실패/미응답 분리 · &lt;10명 마스킹</text>
+        <text x="24" y="456" font-size="9.8" font-weight="700" fill="#1b64da">4) 실시간 세션 반영 ('실시간 +N' 배지)</text>
+        <text x="34" y="470" font-size="9" fill="#656f7c">서류 장애 사유 · 질문 토픽 · 퀴즈 실측 정답률 즉시 갱신</text>
+
+        <!-- Tab 4 -->
+        <rect x="388" y="308" width="362" height="170" rx="10" fill="#ffffff" stroke="#656f7c" stroke-width="1.5" />
+        <rect x="388" y="308" width="362" height="28" rx="10" fill="#191f28" />
+        <text x="402" y="326" font-size="10.5" font-weight="800" fill="#ffffff">탭 4 · 공공 API · 연구 검증 · 운영 DB</text>
+        <text x="402" y="354" font-size="9.8" font-weight="700" fill="#191f28">1) NEIS Open API 실시간 키 연동 + 스냅샷 폴백</text>
+        <text x="412" y="368" font-size="9" fill="#656f7c">schoolMajorinfo 호출 · 장애 시 2026 고정 스냅샷</text>
+        <text x="402" y="388" font-size="9.8" font-weight="700" fill="#191f28">2) Python 통계·NLP 검증 배치 2종</text>
+        <text x="412" y="402" font-size="9" fill="#656f7c">generate_and_validate.py (DiD) · run_tfidf_eval.py (F1)</text>
+        <text x="402" y="422" font-size="9.8" font-weight="700" fill="#191f28">3) 운영용 PostgreSQL / Supabase DDL</text>
+        <text x="412" y="436" font-size="9" fill="#656f7c">opportunity 중심 스키마 · RLS · k-익명성 공개 뷰</text>
+        <text x="402" y="456" font-size="9.8" font-weight="700" fill="#191f28">4) 보고서 첨부용 JSON · CSV 원클릭 내보내기</text>
+        <text x="412" y="470" font-size="9" fill="#656f7c">PWA manifest.webmanifest · 면책 고지 포함</text>
+
+        <!-- Layer 3: Backend & Data Sources -->
+        <rect x="10" y="494" width="740" height="90" rx="10" fill="#f2f4f6" stroke="#d1d6db" />
+        <text x="24" y="514" font-size="10.5" font-weight="800" fill="#191f28">하부 데이터 · 검증 · 운영 인프라 계층</text>
+        <rect x="24" y="524" width="228" height="48" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="34" y="542" font-size="9.5" font-weight="700" fill="#1b64da">공공 Open API &amp; 공식 스냅샷</text>
+        <text x="34" y="558" font-size="8.8" fill="#656f7c">NEIS · 커리어넷 · 서울열린데이터 · 가족센터</text>
+
+        <rect x="266" y="524" width="228" height="48" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="276" y="542" font-size="9.5" font-weight="700" fill="#0e7c55">Python 검증 배치 (analytics/)</text>
+        <text x="276" y="558" font-size="8.8" fill="#656f7c">432명 20시드 manifest.json · tfidf_eval.json</text>
+
+        <rect x="508" y="524" width="228" height="48" rx="6" fill="#ffffff" stroke="#d1d6db" />
+        <text x="518" y="542" font-size="9.5" font-weight="700" fill="#191f28">Supabase PostgreSQL (supabase/)</text>
+        <text x="518" y="558" font-size="8.8" fill="#656f7c">schema.sql · 비자 컬럼 원천 배제 · RLS</text>
+      </svg>
+    </div>
+
+    <div class="grid-3" style="margin-top:10px;">
+      <div class="card-soft">
+        <h3>학생에게 주는 가치</h3>
+        <p class="muted">설문 없이 내 입시·장학금·비자·알바 시간을 10초 만에 해결하고 1장 PDF로 상담 준비</p>
+      </div>
+      <div class="card-soft">
+        <h3>교사에게 주는 가치</h3>
+        <p class="muted">4대 행정오류를 사전 차단하고, 다음 상담에서 쉬운 말로 고칠 1순위 용어를 데이터로 제시</p>
+      </div>
+      <div class="card-soft">
+        <h3>교육청에 주는 가치</h3>
+        <p class="muted">용산 아랍어 배치 0명 등 자치구×언어권 통역·진로 사각지대를 k-익명성 보호 하에 시각화</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 3: TOPIK 장학금 · 2025~2026 비자 스킬트리 · 아포스티유 ================= -->
+  <section class="page">
+    <div class="top-bar">
+      <span class="badge">DOMAIN FACTS · 2025~2026 VERIFIED DATA</span>
+      <span class="muted">PAGE 03 / 04 · 입시·장학·비자 정밀 규칙</span>
+    </div>
+
+    <h1>핵심 도메인 인포그래픽: TOPIK 장학금 · 비자 스킬트리 · 아포스티유</h1>
+
+    <h2>1. 서울 주요 대학 외국인 신입생 첫 학기 TOPIK 장학금 비교 (2026~2027)</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>대학</th>
+            <th>검정고시</th>
+            <th class="num">TOPIK 3급</th>
+            <th class="num">4급</th>
+            <th class="num">5급</th>
+            <th class="num">6급</th>
+            <th>핵심 특징</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>숭실대</strong></td><td>확인 필요</td><td class="num"><strong>40%</strong></td><td class="num"><strong>60%</strong></td><td class="num"><strong>80%</strong></td><td class="num"><strong>100%</strong></td><td>대학 공식 확인 · 3~5급 감면율 최상위</td></tr>
+          <tr><td><strong>건국대</strong></td><td>확인 필요</td><td class="num"><strong>30%</strong></td><td class="num"><strong>50%</strong></td><td class="num"><strong>70%</strong></td><td class="num"><strong>100%</strong></td><td>대학 공식 확인 · 5급 70% 상향 · F비자 잔고면제</td></tr>
+          <tr><td><strong>한국외대</strong></td><td><span class="badge badge-red">불인정</span></td><td class="num">-</td><td class="num">30%</td><td class="num">50%</td><td class="num">100%</td><td>이중언어 강점 · 잔고증명 발급 1개월 이내</td></tr>
+          <tr><td><strong>서울과기대</strong></td><td><span class="badge badge-red">불인정</span></td><td class="num">확인</td><td class="num">50%</td><td class="num">70%</td><td class="num">최상위</td><td>2027 국제대학 개편 · 영어트랙 동일 적용</td></tr>
+          <tr><td><strong>경희·한양·성균관·중앙</strong></td><td>확인 필요</td><td class="num">-</td><td class="num">-</td><td class="num">50%</td><td class="num">100%</td><td>5~6급 집중 감면 구조 (중앙대 연 4회 모집)</td></tr>
+          <tr><td><strong>숙명여대 / 서울시립대</strong></td><td>시립 <span class="badge badge-red">불인정</span></td><td class="num" colspan="4" style="text-align:center;">숙명: 정액 30만 원 / 시립: 국공립 최저 학비(약 215만)</td><td>배타적 외부 장학(우리·명인 vs 삼성꿈) 자동 필터</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>2. 2025~2026 개정 외국국적 청소년 체류자격(비자) 스킬트리</h2>
+    <div class="svg-box">
+      <svg viewBox="0 0 760 190" width="100%" height="auto">
+        <rect x="10" y="14" width="155" height="50" rx="8" fill="#ffffff" stroke="#0e7c55" stroke-width="1.5" />
+        <text x="87" y="34" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0e7c55">미등록 구제 (~2028.3)</text>
+        <text x="87" y="51" text-anchor="middle" font-size="9" fill="#191f28">아동 D-4 · 형제 G-1</text>
+
+        <rect x="10" y="76" width="155" height="50" rx="8" fill="#ffffff" stroke="#1b64da" stroke-width="1.5" />
+        <text x="87" y="96" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1b64da">국내 성장 (F-1·F-3)</text>
+        <text x="87" y="113" text-anchor="middle" font-size="9" fill="#191f28">국내 7년+ 초·중·고 졸업</text>
+
+        <rect x="10" y="138" width="155" height="42" rx="8" fill="#ffffff" stroke="#c92a2a" stroke-width="1.5" />
+        <text x="87" y="156" text-anchor="middle" font-size="9" font-weight="700" fill="#c92a2a">해외 직업계고 D-4-3</text>
+        <text x="87" y="170" text-anchor="middle" font-size="8.5" fill="#c92a2a">2025.10 발급 중단</text>
+
+        <!-- Arrows -->
+        <line x1="165" y1="39" x2="215" y2="39" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+        <line x1="165" y1="101" x2="215" y2="101" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+        <line x1="165" y1="101" x2="215" y2="156" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+
+        <!-- Middle stage -->
+        <rect x="220" y="14" width="175" height="50" rx="8" fill="#f2f4f6" stroke="#d1d6db" />
+        <text x="307" y="34" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">대학 유학 (D-2)</text>
+        <text x="307" y="51" text-anchor="middle" font-size="8.8" fill="#656f7c">F비자 면제 · 주 25~30h 알바</text>
+
+        <rect x="220" y="76" width="175" height="50" rx="8" fill="#f2f4f6" stroke="#0e7c55" stroke-width="1.5" />
+        <text x="307" y="96" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0e7c55">고졸 직행 E-7-Y (신설)</text>
+        <text x="307" y="113" text-anchor="middle" font-size="8.8" fill="#191f28">2025.4 · 코드 9999 · D-10 3년</text>
+
+        <rect x="220" y="138" width="175" height="42" rx="8" fill="#f2f4f6" stroke="#d1d6db" />
+        <text x="307" y="156" text-anchor="middle" font-size="9.5" font-weight="700" fill="#191f28">육성형 전문대 E-7-M</text>
+        <text x="307" y="170" text-anchor="middle" font-size="8.5" fill="#656f7c">7년 미만 대안 · 주 35h 특례</text>
+
+        <!-- Arrows to right -->
+        <line x1="395" y1="39" x2="445" y2="62" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+        <line x1="395" y1="101" x2="445" y2="101" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+        <line x1="395" y1="158" x2="445" y2="132" stroke="#1b64da" stroke-width="1.5" marker-end="url(#arr1)" />
+
+        <!-- Right stage -->
+        <rect x="450" y="34" width="140" height="122" rx="10" fill="#ffffff" stroke="#1b64da" stroke-width="1.5" />
+        <text x="520" y="56" text-anchor="middle" font-size="10" font-weight="800" fill="#1b64da">구직 · 취업 관문</text>
+        <text x="520" y="78" text-anchor="middle" font-size="9" font-weight="700" fill="#191f28">D-10 (최장 3년)</text>
+        <text x="520" y="94" text-anchor="middle" font-size="8.5" fill="#656f7c">TOPIK 4급+ 점수 면제</text>
+        <text x="520" y="116" text-anchor="middle" font-size="9" font-weight="700" fill="#191f28">E-7 전문취업</text>
+        <text x="520" y="132" text-anchor="middle" font-size="8.5" fill="#656f7c">E-7-1 3,112만 (2026.2)</text>
+
+        <line x1="590" y1="95" x2="620" y2="95" stroke="#0e7c55" stroke-width="1.8" marker-end="url(#arr2)" />
+
+        <rect x="624" y="34" width="126" height="122" rx="10" fill="#191f28" />
+        <text x="687" y="60" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">장기 정주</text>
+        <text x="687" y="84" text-anchor="middle" font-size="9.5" font-weight="700" fill="#4c8dff">F-2-R 지역특화</text>
+        <text x="687" y="100" text-anchor="middle" font-size="8.5" fill="#d1d6db">2026.8 TOPIK 3급 완화</text>
+        <text x="687" y="122" text-anchor="middle" font-size="9.5" font-weight="700" fill="#34c78b">F-2-7 → F-5 영주</text>
+        <text x="687" y="138" text-anchor="middle" font-size="8.5" fill="#d1d6db">불법취업 시 감점 주의</text>
+      </svg>
+    </div>
+
+    <h2>3. 2026년 9월 최신 해외 서류 인증 분기 &amp; 알바 허용시간 핵심 기준</h2>
+    <div class="grid-2">
+      <div class="card-soft">
+        <h3>아포스티유 vs 영사확인 (2026.9 최신)</h3>
+        <ul>
+          <li><span class="badge badge-green">아포스티유</span> 중국(2023.11) · 방글라데시(2025.3) · <strong>베트남(2026.9.11 발효)</strong> · 몽골 · 러시아 · 필리핀</li>
+          <li><span class="badge badge-amber">전환기</span> <strong>태국(2027.2.28 발효 예정)</strong> — 그전까지는 영사확인 필수</li>
+          <li><span class="badge badge-red">영사확인</span> 캄보디아 · 미얀마 · 라오스 (비협약국 · 재외동포청+공관)</li>
+        </ul>
+      </div>
+      <div class="card-soft">
+        <h3>2026 시간제취업(알바) 허용시간</h3>
+        <ul>
+          <li><strong>고등학생(F-1·F-3·D-4-3):</strong> 원칙 금지</li>
+          <li><strong>D-2 학사:</strong> 1~2학년 TOPIK 3급 / 3~4학년 4급 충족 시 주 25시간(+우대 5시간, 주말·방학 무제한)</li>
+          <li><strong>금지 업종:</strong> 배달라이더·건설·개인과외·파견 (적발 시 E-7 탈락)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 4: 데이터 분석 실측 결과 & Q&A 치트시트 ================= -->
+  <section class="page">
+    <div class="top-bar">
+      <span class="badge">ANALYTICS VALIDATION &amp; PRESENTATION Q&amp;A</span>
+      <span class="muted">PAGE 04 / 04 · 기말과제 검증 및 발표 치트시트</span>
+    </div>
+
+    <h1>데이터 분석 실측 결과 &amp; 발표 Q&amp;A 치트시트</h1>
+
+    <h2>1. Python 검증 배치 실측 결과 (재현성 · 인과검증 · NLP)</h2>
+    <div class="grid-4">
+      <div class="card">
+        <div class="muted">가상학교 · 학생</div>
+        <div class="kpi-val" style="font-size:16px;">6개교 · 432명</div>
+        <div class="muted">12주 · 5,184기회/회</div>
+      </div>
+      <div class="card">
+        <div class="muted">DiD 평균 개입 효과</div>
+        <div class="kpi-val green" style="font-size:16px;">+15.47%p</div>
+        <div class="muted">20시드 회수율 100%</div>
+      </div>
+      <div class="card">
+        <div class="muted">무결성 / Null 오경보</div>
+        <div class="kpi-val" style="font-size:16px;color:#b25e09;">0건 / 15.0%</div>
+        <div class="muted">효과 0 대조군 투명 공개</div>
+      </div>
+      <div class="card">
+        <div class="muted">문자 2~4그램 TF-IDF</div>
+        <div class="kpi-val" style="font-size:16px;">Macro-F1 1.0</div>
+        <div class="muted">문서 단위 Train/Test 분리</div>
+      </div>
+    </div>
+
+    <h2>2. 서울시 6개 자치구 7일 상담 연결 퍼널 (k-익명성 마스킹 적용)</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>자치구</th>
+            <th>요청 언어</th>
+            <th class="num">필요 표시</th>
+            <th class="num">7일 연결됨</th>
+            <th class="num">실패 보고</th>
+            <th class="num">후속 미응답</th>
+            <th class="num">7일 연결율</th>
+            <th>교육청 정책 액션</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>구로구</strong></td><td>중국어(간체)</td><td class="num">54</td><td class="num">34</td><td class="num">3</td><td class="num">4</td><td class="num"><strong>63%</strong></td><td>평일 18시 종료 → 야간 연장</td></tr>
+          <tr><td><strong>영등포구</strong></td><td>중국어(간체)</td><td class="num">48</td><td class="num">31</td><td class="num">3</td><td class="num">3</td><td class="num"><strong>65%</strong></td><td>다+온 거점 · 서류 안내 보강</td></tr>
+          <tr><td><strong>금천구</strong></td><td>베트남어</td><td class="num">26</td><td class="num">12</td><td class="num">3</td><td class="num">2</td><td class="num"><strong>46%</strong></td><td>연락 시간 불일치 해소</td></tr>
+          <tr><td><strong>용산구</strong></td><td>아랍어</td><td class="num">18</td><td class="num">4</td><td class="num">6</td><td class="num">2</td><td class="num" style="color:#c92a2a;"><strong>22%</strong></td><td>통번역사 0명 → 광역 연계 시급</td></tr>
+          <tr><td><strong>동대문구</strong></td><td>몽골어</td><td class="num">15</td><td class="num">8</td><td class="num">1</td><td class="num">2</td><td class="num"><strong>53%</strong></td><td>동부교육지원청 권역 · 조건 안내 보완</td></tr>
+          <tr><td><strong>관악구</strong></td><td>태국어</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num"><strong>&lt;10명 마스킹</strong></td><td>표본 7명 · k-익명성 역추적 차단</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>3. 교수님 · 심사위원 예상 질문 10초 모범 답변</h2>
+    <div class="qa-item">
+      <div class="qa-q">Q1. 실제 학생 데이터가 없는데 어떻게 분석·검증했나요?</div>
+      <div>서울 남부·중부권 분포를 반영한 6개 가상교 432명·12주 합성 데이터를 Python으로 생성해 20개 시드에서 효과 회수율(100%)과 Null 대조군 오경보율(15%)까지 검증했고, 웹앱 1·2번 탭의 실시간 입력도 3번 탭에 즉시 합산됩니다.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">Q2. 미등록 아동이나 개인정보 문제는 어떻게 처리했나요?</div>
+      <div>체류자격·비자·실명·연락처는 DB 컬럼 자체를 배제한 Zero-Tracking(Stateless) 구조입니다. 브라우저 메모리에서만 전형을 판정하고, 교육청 집계에는 10명 미만 자동 마스킹(k-익명성)과 Supabase RLS를 적용했습니다.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">Q3. 기존 번역 앱(아이엠스쿨·모두의 한국어)과 뭐가 다른가요?</div>
+      <div>기존 앱은 일방 번역·초등 한국어 중심이라 중·고교 학업중단(3.4배 급증)의 핵심인 입시·비자·검정고시 함정을 못 잡습니다. 본 앱은 탐색 과정에서 병목·서류 장애·상담 이탈을 수집해 교사 개입과 교육청 정책으로 환류합니다.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">Q4. 단순 정답률 대신 왜 opportunity와 응답률을 따로 보나요?</div>
+      <div>4·8주차 시험주간처럼 응답률이 급락할 때 미응답을 오답으로 처리하거나 응답자만 보면 선택 편향이 생깁니다. 배정 기회(opportunity)를 분모로 고정하고 응답률 곡선을 분리해 개입 인과성을 검증했습니다.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">Q5. 왜 공통 코어(kbridge-core)와 5종 니치 앱으로 확장했나요?</div>
+      <div>21개 언어 i18n·아랍어 RTL·TTS·익명 로거를 코어로 분리해 둠으로써, 본 발표작(kvisa-path) 외에 급식(kschool-meal)·교과서(kschool-lens)·학교생존(kschool-guide)·소아과(kmed-card)까지 즉시 확장할 수 있습니다.</div>
+    </div>
+  </section>
+
+</body>
+</html>
