@@ -16,6 +16,7 @@ export const TRACK_CATEGORIES = [
   'foreign_school_graduate',
   'international_college',
   'scholarship',
+  'junior_college',
   'north_korean_defector',
   'mid_entry',
   'ged',
@@ -77,6 +78,15 @@ export interface EligibilityConditions {
   ageResidency: AgeResidencyCondition | null;
   legalBasis: readonly string[];
   textKo: string;
+  /** 복수국적자는 이 전형의 외국인으로 인정하지 않음. */
+  dualNationalityDisqualifies?: boolean;
+}
+
+/** TOPIK floor stated in a guide. Exceptions stay in noteKo. */
+export interface LanguageRequirement {
+  topikMin: number | null;
+  noMinimum: boolean;
+  noteKo: string;
 }
 
 export interface PathwayWindow {
@@ -114,6 +124,11 @@ export interface PathwayRecord {
   windows: readonly PathwayWindow[];
   phone: string | null;
   sourceType: string;
+  /** 2027 university guide used because the 2028 guide is not published yet. */
+  guideBasis?: '2027_guide';
+  language?: LanguageRequirement;
+  /** Korean course after an offer. Not a separate application track. */
+  languageBridge?: boolean;
   /** Always false. Stay text is not a question and not an answer. */
   asksVisaOrResidency: false;
   /** Always false. Rows are not filtered by a visa or residency answer. */
@@ -137,6 +152,8 @@ export interface TrackQuery {
   bothParentsForeign?: boolean;
   multiculturalFamilyChild?: boolean;
   category?: TrackCategory;
+  /** Known TOPIK level. Rows with a higher floor drop out. Visa is not a query field. */
+  topikLevel?: number;
 }
 
 function covers(row: PathwayRecord, category: TrackCategory): boolean {
@@ -150,6 +167,15 @@ function covers(row: PathwayRecord, category: TrackCategory): boolean {
 export function matchPathways(rows: readonly PathwayRecord[], query: TrackQuery): readonly PathwayRecord[] {
   return rows.filter((row) => {
     if (query.category && !covers(row, query.category)) return false;
+    if (
+      query.topikLevel != null &&
+      row.language &&
+      !row.language.noMinimum &&
+      row.language.topikMin != null &&
+      query.topikLevel < row.language.topikMin
+    ) {
+      return false;
+    }
     if (row.role === 'general_info' || row.category === 'post_graduation_stay') return true;
     if (query.nationality === 'korean' && row.eligibility.nationality === 'both_parents_and_student_foreign') return false;
     if (query.nationality === 'korean' && row.eligibility.nationality === 'foreign_national_student') return false;

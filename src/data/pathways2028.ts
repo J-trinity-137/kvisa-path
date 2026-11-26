@@ -1,3 +1,4 @@
+import { FOREIGN_TRACKS } from './foreignTracks';
 import type { PathwayRecord, TrackCategory } from './trackSchema';
 
 /**
@@ -2091,6 +2092,7 @@ const SECTION_ORDER = [
   'foreign_school_graduate',
   'international_college',
   'scholarship',
+  'junior_college',
   'north_korean_defector',
   'mid_entry',
   'ged',
@@ -2104,6 +2106,6 @@ const SECTION_ORDER = [
 export function pathwaySections(): { id: TrackCategory; rows: readonly PathwayRecord[] }[] {
   return SECTION_ORDER.map((id) => ({
     id,
-    rows: PATHWAYS_2028.filter((row) => row.category === id),
+    rows: [...PATHWAYS_2028, ...FOREIGN_TRACKS].filter((row) => row.category === id),
   })).filter((section) => section.rows.length > 0);
 }

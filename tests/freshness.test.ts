@@ -6,6 +6,7 @@ import { isOlderThanYear } from '../src/data/freshness';
 import { DDAY_SCHEDULES } from '../src/data/interactiveModules';
 import { MULTICULTURAL_SECTIONS } from '../src/data/multiculturalPath';
 import { MULTICULTURAL_TRACKS } from '../src/data/multiculturalTracks';
+import { FOREIGN_TRACKS } from '../src/data/foreignTracks';
 import { PATHWAYS_2028 } from '../src/data/pathways2028';
 import { PROCEDURES } from '../src/data/procedures';
 import { STUDENT_TYPE_KEY, STUDENT_TYPES, writeStudentType } from '../src/data/studentType';
@@ -28,6 +29,7 @@ describe('verified dates', () => {
     months(PROCEDURES, 'procedures');
     months(MULTICULTURAL_TRACKS, 'tracks');
     months(PATHWAYS_2028, 'pathways2028');
+    months(FOREIGN_TRACKS, 'foreignTracks');
   });
 
   it('keeps Seoul rows on seoul and leaves Gyeonggi empty', () => {
