@@ -3,6 +3,8 @@ import { visaPath } from '../data/visaPaths';
 import { monthFromDate } from '../data/freshness';
 import type { SupportedLangCode } from '../kbridge';
 import { FRESHNESS_COPY, easySentence } from '../i18n/shellCopy';
+import { factsFor } from '../data/multiculturalContent';
+import { REGION_COPY } from '../i18n/regionCopy';
 import { STUDENT_TYPE_COPY } from '../i18n/studentTypeCopy';
 import { FreshnessLine } from './FreshnessLine';
 import { SpeakButton } from './SpeakButton';
@@ -21,6 +23,8 @@ export function TeacherSheet({ lang, choice, easy }: { lang: SupportedLangCode; 
       ? null
       : visaPath(choice.visa);
   const summary = path ? (easy ? easySentence(path.summary) : path.summary) : student.teacherDomestic;
+  const labels = REGION_COPY[lang];
+  const letter = factsFor('school-supports').find((fact) => fact.name.includes('가정통신문'));
   const regionName = choice.region === 'seoul' ? copy.seoul : copy.gyeonggi;
   const spoken = `${copy.regionLabel} ${regionName}. ${copy.stage} ${STAGE[choice.stage]}. ${path ? `${copy.visa} ${path.title}. ` : ''}${summary}`;
 
@@ -63,6 +67,13 @@ export function TeacherSheet({ lang, choice, easy }: { lang: SupportedLangCode; 
           <p className="kb-subtitle" style={{ margin: 0 }}>{copy.privacy}</p>
         </article>
       </div>
+      {letter ? (
+        <article className="kb-card kb-stack" style={{ marginTop: 12 }}>
+          <strong>{labels.letterTitle}</strong>
+          <p style={{ margin: 0 }}>{letter.text}</p>
+          <FreshnessLine lang={lang} verifiedAt={letter.verifiedAt} sourceUrl={letter.sourceUrl} />
+        </article>
+      ) : null}
     </section>
   );
 }

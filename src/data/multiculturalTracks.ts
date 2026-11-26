@@ -33,6 +33,42 @@ export const MULTICULTURAL_TRACKS: readonly MulticulturalTrack[] = [
     url: 'https://file.uos.ac.kr/upload/admission/2027%ED%95%99%EB%85%84%EB%8F%84%20%EC%88%98%EC%8B%9C%EB%AA%A8%EC%A7%91%20%EC%8B%A0%EC%9E%85%EC%83%9D%20%EB%AA%A8%EC%A7%91%EC%9A%94%EA%B0%95.pdf',
   },
   {
+    id: 'korea',
+    university: '고려대',
+    hasTrack: true,
+    url: 'https://oku.korea.ac.kr/attach/202610/1792973469910_0.pdf',
+  },
+  {
+    id: 'sogang',
+    university: '서강대',
+    hasTrack: true,
+    url: 'https://admission.sogang.ac.kr/enter/html/rolling/noticeView.asp?idx=29002',
+  },
+  {
+    id: 'ewha',
+    university: '이화여대',
+    hasTrack: true,
+    url: 'https://admission.ewha.ac.kr/upload/GUIDES/20260907134642BHLTER.pdf',
+  },
+  {
+    id: 'hongik',
+    university: '홍익대',
+    hasTrack: true,
+    url: 'https://www.hongik.ac.kr/kr/admission/recruitment.do?articleNo=152315&mode=view&title=2027%ED%95%99%EB%85%84%EB%8F%84+%EC%88%98%EC%8B%9C%EB%AA%A8%EC%A7%91+%EB%AA%A8%EC%A7%91%EC%9A%94%EA%B0%95',
+  },
+  {
+    id: 'sejong',
+    university: '세종대',
+    hasTrack: true,
+    url: 'https://ipsi.sejong.ac.kr/ipsi/assistant/notice.do?article.offset=0&articleLimit=10&articleNo=2644&mode=view',
+  },
+  {
+    id: 'mju',
+    university: '명지대',
+    hasTrack: true,
+    url: 'https://iphak.mju.ac.kr/pages/?b=B_1_1&bn=30136&cate=%EC%88%98%EC%8B%9C&m=read&p=9',
+  },
+  {
     id: 'kookmin',
     university: '국민대',
     hasTrack: false,

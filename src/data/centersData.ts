@@ -1,6 +1,7 @@
 import type { SupportedLangCode } from '../kbridge';
 import type { RegionId } from './freshness';
 import { stampVerifiedAt } from './freshness';
+import { GYEONGGI_FAMILY_CENTERS } from './gyeonggiData';
 
 export interface SupportCenter {
   id: string;
@@ -225,5 +226,17 @@ for (const center of SEOUL_SUPPORT_CENTERS) {
 }
 stampVerifiedAt(SEOUL_SUPPORT_CENTERS, 'phoneVerifiedOn');
 
-/** Empty until a later PR adds verified Gyeonggi family-center rows. */
-export const GYEONGGI_SUPPORT_CENTERS: SupportCenter[] = [];
+export const GYEONGGI_SUPPORT_CENTERS: SupportCenter[] = GYEONGGI_FAMILY_CENTERS.map((row) => ({
+  id: `gg-${row.city}`,
+  region: 'gyeonggi',
+  district: row.city,
+  verifiedAt: row.verified_at,
+  name: row.name,
+  phone: row.phone,
+  hours: '',
+  asOfDate: row.verified_at,
+  interpreters: {},
+  freeCareerProgram: '',
+  phoneVerifiedOn: `${row.verified_at}-01`,
+  phoneSourceUrl: row.source_url,
+}));

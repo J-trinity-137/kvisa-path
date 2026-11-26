@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXTERNAL_SCHOLARSHIPS, SEOUL_VOCATIONAL_SCHOOLS, UNIVERSITY_GED_RULES, UNIVERSITY_SCHOLARSHIP_RULES } from '../src/data/admissionsData';
 import { GYEONGGI_SUPPORT_CENTERS, SEOUL_SUPPORT_CENTERS } from '../src/data/centersData';
+import { GYEONGGI_FAMILY_CENTERS, GYEONGGI_KLS } from '../src/data/gyeonggiData';
 import { isOlderThanYear } from '../src/data/freshness';
 import { DDAY_SCHEDULES } from '../src/data/interactiveModules';
 import { MULTICULTURAL_SECTIONS } from '../src/data/multiculturalPath';
@@ -30,7 +31,9 @@ describe('verified dates', () => {
   it('keeps Seoul rows on seoul and leaves Gyeonggi empty', () => {
     expect(SEOUL_VOCATIONAL_SCHOOLS.every((school) => school.region === 'seoul')).toBe(true);
     expect(SEOUL_SUPPORT_CENTERS.every((center) => center.region === 'seoul')).toBe(true);
-    expect(GYEONGGI_SUPPORT_CENTERS).toEqual([]);
+    expect(GYEONGGI_SUPPORT_CENTERS).toHaveLength(GYEONGGI_FAMILY_CENTERS.length);
+    expect(GYEONGGI_SUPPORT_CENTERS.every((center) => center.region === 'gyeonggi')).toBe(true);
+    expect(GYEONGGI_KLS.length).toBeGreaterThan(30);
   });
 
   it('flags a check older than 12 months and keeps 2026-11 current', () => {
@@ -39,14 +42,14 @@ describe('verified dates', () => {
     expect(isOlderThanYear('2025-10', today)).toBe(true);
   });
 
-  it('hides multicultural sections that have no verified rows', () => {
+  it('fills multicultural sections only when verified rows exist', () => {
     expect(MULTICULTURAL_SECTIONS.map((section) => section.id)).toEqual([
       'school-supports',
       'bilingual-programs',
       'bilingual-careers',
       'scholarships',
     ]);
-    expect(MULTICULTURAL_SECTIONS.every((section) => section.itemIds.length === 0)).toBe(true);
+    expect(MULTICULTURAL_SECTIONS.every((section) => section.itemIds.length > 0)).toBe(true);
     expect(STUDENT_TYPES).toEqual(['foreign_family', 'mid_entry', 'domestic_multicultural', 'unsure']);
   });
 

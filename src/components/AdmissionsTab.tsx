@@ -29,11 +29,13 @@ import { MULTICULTURAL_TRACKS } from '../data/multiculturalTracks';
 import { gapUi } from '../i18n/gapUi';
 import { scholarshipTerm, topikHeads, universityCell } from '../i18n/tableCopy';
 import { getUiMessages } from '../i18n/messages';
-import { easySentence, shellCopy } from '../i18n/shellCopy';
+import { easySentence } from '../i18n/shellCopy';
 import { pageLink, shareOrCopy } from '../share/parentShare';
 import type { PathChoice } from '../session/pathChoice';
+import type { RegionId } from '../data/freshness';
 import type { StudentType } from '../data/studentType';
 import { FreshnessLine } from './FreshnessLine';
+import { GyeonggiGuide } from './GyeonggiGuide';
 import { MulticulturalPathView } from './MulticulturalPath';
 import { SpeakButton } from './SpeakButton';
 import { loadVocationalSnapshot } from '../services/neisClient';
@@ -41,6 +43,7 @@ import { loadVocationalSnapshot } from '../services/neisClient';
 export interface AdmissionsTabProps {
   lang: SupportedLangCode;
   studentType: StudentType;
+  region: RegionId;
   easy: boolean;
   onEventLogged: () => void;
   onChoice: (choice: PathChoice) => void;
@@ -67,7 +70,7 @@ const FIELD_OPTIONS: { value: InterestField; label: string }[] = [
   { value: 'health', label: '보건·간호' },
 ];
 
-export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice }: AdmissionsTabProps) {
+export function AdmissionsTab({ lang, studentType, region, easy, onEventLogged, onChoice }: AdmissionsTabProps) {
   const [stage, setStage] = useState<ProcedureLevel>('high');
   const [visa, setVisa] = useState<VisaCode>('F-1');
   const [background, setBackground] = useState<BackgroundType>('both_foreign');
@@ -137,13 +140,12 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
     ? activeTerm.translations[lang] ?? activeTerm.translations.en ?? ''
     : '';
   const ui = getUiMessages(lang);
-  const shell = shellCopy(lang);
   const hideVisa = studentType === 'domestic_multicultural' || studentType === 'unsure';
   const showMulticultural = studentType === 'domestic_multicultural' || studentType === 'unsure';
 
   useEffect(() => {
     onChoice({
-      region: 'seoul',
+      region,
       stage,
       background,
       visa: hideVisa ? '' : visa,
@@ -151,7 +153,7 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
       field,
       studentType,
     });
-  }, [onChoice, stage, background, visa, koreanLevel, field, studentType, hideVisa]);
+  }, [onChoice, stage, background, visa, koreanLevel, field, studentType, hideVisa, region]);
 
   return (
     <div className="kb-stack">
@@ -203,7 +205,7 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
                 {copy?.levelHigh ?? '고등학생 (대학 입학전형 · TOPIK 장학)'}
               </button>
             </div>
-            <p className="kb-subtitle" style={{ margin: '8px 0 0' }}>{shell.gyeonggiEmpty}</p>
+            {region === 'gyeonggi' ? <GyeonggiGuide lang={lang} /> : null}
           </div>
 
           {hideVisa ? null : <>
@@ -492,7 +494,7 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
       </section>}
 
       {/* 3. 서울 특성화고 12개교 / 주요 대학 12개교 TOPIK 장학금 비교 + 검색 */}
-      {hideVisa && schoolLevel === 'high' ? null : <section className="kb-section">
+      {(region === 'gyeonggi' && schoolLevel !== 'high') || (hideVisa && schoolLevel === 'high') ? null : <section className="kb-section">
         <h2 className="kb-section-title">
           {schoolLevel === 'middle'
             ? (copy?.schoolsTitle ?? '3. 서울 특성화고·마이스터고')
@@ -714,7 +716,7 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
       </section>}
 
       {/* 6. 자치구 가족센터 통역·상담 연결 + 4단계 퍼널 기록 */}
-      <section className="kb-section">
+      {region === 'seoul' ? <section className="kb-section">
         <h2 className="kb-section-title">{copy?.referralTitle ?? '6. 우리 구 무료 진로·입시 통역 상담'}</h2>
         <div className="kb-card kb-stack" style={{ marginBottom: 12 }}>
           <strong>{copy?.helpTitle ?? '공식 도움 창구'}</strong>
@@ -801,7 +803,7 @@ export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice
           </div>
           {referralFeedback ? <p className="kb-subtitle" style={{ margin: 0 }}>{referralFeedback}</p> : null}
         </div>
-      </section>
+      </section> : null}
 
       {/* 7. 진로상담실 소통 카드 */}
       <section className="kb-section">
