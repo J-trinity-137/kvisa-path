@@ -4,14 +4,14 @@
   "city": "인천(공통)",
   "category": "edu_office_multicultural",
   "name": "인천광역시교육청 다문화교육지원센터",
-  "phone": "032-420-8269",
-  "url": "https://kr.allim2.kr/html/index.html",
-  "quote": "인천 미추홀구 경원대로 804 인천광역시교육청 학생맞춤통합지원센터, 2층 인천다문화교육지원센터 … 운영문의 … 전화 Telephone : 032)420-8265~8269 FAX : 032)570-2179 / *긴급연락처: 032-420-8268",
-  "source_url": "https://kr.allim2.kr/html/index.html",
+  "phone": "032-420-8265~8269",
+  "url": "https://www.incheon.go.kr/infohub/HUB050101",
+  "quote": "인천광역시교육청 다문화교육지원센터 / ☎ 032-420-8265~9",
+  "source_url": "https://www.incheon.go.kr/infohub/HUB050101",
   "source_type": "edu_office",
   "status": "verified",
-  "verified_at": "2026-11",
-  "note": "중앙다문화교육센터 목록(edu4mc.or.kr)에는 구 주소(남동구 정각로 9)가 남아 있음. 센터 누리집 기준 미추홀구 경원대로 804로 이전. 대면 상담은 사전 예약 필수(10:00~17:00, 점심 12~13시)."
+  "verified_at": "2026-11-26",
+  "note": "2026-11-26 확인. 센터 누리집 https://kr.allim2.kr/html/index.html 은 HTTP 404. 주소·상담 시간·긴급연락처는 다시 확인하지 못함. 전화 032-420-8265~9는 인천시 재외동포정보허브 입학 안내(자료 최종업데이트 2026-07-07)에 있다."
  },
  {
   "region": "인천",

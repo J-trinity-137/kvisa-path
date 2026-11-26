@@ -7,7 +7,7 @@ import type { PathwayRecord } from './trackSchema';
  * the label is "2027 요강 기준(2028 요강 미공개)".
  * The 화교 explainer is omitted: the only "no such track" row was partial.
  */
-export const FOREIGN_TRACKS: readonly PathwayRecord[] = [
+const FOREIGN_TRACK_ROWS: readonly PathwayRecord[] = [
   {
     "id": "ft-snu-global-1",
     "category": "foreign_special",
@@ -1745,8 +1745,8 @@ export const FOREIGN_TRACKS: readonly PathwayRecord[] = [
     "quote": "가. 최근 9년 이내(지원서 접수 마감일 기준)에 입국한 북한이탈주민으로서 고등학교 졸업자(2028년 / 북한이탈주민은 별도로 정해진 모집인원이 없음",
     "summaryKo": "정시 나군. 별도 모집인원 없음(특수교육대상자 상한 총 20명 이내). 수능 응시영역 기준 충족 필요(음악대학 제외). 북한이탈주민 별도 서류 요건은 모집요강.",
     "verifiedAt": "2026-11",
-    "status": "verified",
-    "notes": null,
+    "status": "not_found",
+    "notes": "2026-11-26 확인: 공지(bbsidx=168854)는 열리지만 본문은 첨부 안내뿐이고, 첨부 fileidx=51182(2028 입학전형 시행계획.pdf)는 HTTP 404. admission.snu.ac.kr에서 같은 전형의 대체 첨부를 찾지 못해 게시하지 않음.",
     "windows": [],
     "phone": null,
     "sourceType": "official",
@@ -1841,3 +1841,6 @@ export const FOREIGN_TRACKS: readonly PathwayRecord[] = [
     "tiedToUserInput": false
   }
 ];
+
+/** Partial and not_found rows stay in the file and are not shipped. */
+export const FOREIGN_TRACKS: readonly PathwayRecord[] = FOREIGN_TRACK_ROWS.filter((row) => row.status === 'verified');

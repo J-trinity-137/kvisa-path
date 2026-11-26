@@ -5,11 +5,11 @@
   "category": "edu_office_multicultural",
   "name": "인천광역시교육청 다문화교육지원센터",
   "phone": "032-420-8265~8269",
-  "url": "https://kr.allim2.kr/html/index.html",
-  "quote": "[ 22147 ] 인천 미추홀구 경원대로 804 인천광역시교육청 학생맞춤통합지원센터, 2층 인천다문화교육지원센터 / 운영문의(다문화교육지원센터) 전화 : 032)420-8265~8269 FAX : 032)570-2179 … 대면상담절차: 사전 예약 필수 … 상담가능시간: 10:00 ~ 17:00 (점심시간 12:00 ~13:00) ※주말 및 공휴일 제외 … *긴급연락처: 032-420-8268",
-  "source_url": "https://kr.allim2.kr/html/index.html",
-  "verified_at": "2026-11",
-  "note": "센터 사이트 기준(이전 후 주소 미추홀구 경원대로 804). 중앙다문화교육센터 목록(edu4mc.or.kr)은 옛 주소(남동구 정각로 9)와 032-420-8269만 표기해 불일치. 2025.2 기준 전국 안내문은 032-420-8265. 공교육 진입 대면상담은 사전 예약제(홈페이지 예약). 세부 하위 메뉴 페이지는 404라 접속 불가했고 첫 화면 내용만 확인."
+  "url": "https://www.incheon.go.kr/infohub/HUB050101",
+  "quote": "인천광역시교육청 다문화교육지원센터 / ☎ 032-420-8265~9",
+  "source_url": "https://www.incheon.go.kr/infohub/HUB050101",
+  "verified_at": "2026-11-26",
+  "note": "2026-11-26 확인. 센터 누리집 https://kr.allim2.kr/html/index.html 은 HTTP 404(본문: 찾을 수 없습니다). 주소·상담 시간·긴급연락처는 현재 열린 공식 페이지에서 다시 확인하지 못함. 전화 032-420-8265~9는 인천시 재외동포정보허브 입학 안내(자료 최종업데이트 2026-07-07)에 있다."
  },
  {
   "region": "인천",
@@ -365,11 +365,11 @@
   "category": "korean_class_program",
   "name": "한국어학급(KSL) 운영 — 2026 강원 다문화교육 계획",
   "phone": "not_found",
-  "url": "https://www.gwe.go.kr/main/bbs/view.do?bbsSn=47595&key=m2307211198781",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "가. 한국어 학급 운영 … · 한국어 능력이 부족한 중도입국학생, 외국인학생 대상 체계적인 한국어교육 · 한국어(KSL)교육과정에 따라 한국어를 교육 … · 교당 35,000천원씩 지원 예정",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026학년도 운영교 명단은 계획서·센터 누리집에서 확인하지 못함(not_found). 고교 한국어학급은 강원 0개(뉴시스 2026-10-22, 한병도 의원 자료 인용 — 17개 시도 중 8곳이 고교 한국어학급 0)."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026학년도 운영교 명단은 계획서·센터 누리집에서 확인하지 못함(not_found). 고교 한국어학급은 강원 0개(뉴시스 2026-10-22, 한병도 의원 자료 인용 — 17개 시도 중 8곳이 고교 한국어학급 0). 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -379,9 +379,9 @@
   "phone": "033-640-3315",
   "url": "https://www.gwe.go.kr/main/content.do?key=m2307211206458",
   "quote": "(우) 25592 강릉시 노암등길 39 | 033-640-3315 … [계획서] 나. 지역거점 한국어 예비과정 운영 · 강릉교육지원청 한국어 예비과정 운영, 한국어능력이 부족한 이주배경학생 대상 한국어 집중 교육 실시",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "강원 유일의 거점형 예비과정. 2026년 강원대 강릉캠퍼스에서 3월·8월 두 차례(각 12주) 운영했다는 보도(연합뉴스 2026-03-23, 강원일보 2026-09-02)는 검색 요약으로만 확인했고 원문은 열람하지 못함. 전화는 강릉교육지원청 대표번호이며 예비과정 직통번호는 확인 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "강원 유일의 거점형 예비과정. 2026년 강원대 강릉캠퍼스에서 3월·8월 두 차례(각 12주) 운영했다는 보도(연합뉴스 2026-03-23, 강원일보 2026-09-02)는 검색 요약으로만 확인했고 원문은 열람하지 못함. 전화는 강릉교육지원청 대표번호이며 예비과정 직통번호는 확인 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -391,9 +391,9 @@
   "phone": "not_found",
   "url": "https://damunhwa.gwe.go.kr/main.do",
   "quote": "2026 강원 다문화교육 계획서와 센터 누리집에서 이주배경학생 전용 대안학교는 확인되지 않음.",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "있다/없다를 단정하지 말고 센터(033-1396)에 문의하도록 안내."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "있다/없다를 단정하지 말고 센터(033-1396)에 문의하도록 안내. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -401,11 +401,11 @@
   "category": "family_center",
   "name": "강원특별자치도 가족센터(거점)",
   "phone": "033-632-3356",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 강원특별자치도 거점 | 춘천시 공지로 305 (홀트춘천복지센터2층) | 632-3356",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -413,11 +413,11 @@
   "category": "family_center",
   "name": "춘천 가족센터",
   "phone": "033-251-8014",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 춘천 | 춘천시 공지로 305 (홀트춘천복지센터1층) | 중국어, 일본어, 베트남어, 캄보디아어 | 251-8014",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어, 일본어, 베트남어, 캄보디아어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어, 일본어, 베트남어, 캄보디아어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -425,11 +425,11 @@
   "category": "family_center",
   "name": "원주 가족센터",
   "phone": "033-764-8612",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 원주 | 원주시 판부면 매봉길 16-18 | 중국어, 베트남어, 필리핀어 | 764-8612",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어, 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어, 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -437,11 +437,11 @@
   "category": "family_center",
   "name": "강릉 가족센터",
   "phone": "033-648-3019",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 강릉 | 강릉시 입암로 92번길 30-16 | 베트남어, 중국어, 필리핀어, 러시아어 | 648-3019",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어, 필리핀어, 러시아어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어, 필리핀어, 러시아어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -449,11 +449,11 @@
   "category": "family_center",
   "name": "속초 가족센터",
   "phone": "033-638-3523",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 속초 | 속초시 도리원길 5 (경동대 속초캠퍼스 유아교육관2층) | 러시아어 | 638-3523",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 러시아어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 러시아어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -461,11 +461,11 @@
   "category": "family_center",
   "name": "양양 가족센터",
   "phone": "033-670-2943",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 양양 | 양양군 양양읍 안산1길 36 (여성회관 2층) | 670-2943",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -473,11 +473,11 @@
   "category": "family_center",
   "name": "동해 가족센터",
   "phone": "033-535-8377",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 동해 | 동해시 천곡1길 20-3 동해시청 제1별관1층 | 베트남어, 중국어 | 535-8377",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -485,11 +485,11 @@
   "category": "family_center",
   "name": "태백 가족센터",
   "phone": "033-554-4003",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 태백 | 태백시 해지개길 41 2층 | 일본어 | 554-4003",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 일본어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 일본어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -497,11 +497,11 @@
   "category": "family_center",
   "name": "삼척 가족센터",
   "phone": "033-576-0761",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 삼척 | 삼척시 원당로2길 72-6 종합사회복지관5층 | 베트남어 | 576-0761",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -509,11 +509,11 @@
   "category": "family_center",
   "name": "홍천 가족센터",
   "phone": "033-433-1915",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 홍천 | 홍천군 홍천읍 꽃뫼로 87 | 베트남어, 중국어, 캄보디아어, 태국어 | 433-1915",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어, 캄보디아어, 태국어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 중국어, 캄보디아어, 태국어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -521,11 +521,11 @@
   "category": "family_center",
   "name": "횡성 가족센터",
   "phone": "033-344-3458",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 횡성 | 횡성군 횡성읍 횡성로379 (횡성군종합보건복지타운3층) | 베트남어, 필리핀어 | 344-3458",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -533,11 +533,11 @@
   "category": "family_center",
   "name": "영월 가족센터",
   "phone": "033-372-4769",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 영월 | 영월군 영월읍 단종로 12 (4층) | 베트남어, 필리핀어 | 372-4769",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어, 필리핀어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -545,11 +545,11 @@
   "category": "family_center",
   "name": "평창 가족센터",
   "phone": "033-332-2063",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 평창 | 평창군 평창읍 평창중앙로 67 | 베트남어 | 332-2063",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 베트남어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -557,11 +557,11 @@
   "category": "family_center",
   "name": "정선 가족센터",
   "phone": "033-562-3458",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 정선 | 정선군 정선읍 봉양7길 16 | 필리핀어 | 562-3458",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 필리핀어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 필리핀어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -569,11 +569,11 @@
   "category": "family_center",
   "name": "철원 가족센터",
   "phone": "033-452-7800",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 철원 | 철원군 갈말읍 삼부연로 22-1 | 중국어 | 452-7800",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -581,11 +581,11 @@
   "category": "family_center",
   "name": "화천 가족센터",
   "phone": "033-440-4527",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 화천 | 화천군 화천읍 산수화로 45-30 | 440-4527",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -593,11 +593,11 @@
   "category": "family_center",
   "name": "양구 가족센터",
   "phone": "033-480-2445",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 양구 | 양구군 박수근로 286-11 | 몽골어 | 480-2445",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 몽골어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 몽골어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -605,11 +605,11 @@
   "category": "family_center",
   "name": "인제 가족센터",
   "phone": "033-462-3651",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 인제 | 인제군 인제읍 비봉로 44번길 100 하늘내린센터 3층 | 중국어 | 462-3651",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 인력 배치 언어: 중국어. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",
@@ -617,11 +617,11 @@
   "category": "family_center",
   "name": "고성 가족센터",
   "phone": "033-681-9390",
-  "url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
+  "url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
   "quote": "Ⅷ. 강원특별자치도내 가족센터 현황 … 고성 | 고성군 간성읍 간성로 97 | 681-9390",
-  "source_url": "https://www.gwe.go.kr/cmm/fileDown.do?encKey=MTE5OTkx&type=bbs",
-  "verified_at": "2026-11",
-  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함."
+  "source_url": "https://damunhwa.gwe.go.kr/boardCnts/view.do?boardID=85244&boardSeq=7702876&lev=0&m=0204&s=damunhwa",
+  "verified_at": "2026-11-26",
+  "note": "2026 강원 다문화교육 계획서(강원교육청)의 도내 가족센터 표. 표에 지역번호가 없어 강원 033을 붙임. 통번역 배치 언어 표시 없음. 센터 누리집 직접 확인은 못 함. 2026-11-26에 강원다문화교육지원센터 교육자료실의 「2026 다문화교육 계획(강원).hwp」로 다시 확인. 교육청 fileDown(encKey=MTE5OTkx)은 HTTP 500."
  },
  {
   "region": "강원",

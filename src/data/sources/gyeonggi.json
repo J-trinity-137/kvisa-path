@@ -1281,11 +1281,11 @@
   "category": "foreign_resident_center",
   "name": "김포시 외국인주민지원센터",
   "phone": "031-986-7660",
-  "url": "https://www.gfcc.kr",
-  "quote": "김포시 외국인주민지원센터 | 김포시 양촌읍 황금로110번길 52 | 031-986-7660  (외국인복지센터 현황 '26.3월 기준)",
-  "source_url": "https://www.gg.go.kr/bbs/boardView.do?bIdx=42369500&bcIdx=0&bsIdx=647&menuId=1886&page=1",
-  "verified_at": "2026-11",
-  "note": "같은 건물에 김포다문화이주민 플러스센터(출입국) 031-981-0042."
+  "url": "https://www.gimpofc.kr/",
+  "quote": "김포시외국인주민지원센터 | 경기도 김포시 양촌읍 황금로110번길 52 | TEL 031-986-7660",
+  "source_url": "https://www.gimpofc.kr/",
+  "verified_at": "2026-11-26",
+  "note": "2026-11-26 확인. www.gfcc.kr 은 DNS에 없다. 센터 누리집 바닥글에 같은 주소와 031-986-7660이 있다."
  },
  {
   "city": "평택",
