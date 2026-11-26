@@ -8,7 +8,7 @@ import type { PathwayRecord, TrackCategory } from './trackSchema';
  * 2028 admission is the current target (수시 2027-09-20~23, 정시 2028-01-03~06).
  * 2027 rows in this list are closed reference.
  */
-export const PATHWAYS_2028: readonly PathwayRecord[] = [
+const PATHWAY_ROWS: readonly PathwayRecord[] = [
   {
     "id": "kcue-2028-plan",
     "category": "admission_overview",
@@ -476,8 +476,8 @@ export const PATHWAYS_2028: readonly PathwayRecord[] = [
     "quote": "Ⅳ 수시모집 기회균형특별전형(사회통합) / ▪ 농어촌 학생 / ▪ 저소득 학생 / ▪ 국가보훈대상자 / ▪ 서해 5도 학생 / ▪ 자립지원 대상자 / ▪ 농생명계열 고교 졸업예정자(농업생명과학대학)",
     "summaryKo": "수시 기회균형특별전형(사회통합) 자격은 농어촌학생(가·나), 저소득(다·라·마: 기초생활수급(권)자·차상위·한부모), 국가보훈대상자(바), 서해5도 학생(사), 자립지원대상자(아), 농생명계열 특성화고 졸업예정자(자)뿐. 다문화가족 자녀 항목 없음.",
     "verifiedAt": "2026-11",
-    "status": "verified",
-    "notes": "SNU 공식 첨부 PDF(fileidx=51182)를 직접 내려받아 \"다문화\" 문자열 0건 확인.",
+    "status": "not_found",
+    "notes": "2026-11-26 확인: 공지 페이지는 열리지만 인용문은 첨부 PDF에만 있었다. fileidx=51182는 HTTP 404이고, 공지 본문에는 자격 목록이 없다. 대체 공식 첨부를 찾지 못해 게시하지 않음.",
     "windows": [],
     "phone": null,
     "sourceType": "official",
@@ -2082,6 +2082,9 @@ export const PATHWAYS_2028: readonly PathwayRecord[] = [
     "tiedToUserInput": false
   }
 ];
+
+/** Partial and not_found rows stay in PATHWAY_ROWS and are not shipped. */
+export const PATHWAYS_2028: readonly PathwayRecord[] = PATHWAY_ROWS.filter((row) => row.status === 'verified');
 
 const SECTION_ORDER = [
   'admission_overview',

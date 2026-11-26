@@ -14,7 +14,7 @@ type NoVisaQuestion = Extract<keyof TrackQuery, 'visa' | 'residency' | 'residenc
 
 describe('foreign tracks', () => {
   it('ships the 39 verified rows with a url and a check month', () => {
-    expect(FOREIGN_TRACKS).toHaveLength(39);
+    expect(FOREIGN_TRACKS).toHaveLength(38);
     expect(FOREIGN_TRACKS.every(isShippedPathway)).toBe(true);
     for (const row of FOREIGN_TRACKS) {
       expect(row.verifiedAt, row.id).toBe('2026-11');
@@ -23,7 +23,8 @@ describe('foreign tracks', () => {
       expect(row.asksVisaOrResidency, row.id).toBe(false);
       expect(row.tiedToUserInput, row.id).toBe(false);
     }
-    expect(new Set(FOREIGN_TRACKS.map((row) => row.id)).size).toBe(39);
+    expect(new Set(FOREIGN_TRACKS.map((row) => row.id)).size).toBe(38);
+    expect(FOREIGN_TRACKS.some((row) => row.id === 'ft-snu-nk-2028')).toBe(false);
     expect(FOREIGN_TRACKS.some((row) => row.status !== 'verified')).toBe(false);
   });
 

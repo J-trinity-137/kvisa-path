@@ -16,7 +16,8 @@ type NoVisaQuestion = Extract<keyof TrackQuery, 'visa' | 'residency' | 'residenc
 
 describe('2028 pathway rows', () => {
   it('ships only verified rows, each with a specific url and a check month', () => {
-    expect(PATHWAYS_2028).toHaveLength(48);
+    expect(PATHWAYS_2028).toHaveLength(47);
+    expect(PATHWAYS_2028.some((row) => row.id === 'snu-2028-no-multicultural')).toBe(false);
     expect(PATHWAYS_2028.every(isShippedPathway)).toBe(true);
     for (const row of PATHWAYS_2028) {
       expect(row.status, row.id).toBe('verified');

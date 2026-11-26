@@ -4,14 +4,14 @@
   "city": "경남(공통)",
   "category": "edu_office_multicultural",
   "name": "경상남도교육청 다문화교육지원센터(경남다문화교육지원센터)",
-  "phone": "055-210-5161",
-  "url": "https://www.gne.go.kr/multiculture/main.jsp",
-  "quote": "다문화교육(학생, 학부모, 교사), 한국어(KSL) 교육과정 운영, 이중언어교육 운영, 다문화학생의 공교육 진입 및 적응, 편입학 행정절차 지원 … 찾아가는 한국어학급 운영 / 연락처 : 055-210-5161 / 위치 : 창원시 의창구 용지로 264 (용호동 8-2)",
-  "source_url": "https://www.gyeongnam.go.kr/index.gyeong?menuCd=DOM_000000144010004005",
-  "source_type": "local_gov",
+  "phone": "055-210-5160~2",
+  "url": "https://www.gne.go.kr/multiculture/center/introduction.jsp",
+  "quote": "전화번호 : 055-210-5160~2 / 위치 : 창원시 의창구 용지로 264 (용호동 8-2) 3층",
+  "source_url": "https://www.gne.go.kr/multiculture/center/introduction.jsp",
+  "source_type": "edu_office",
   "status": "verified",
-  "verified_at": "2026-11",
-  "note": "충돌(사소): 경남교육청 센터 누리집 담당자 정보는 055-210-5162(진로교육과), 도청 안내와 중앙다문화교육센터 목록은 055-210-5161·5162 병기. 둘 다 같은 부서 번호로 보임. 누리집은 15개 언어 지원."
+  "verified_at": "2026-11-26",
+  "note": "2026-11-26 확인. 예전 첫 화면 /multiculture/main.jsp 는 HTTP 404. 센터소개에 전화 055-210-5160~2와 주소가 있다. 주요사업(공교육 진입, 한국어(KSL), 이중언어, 찾아가는 한국어학급)은 https://www.gne.go.kr/multiculture/center/bussiness.jsp 에 있고 담당 전화는 055-210-5162."
  },
  {
   "region": "경남",
