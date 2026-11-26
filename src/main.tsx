@@ -1,7 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import 'kbridge-core/styles.css';
+import './kbridge/styles.css';
 import { App } from './App';
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => undefined);
+  });
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

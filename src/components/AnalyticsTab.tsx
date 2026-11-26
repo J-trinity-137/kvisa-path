@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from 'kbridge-core';
+import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from '../kbridge';
+import { ADMISSION_TERMS } from '../data/admissionsData';
+import { gapUi } from '../i18n/gapUi';
+import { counselorHeads } from '../i18n/tableCopy';
+import { shareOrCopy } from '../share/parentShare';
 import {
   WEEKLY_DID_SERIES,
   computeDidEffect,
@@ -26,6 +30,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
     ),
   );
 
+  const gap = gapUi(lang);
+  const cols = counselorHeads(lang);
   const termRows = computeTermBottlenecks(liveEvents);
   const allFunnelRows = computeDistrictFunnels(liveEvents);
   const funnelRows = allFunnelRows.filter((row) => {
@@ -81,8 +87,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
   return (
     <div className="kb-stack">
       <div className="kv-notice-box" role="note">
-        <strong>데이터 출처 표시:</strong> 가상 중·고교 6곳(432명) 12주 합성 데이터 + 현재 세션 실시간 입력{' '}
-        <strong>{liveEvents.length}건</strong> 반영 · 공공자료(가족센터·통번역사) 기준일 2026-06-30.
+        <strong>{gap.counselorNotice}</strong> {gap.exampleFigure}. {liveEvents.length}
       </div>
 
       {/* KPI 4개 */}
@@ -98,7 +103,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
         </div>
 
         <div className="kb-card">
-          <p className="kv-kpi-label">개입(쉬운 용어 카드) DiD 효과</p>
+          <p className="kv-kpi-label">개입 DiD 효과 <span className="kb-tag">가상·예시</span></p>
           <p className="kv-kpi-value">+{did.didEstimate}%p</p>
           <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
             조기군 +{did.earlyDiff}%p vs 지연군 +{did.lateDiff}%p (6~8주 비교)
@@ -117,7 +122,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <p className="kv-kpi-label">진로정보 격차 지수(CIGI)</p>
           <p className="kv-kpi-value">0.38</p>
           <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
-            대학 희망 71.6% 대비 전형 이해 완료 44.4%
+            0.38 · 71.6% · 44.4% — {gap.exampleFigure}
           </p>
         </div>
       </section>
@@ -133,13 +138,13 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <table className="kv-table">
             <thead>
               <tr>
-                <th>입시 용어</th>
-                <th>TF-IDF 주제 군집</th>
-                <th className="num">선택/유효응답 (x/n)</th>
-                <th className="num">응답률</th>
-                <th className="num">평활화 병목률</th>
-                <th className="num">예상 영향 인원</th>
-                <th>교사 개입 시뮬레이션</th>
+                <th>{cols.term}</th>
+                <th>{cols.cluster}</th>
+                <th className="num">{cols.selected}</th>
+                <th className="num">{cols.responseRate}</th>
+                <th className="num">{cols.bottleneck}</th>
+                <th className="num">{cols.affected}</th>
+                <th>{cols.teacher}</th>
               </tr>
             </thead>
             <tbody>
@@ -179,9 +184,14 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
                         <button
                           type="button"
                           className="kv-term-btn"
-                          onClick={() => handleApplyIntervention(row.termId)}
+                          onClick={() => {
+                            handleApplyIntervention(row.termId);
+                            const term = ADMISSION_TERMS[row.termId];
+                            const text = term ? `${term.term}\n${term.easyKo}` : row.term;
+                            void shareOrCopy(text);
+                          }}
                         >
-                          쉬운 카드 배포
+                          {gap.shareCard}
                         </button>
                       )}
                     </td>
@@ -195,7 +205,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
 
       {/* 차트 2: 조기·지연 도입 학급 DiD 전후 검증 */}
       <section className="kb-section">
-        <h2 className="kb-section-title">2. 교사 개입(쉬운 입시 용어 카드) 전후 이해도 검증 (DiD)</h2>
+        <h2 className="kb-section-title">2. 이해도 변화 예시 (DiD) <span className="kb-tag kb-status-check">가상·예시 데이터</span></h2>
         <p className="kb-subtitle" style={{ marginBottom: 12 }}>
           6주차에 조기 도입한 학급(실선)과 9주차에 지연 도입한 학급(점선)의 전형 이해 정답률을 비교해요.
           4·8주차 시험주간의 응답률 하락(회색 점선)을 정답률과 분리해 선택 편향을 통제했어요.
@@ -317,15 +327,15 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <table className="kv-table">
             <thead>
               <tr>
-                <th>자치구</th>
-                <th>요청 언어</th>
-                <th className="num">필요 표시</th>
-                <th className="num">연락 시도</th>
-                <th className="num">7일 연결됨</th>
-                <th className="num">실패 보고</th>
-                <th className="num">후속 미응답</th>
-                <th className="num">7일 연결율</th>
-                <th>주요 중단 원인 · 통역 배치</th>
+                <th>{cols.district}</th>
+                <th>{cols.language}</th>
+                <th className="num">{cols.asked}</th>
+                <th className="num">{cols.tried}</th>
+                <th className="num">{cols.connected}</th>
+                <th className="num">{cols.failed}</th>
+                <th className="num">{cols.noFollowup}</th>
+                <th className="num">{cols.connectRate}</th>
+                <th>{cols.dropoff}</th>
               </tr>
             </thead>
             <tbody>
@@ -365,8 +375,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
             <table className="kv-table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
-                  <th>장애 사유</th>
-                  <th className="num">누적 건수</th>
+                  <th>{cols.barrier}</th>
+                  <th className="num">{cols.count}</th>
                 </tr>
               </thead>
               <tbody>
@@ -394,8 +404,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
             <table className="kv-table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
-                  <th>분류 토픽</th>
-                  <th className="num">질문 건수</th>
+                  <th>{cols.topic}</th>
+                  <th className="num">{cols.questions}</th>
                 </tr>
               </thead>
               <tbody>
