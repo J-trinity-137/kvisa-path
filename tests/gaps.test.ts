@@ -67,11 +67,13 @@ describe('new checked facts', () => {
     expect(checked.every((center) => center.phoneSourceUrl && isSpecificHttpUrl(center.phoneSourceUrl))).toBe(true);
     expect(SEOUL_SUPPORT_CENTERS).toHaveLength(25);
     expect(SEOUL_SUPPORT_CENTERS.every((center) => Object.keys(center.interpreters).length === 0)).toBe(true);
-    expect(SEOUL_SUPPORT_CENTERS.filter((center) => center.phone === '')).toHaveLength(12);
+    expect(SEOUL_SUPPORT_CENTERS.filter((center) => center.phone === '')).toHaveLength(0);
+    expect(SEOUL_SUPPORT_CENTERS.every((center) => center.phoneVerifiedOn && isSpecificHttpUrl(center.phoneSourceUrl ?? ''))).toBe(true);
     const skku = UNIVERSITY_TOPIK_TABLE.find((row) => row.id === 'skku');
     expect(skku?.topik6).toBe('100%');
     expect(skku?.topik5).toBe('50%');
-    expect(skku?.gedAccepted).toBe('미확인');
+    expect(skku?.gedAccepted).toBe('불인정');
+    expect(skku?.note).toContain('해외 고교');
     expect(UNIVERSITY_SCHOLARSHIP_RULES.skku.verification).toBe('verified');
     expect(isSpecificHttpUrl(UNIVERSITY_SCHOLARSHIP_RULES.skku.sourceUrl)).toBe(true);
   });

@@ -238,7 +238,7 @@ const ROWS: Record<UniversityId, Row> = {
     },
   },
   skku: {
-    ged: 'unknown',
+    ged: 'rejected',
     track: {
       en: 'Regular admission, group B, 17 seats (CSAT 100%)',
       'zh-Hans': '正时 B 组 17 人（学能 100%）',
@@ -249,13 +249,13 @@ const ROWS: Record<UniversityId, Row> = {
       ar: 'قبول عام، المجموعة B، 17 مقعدًا (اختبار القدرات 100%)',
     },
     note: {
-      en: 'Official scholarship page: overseas high-school graduates, first semester only. TOPIK 6 or Sungkyun Language Institute level 6 is 100%. TOPIK 5 or institute level 5 or the prep class is 50%. Levels 3 and 4 have no rate. The GED rule is not on this page. No multicultural-track URL.',
-      'zh-Hans': '外国学生奖学金页：海外高中毕业录取者，仅入学第一学期。TOPIK 6级或成均语学院6级为100%，TOPIK 5级或语学院5级、升学准备班为50%。3级和4级没有比例。这一页没有检定考试条款，也没有多文化选拔网址。',
-      'zh-Hant': '外國學生獎學金頁：海外高中畢業錄取者，僅入學第一學期。TOPIK 6級或成均語學院6級為100%，TOPIK 5級或語學院5級、升學準備班為50%。3級和4級沒有比例。這一頁沒有檢定考試條款，也沒有多文化選拔網址。',
-      vi: 'Trang học bổng: người tốt nghiệp THPT nước ngoài, chỉ học kỳ đầu. TOPIK 6 hoặc viện ngôn ngữ cấp 6 là 100%. TOPIK 5 hoặc cấp 5 hoặc lớp chuẩn bị là 50%. Cấp 3 và 4 không có tỷ lệ. Trang này không có quy tắc GED và không có địa chỉ tuyển đa văn hóa.',
-      ru: 'Страница стипендии: выпускники зарубежной школы, только первый семестр. TOPIK 6 или 6 уровень языкового института — 100%. TOPIK 5, 5 уровень института или подготовительный класс — 50%. У уровней 3 и 4 доли нет. Правила GED на странице нет. Адреса многокультурного трека нет.',
-      mn: 'Тэтгэлгийн хуудас: гадаад ахлах төгсөгч, зөвхөн эхний улирал. TOPIK 6 эсвэл хэлний дээд сургуулийн 6-р түвшин 100%. TOPIK 5, 5-р түвшин эсвэл бэлтгэл анги 50%. 3 ба 4-р зэрэгт хувь алга. GED дүрэм энэ хуудсанд алга. Олон соёлын замын хаяг алга.',
-      ar: 'صفحة المنحة: خريجو ثانوية في الخارج، الفصل الأول فقط. TOPIK 6 أو المستوى 6 في معهد اللغة 100%. TOPIK 5 أو المستوى 5 أو صف الإعداد 50%. المستويان 3 و4 بلا نسبة. قاعدة المعادلة ليست في هذه الصفحة. لا عنوان لمسار متعدد الثقافات.',
+      en: '2027 spring foreign-student guide: the GED, homeschooling, and online study are not accepted. There is no TOPIK minimum to apply. Without a certificate you are a preliminary admit and must earn TOPIK 4 within two years, then reapply to the same unit. Year 2 needs level 4 to enter the major, and Korean-track graduation needs level 5. The TOPIK award is the first semester only, and only if you graduated from a high school abroad: level 6 is 100%, level 5 is 50%. A student who finished high school in Korea does not get it. There is no level 3 or 4 TOPIK award. Institute level-4 recommendees get 25% for the first semester.',
+      'zh-Hans': '2027春季外国学生简章：不承认检定考试、家庭学校和网课。申请没有最低TOPIK。没有证明就是预备录取，须在两年内取得4级并再申请同一单位。二年级进专业要4级，韩语轨道毕业要5级。TOPIK奖学金只在第一学期，而且只给海外高中毕业的录取者：6级100%、5级50%。在韩国读完高中的中途入学学生拿不到。没有3级或4级的TOPIK奖学金。语学院4级被推荐者第一学期25%。',
+      'zh-Hant': '2027春季外國學生簡章：不承認檢定考試、家庭學校和網課。申請沒有最低TOPIK。沒有證明就是預備錄取，須在兩年內取得4級並再申請同一單位。二年級進專業要4級，韓語軌道畢業要5級。TOPIK獎學金只在第一學期，而且只給海外高中畢業的錄取者：6級100%、5級50%。在韓國讀完高中的中途入學學生拿不到。沒有3級或4級的TOPIK獎學金。語學院4級被推薦者第一學期25%。',
+      vi: 'Hướng dẫn xuân 2027: không nhận GED, học tại nhà và học trực tuyến. Không có TOPIK tối thiểu để nộp. Không có chứng chỉ thì là đỗ dự bị, phải đạt cấp 4 trong hai năm rồi nộp lại cùng đơn vị. Năm 2 cần cấp 4 để vào ngành, tốt nghiệp track tiếng Hàn cần cấp 5. Học bổng TOPIK chỉ học kỳ đầu và chỉ khi tốt nghiệp THPT ở nước ngoài: cấp 6 là 100%, cấp 5 là 50%. Học sinh học THPT ở Hàn không được. Không có học bổng TOPIK cấp 3 hoặc 4. Người được viện ngôn ngữ cấp 4 giới thiệu nhận 25% ở học kỳ đầu.',
+      ru: 'Весна 2027: GED, домашнее и онлайн-обучение не принимаются. Минимального TOPIK для подачи нет. Без справки вы предварительно приняты и должны получить 4 уровень за два года, затем снова подать в ту же единицу. Для входа в специальность на 2 курсе нужен 4 уровень, для выпуска корейского трека — 5. Стипендия TOPIK только в первом семестре и только если школа была за рубежом: 6 уровень 100%, 5 — 50%. Кто закончил школу в Корее, её не получает. Стипендии TOPIK за 3 и 4 уровень нет. Рекомендованные с 4 уровнем института получают 25% в первом семестре.',
+      mn: '2027 хавар: GED, гэрийн болон цахим сургалтыг хүлээж авахгүй. Өргөдөлд доод TOPIK алга. Гэрчилгээгүй бол урьдчилсан тэнцэлт, хоёр жилийн дотор 4-р зэрэг авч мөн нэгжид дахин өргөдөл гаргана. 2-р курсэд мэргэжилд ороход 4, солонгос замын төгсөлтөд 5 хэрэгтэй. TOPIK тэтгэлэг зөвхөн эхний улирал, зөвхөн гадаад ахлах төгссөн хүнд: 6-р зэрэг 100%, 5: 50%. Солонгост ахлах төгссөн сурагч авч чадахгүй. 3 ба 4-р зэргийн TOPIK тэтгэлэг алга. Хэлний дээд сургуулийн 4-р түвшний зөвлөмжтэй хүн эхний улиралд 25%.',
+      ar: 'دليل ربيع 2027: المعادلة والتعليم المنزلي والدراسة عبر الإنترنت غير مقبولة. لا حد أدنى لـ TOPIK عند التقديم. بلا شهادة تكون قبولًا مبدئيًا ويجب الحصول على المستوى 4 خلال سنتين ثم إعادة التقديم لنفس الوحدة. دخول التخصص في السنة الثانية يحتاج المستوى 4، وتخرج مسار الكورية يحتاج المستوى 5. منحة TOPIK للفصل الأول فقط ولمن تخرج من ثانوية في الخارج: المستوى 6 بنسبة 100% والمستوى 5 بنسبة 50%. من أنهى الثانوية في كوريا لا يحصل عليها. لا منحة TOPIK للمستوى 3 أو 4. الموصى بهم من المستوى 4 في المعهد يحصلون على 25% في الفصل الأول.',
     },
   },
   cau: {
@@ -311,6 +311,15 @@ const TERMS: Record<string, Record<Lang7, string>> = {
     ru: 'Семестр не подтверждён',
     mn: 'Улирал баталгаажаагүй',
     ar: 'الفصل غير مؤكد',
+  },
+  '입학 첫 학기, 해외 고교 졸업(예정)자만': {
+    en: 'First semester only, and only graduates of a high school abroad',
+    'zh-Hans': '仅第一学期，且仅海外高中毕业（预定）者',
+    'zh-Hant': '僅第一學期，且僅海外高中畢業（預定）者',
+    vi: 'Chỉ học kỳ đầu, và chỉ người tốt nghiệp THPT ở nước ngoài',
+    ru: 'Только первый семестр и только выпускники школы за рубежом',
+    mn: 'Зөвхөн эхний улирал, зөвхөн гадаад ахлах төгсөгч',
+    ar: 'الفصل الأول فقط، ولخريجي ثانوية في الخارج فقط',
   },
   '입학 첫 학기(해외 고교 졸업 합격자)': {
     en: 'First semester after entry (overseas high-school graduates)',

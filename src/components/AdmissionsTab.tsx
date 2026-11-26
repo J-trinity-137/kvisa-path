@@ -24,7 +24,8 @@ import { OFFICIAL_FORMS, proceduresFor } from '../data/procedures';
 import { filterAdmissionTracks, filterVocationalSchools } from '../data/trackFilter';
 import { EASY_VISA_PATHS, optionsForVisa, VISA_PATHS, type ProcedureLevel, type VisaCode } from '../data/visaPaths';
 import { getCoreCopy } from '../i18n/coreCopy';
-import { MULTICULTURAL_NOTE, PROCEDURE_COPY } from '../i18n/extraCopy';
+import { LANGUAGE_SUPPORT_LEAD, MULTICULTURAL_NOTE, MULTICULTURAL_ROWS, PROCEDURE_COPY, SUPPORT_LANGUAGE } from '../i18n/extraCopy';
+import { MULTICULTURAL_TRACKS } from '../data/multiculturalTracks';
 import { gapUi } from '../i18n/gapUi';
 import { scholarshipTerm, topikHeads, universityCell } from '../i18n/tableCopy';
 import { getUiMessages } from '../i18n/messages';
@@ -466,12 +467,18 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             : (copy?.universitiesTitle ?? '3. 서울 주요 대학 TOPIK 장학금')}
         </h2>
         {schoolLevel === 'high' ? (
-          <p className="kb-subtitle">
-            {MULTICULTURAL_NOTE[lang]}{' '}
-            <a className="kv-link" href="https://www.moe.go.kr/boardCnts/fileDown.do?fileSeq=372b41b980d65217ab932234c3f239b6&m=0303&s=moe" target="_blank" rel="noreferrer">대교협 기본사항</a>
-            {' · '}
-            <a className="kv-link" href="https://ipsi.dongguk.edu/upload/file/202605291309499DW33F.PDF" target="_blank" rel="noreferrer">동국대 2027 수시</a>
-          </p>
+          <div className="kb-card kb-stack" style={{ marginBottom: 12 }}>
+            <p style={{ margin: 0 }}>{MULTICULTURAL_NOTE[lang]}</p>
+            {MULTICULTURAL_TRACKS.map((track) => (
+              <p key={track.id} style={{ margin: 0, fontSize: 14 }}>
+                <strong>{track.university}</strong>
+                {' · '}
+                {MULTICULTURAL_ROWS[lang][track.id]}
+                {' '}
+                <a className="kv-link" href={track.url} target="_blank" rel="noreferrer">2027</a>
+              </p>
+            ))}
+          </div>
         ) : null}
 
         <div style={{ marginBottom: 12 }}>
@@ -729,7 +736,9 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             진로 프로그램: {center.freeCareerProgram}
           </p>
           <p className="kb-subtitle" style={{ margin: 0 }}>
-            {copy?.interpreterMissing ?? '언어별 배치 인원은 이번 점검에서 공식 표로 확인하지 못해 숫자를 빼 두었습니다. 다누리 1577-1366.'}
+            {center.languageSupport && center.languageSupport.length > 0
+              ? `${LANGUAGE_SUPPORT_LEAD[lang]} ${center.languageSupport.map((code) => SUPPORT_LANGUAGE[lang][code]).join(' · ')}`
+              : (copy?.interpreterMissing ?? '이 센터의 언어 지원은 이번 점검에서 확인하지 못했습니다.')}
           </p>
 
           <div className="kb-row kv-no-print">
