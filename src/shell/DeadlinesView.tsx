@@ -1,5 +1,5 @@
 import { EmptyState } from '../components/ui';
-import { allDates, ddayState, undatedChosen, type Deadline } from '../deadlines/list';
+import { datesForDisplay, ddayState, undatedChosen, type Deadline } from '../deadlines/list';
 import { navCopy } from '../i18n/navCopy';
 import { seoulDate } from '../deadlines/seoul';
 import { planCopy } from '../i18n/planCopy';
@@ -36,7 +36,7 @@ export function DeadlinesView({
   const copy = planCopy(lang);
   const shell = navCopy(lang);
   const day = today ?? seoulDate(new Date());
-  const rows = allDates(chosenIds);
+  const rows = datesForDisplay(chosenIds, day);
   const undated = undatedChosen(chosenIds);
   const filename = (id: string) => `${id.replace(/[^a-z0-9-]+/gi, '-')}.ics`;
   return (

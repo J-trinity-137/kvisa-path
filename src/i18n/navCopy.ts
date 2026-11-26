@@ -18,6 +18,7 @@ export interface NavCopy {
   homeCount: string;
   nextUp: string;
   restTracks: string;
+  seeAll: string;
   empty: string;
   edit: string;
   skip: string;
@@ -87,6 +88,7 @@ const en: NavCopy = {
   homeCount: '{n} tracks I can use',
   nextUp: 'Next date',
   restTracks: 'Other tracks',
+  seeAll: 'See all {n} tracks',
   empty: 'Answer a few questions and matching tracks show up here.',
   edit: 'Edit answers',
   skip: 'Skip',
@@ -210,6 +212,7 @@ const ko: NavCopy = {
   homeCount: '내가 쓸 수 있는 전형 {n}개',
   nextUp: '다음 일정',
   restTracks: '나머지 전형',
+  seeAll: '전체 전형 {n}개 보기',
   empty: '몇 가지만 답하면 맞는 전형이 여기에 나옵니다.',
   edit: '답 수정',
   skip: '건너뛰기',
@@ -333,6 +336,7 @@ const ar: NavCopy = {
   homeCount: '{n} من المسارات التي أستطيع استخدامها',
   nextUp: 'الموعد التالي',
   restTracks: 'بقية المسارات',
+  seeAll: 'عرض كل المسارات ({n})',
   empty: 'أجب عن بعض الأسئلة لتظهر المسارات المناسبة.',
   edit: 'تعديل الإجابات',
   skip: 'تخطٍ',
@@ -454,6 +458,7 @@ const zhHans: NavCopy = {
   homeCount: '我可以申请的招生 {n} 个',
   nextUp: '下一个日期',
   restTracks: '其余招生',
+  seeAll: '查看全部 {n} 个招生',
   empty: '回答几个问题后，符合的招生会显示在这里。',
   edit: '修改答案',
   skip: '跳过',
@@ -531,6 +536,7 @@ const zhHant: NavCopy = {
   homeCount: '我可以申請的招生 {n} 個',
   nextUp: '下一個日期',
   restTracks: '其餘招生',
+  seeAll: '查看全部 {n} 個招生',
   empty: '回答幾個問題後，符合的招生會顯示在這裡。',
   edit: '修改答案',
   skip: '跳過',
@@ -608,6 +614,7 @@ const vi: NavCopy = {
   homeCount: '{n} tuyển sinh tôi có thể dùng',
   nextUp: 'Lịch kế tiếp',
   restTracks: 'Tuyển sinh còn lại',
+  seeAll: 'Xem tất cả {n} tuyển sinh',
   empty: 'Trả lời vài câu để thấy tuyển sinh phù hợp.',
   edit: 'Sửa câu trả lời',
   skip: 'Bỏ qua',
@@ -685,6 +692,7 @@ const ru: NavCopy = {
   homeCount: '{n} треков, которые мне подходят',
   nextUp: 'Ближайшая дата',
   restTracks: 'Остальные треки',
+  seeAll: 'Показать все {n} треков',
   empty: 'Ответьте на несколько вопросов, и подходящие треки появятся здесь.',
   edit: 'Изменить ответы',
   skip: 'Пропустить',
@@ -762,6 +770,7 @@ const mn: NavCopy = {
   homeCount: 'Ашиглаж болох элсэлт {n}',
   nextUp: 'Дараагийн огноо',
   restTracks: 'Бусад элсэлт',
+  seeAll: 'Бүх {n} элсэлтийг харах',
   empty: 'Хэдэн асуултад хариулбал тохирох элсэлт энд гарна.',
   edit: 'Хариулт засах',
   skip: 'Алгасах',
@@ -843,4 +852,8 @@ export function navCopy(lang: SupportedLangCode): NavCopy {
 
 export function homeHeadline(copy: NavCopy, count: number): string {
   return copy.homeCount.replaceAll('{n}', String(count));
+}
+
+export function seeAllLabel(copy: NavCopy, count: number): string {
+  return copy.seeAll.replaceAll('{n}', String(count));
 }

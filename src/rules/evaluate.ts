@@ -186,6 +186,7 @@ function toSchemaTrack(row: SchemaPathway, reasons: WhyCode[]): EligibleTrack {
     category: row.category,
     reasons,
     referenceKind,
+    hasNamedTrack: row.hasTrack === true,
   };
 }
 
@@ -270,6 +271,21 @@ export function explainTracks(
       .map(([code, count]) => ({ code, count }))
       .sort((a, b) => b.count - a.count || a.code.localeCompare(b.code)),
   };
+}
+
+const INFO_CATEGORIES = new Set<TrackCategory>(['calendar', 'support_center', 'post_graduation_stay', 'admission_overview']);
+const INFO_KINDS = new Set<EligibleTrack['kind']>(['procedure', 'kls', 'support']);
+
+/** A 전형 the student can apply to. Calendar, center, stay, and overview rows are reference, not tracks. */
+export function isAdmissionTrack(track: EligibleTrack): boolean {
+  if (track.category && INFO_CATEGORIES.has(track.category)) return false;
+  if (track.category && track.hasNamedTrack === false) return false;
+  if (!track.category && INFO_KINDS.has(track.kind)) return false;
+  return true;
+}
+
+export function admissionTracks(tracks: readonly EligibleTrack[]): EligibleTrack[] {
+  return tracks.filter(isAdmissionTrack);
 }
 
 export function eligibleTracks(profile: StudentProfile, catalog?: readonly PathwayRecord[]): EligibleTrack[] {

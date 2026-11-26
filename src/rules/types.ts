@@ -67,6 +67,8 @@ export interface EligibleTrack {
   reasons: WhyCode[];
   /** 2027 university guides are closed reference, not the 2028 target. */
   referenceKind?: 'guide' | 'closed';
+  /** False for a checked source that states a rule but is not itself a named 전형. */
+  hasNamedTrack?: boolean;
 }
 
 export const WHY_CODES = [

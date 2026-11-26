@@ -114,8 +114,23 @@ export function allDates(chosenIds: readonly string[]): Deadline[] {
   return [...collectDeadlines(chosenIds), ...exams].sort((a, b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title, 'ko'));
 }
 
+/** Next date that has not started yet, in Seoul civil time. A window that began yesterday is not “next”. */
 export function nextUpcoming(chosenIds: readonly string[], today: string): Deadline | null {
-  return allDates(chosenIds).find((item) => item.end >= today) ?? null;
+  return (
+    allDates(chosenIds)
+      .filter((item) => item.start >= today)
+      .sort((a, b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title, 'ko'))[0] ?? null
+  );
+}
+
+/** Upcoming and open dates first, then past dates newest-first. */
+export function datesForDisplay(chosenIds: readonly string[], today: string): Deadline[] {
+  const rank = (item: Deadline) => (item.start >= today ? 0 : item.end >= today ? 1 : 2);
+  return [...allDates(chosenIds)].sort((a, b) => {
+    const order = rank(a) - rank(b);
+    if (order !== 0) return order;
+    return rank(a) === 2 ? b.start.localeCompare(a.start) : a.start.localeCompare(b.start);
+  });
 }
 
 export function ddayState(start: string, end: string, today: string): DdayState {
