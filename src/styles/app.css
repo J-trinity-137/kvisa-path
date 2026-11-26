@@ -175,10 +175,29 @@
   display: block;
 }
 
+.kv-print-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@page teacher-sheet {
+  size: A4;
+  margin: 12mm;
+}
+
 @media print {
   .kv-tabs,
   .kb-actionbar-wrap,
   .kv-no-print {
+    display: none !important;
+  }
+
+  .kv-print-sheet {
+    page: teacher-sheet;
+  }
+
+  body.kv-printing-teacher .kv-page-wide > :not(.kv-teacher-root) {
     display: none !important;
   }
 

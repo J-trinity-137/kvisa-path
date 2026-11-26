@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SpeakCard,
   recordAnonymousEvent,
@@ -29,12 +29,21 @@ import { MULTICULTURAL_TRACKS } from '../data/multiculturalTracks';
 import { gapUi } from '../i18n/gapUi';
 import { scholarshipTerm, topikHeads, universityCell } from '../i18n/tableCopy';
 import { getUiMessages } from '../i18n/messages';
+import { easySentence, shellCopy } from '../i18n/shellCopy';
 import { pageLink, shareOrCopy } from '../share/parentShare';
+import type { PathChoice } from '../session/pathChoice';
+import type { StudentType } from '../data/studentType';
+import { FreshnessLine } from './FreshnessLine';
+import { MulticulturalPathView } from './MulticulturalPath';
+import { SpeakButton } from './SpeakButton';
 import { loadVocationalSnapshot } from '../services/neisClient';
 
 export interface AdmissionsTabProps {
   lang: SupportedLangCode;
+  studentType: StudentType;
+  easy: boolean;
   onEventLogged: () => void;
+  onChoice: (choice: PathChoice) => void;
 }
 
 const BACKGROUND_OPTIONS: { value: BackgroundType; label: string }[] = [
@@ -58,7 +67,7 @@ const FIELD_OPTIONS: { value: InterestField; label: string }[] = [
   { value: 'health', label: '보건·간호' },
 ];
 
-export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
+export function AdmissionsTab({ lang, studentType, easy, onEventLogged, onChoice }: AdmissionsTabProps) {
   const [stage, setStage] = useState<ProcedureLevel>('high');
   const [visa, setVisa] = useState<VisaCode>('F-1');
   const [background, setBackground] = useState<BackgroundType>('both_foreign');
@@ -128,6 +137,21 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
     ? activeTerm.translations[lang] ?? activeTerm.translations.en ?? ''
     : '';
   const ui = getUiMessages(lang);
+  const shell = shellCopy(lang);
+  const hideVisa = studentType === 'domestic_multicultural' || studentType === 'unsure';
+  const showMulticultural = studentType === 'domestic_multicultural' || studentType === 'unsure';
+
+  useEffect(() => {
+    onChoice({
+      region: 'seoul',
+      stage,
+      background,
+      visa: hideVisa ? '' : visa,
+      koreanLevel,
+      field,
+      studentType,
+    });
+  }, [onChoice, stage, background, visa, koreanLevel, field, studentType, hideVisa]);
 
   return (
     <div className="kb-stack">
@@ -179,8 +203,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                 {copy?.levelHigh ?? '고등학생 (대학 입학전형 · TOPIK 장학)'}
               </button>
             </div>
+            <p className="kb-subtitle" style={{ margin: '8px 0 0' }}>{shell.gyeonggiEmpty}</p>
           </div>
 
+          {hideVisa ? null : <>
           <div>
             <span className="kv-label">{gap.easyPath}</span>
             <div className="kb-row">
@@ -222,6 +248,7 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
               ))}
             </div>
           </div>
+          </>}
 
           <div>
             <span className="kv-label">{copy?.koreanHeading ?? '한국어 수준'}</span>
@@ -259,8 +286,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
         </div>
       </section>
 
+      {showMulticultural ? <MulticulturalPathView lang={lang} easy={easy} /> : null}
+
       {/* Pre-flight 치명적 함정 경고 */}
-      {(background === 'both_foreign' || background === 'mid_entry') ? (
+      {hideVisa ? null : (background === 'both_foreign' || background === 'mid_entry') ? (
         <div className="kb-card" style={{ borderColor: 'var(--kb-avoid)' }} role="alert">
           <div className="kb-row" style={{ justifyContent: 'space-between' }}>
             <strong style={{ color: 'var(--kb-avoid)' }}>{copy?.warningTitle ?? '사전 경고: 입시·비자 3대 함정 체크'}</strong>
@@ -278,7 +307,7 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
         </div>
       ) : null}
 
-      <section className="kb-section">
+      {hideVisa ? null : <section className="kb-section">
         <h2 className="kb-section-title">{gap.procedures}</h2>
         <div className="kb-stack">
           {visaCards.map((item) => (
@@ -289,7 +318,9 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                   {item.verification === 'verified' ? (copy?.verified ?? '확인') : (copy?.unverified ?? '미확인')}
                 </span>
               </div>
-              <p style={{ margin: 0 }}>{item.summary}</p>
+              <p style={{ margin: 0 }}>{easy ? easySentence(item.summary) : item.summary}</p>
+              <FreshnessLine lang={lang} verifiedAt={item.verifiedAt} sourceUrl={item.sourceUrl} />
+              <SpeakButton lang={lang} text={easy ? easySentence(item.summary) : item.summary} />
               <ul className="kv-list">
                 {item.steps.map((step) => (
                   <li key={step}>{step}</li>
@@ -314,7 +345,8 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                   {step.verification === 'verified' ? (copy?.verified ?? '확인') : (copy?.unverified ?? '미확인')}
                 </span>
               </div>
-              <p style={{ margin: 0 }}>{translated?.body ?? step.body}</p>
+              <p style={{ margin: 0 }}>{easy ? easySentence(translated?.body ?? step.body) : (translated?.body ?? step.body)}</p>
+              <FreshnessLine lang={lang} verifiedAt={step.verifiedAt} sourceUrl={step.sourceUrl} />
               <a className="kv-link" href={step.sourceUrl} target="_blank" rel="noreferrer">
                 {step.sourceLabel} · {step.verifiedOn}
               </a>
@@ -343,10 +375,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             {shareNote ? <p className="kb-subtitle" style={{ margin: 0 }}>{shareNote}</p> : null}
           </article>
         </div>
-      </section>
+      </section>}
 
       {/* 2. 지원 가능 입학전형 조회 결과 + Gap 진단 */}
-      <section className="kb-section">
+      {hideVisa ? null : <section className="kb-section">
         <h2 className="kb-section-title">
           {copy?.matchedTitle ?? '2. 지원 가능한 전형'} ({matchedTracks.length})
         </h2>
@@ -457,10 +489,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             ) : null}
           </div>
         ) : null}
-      </section>
+      </section>}
 
       {/* 3. 서울 특성화고 12개교 / 주요 대학 12개교 TOPIK 장학금 비교 + 검색 */}
-      <section className="kb-section">
+      {hideVisa && schoolLevel === 'high' ? null : <section className="kb-section">
         <h2 className="kb-section-title">
           {schoolLevel === 'middle'
             ? (copy?.schoolsTitle ?? '3. 서울 특성화고·마이스터고')
@@ -515,7 +547,8 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                   </div>
                   <p className="kb-subtitle">{s.specialTrack}</p>
                   <p style={{ margin: '8px 0 0', fontSize: 14 }}>{copy?.majorsLead ?? '대표 학과'}: {s.majors.join(', ')}</p>
-                  <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>NEIS {s.neisCode} · {s.verifiedOn}</p>
+                  <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>NEIS {s.neisCode}</p>
+                  <FreshnessLine lang={lang} verifiedAt={s.verifiedAt} sourceUrl={s.sourceUrl} />
                 </div>
               ))}
             </div>
@@ -610,10 +643,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             </div>
           </div>
         )}
-      </section>
+      </section>}
 
       {/* 4. 출신국 해외 서류 인증 (2026.9 아포스티유 vs 영사확인 자동 분기) */}
-      <section className="kb-section">
+      {hideVisa ? null : <section className="kb-section">
         <h2 className="kb-section-title">{copy?.apostilleTitle ?? '4. 해외 학력 서류 인증'}</h2>
         <div className="kb-card kb-stack">
           <div className="kb-row">
@@ -654,10 +687,10 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             <p style={{ margin: '6px 0 0', fontSize: 14 }}>{copy?.countries[apostilleRule.code]?.guide ?? apostilleRule.guide}</p>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* 5. 체류자격·진로 스킬트리 */}
-      <section className="kb-section">
+      {hideVisa ? null : <section className="kb-section">
         <h2 className="kb-section-title">5. {copy?.visa[background]?.title ?? visaTree.title}</h2>
         <p className="kb-subtitle" style={{ marginBottom: 12 }}>
           {copy?.visa[background]?.warning ?? visaTree.warning}
@@ -678,7 +711,7 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             );
           })}
         </div>
-      </section>
+      </section>}
 
       {/* 6. 자치구 가족센터 통역·상담 연결 + 4단계 퍼널 기록 */}
       <section className="kb-section">

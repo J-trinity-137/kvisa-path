@@ -3,6 +3,7 @@ export interface MulticulturalTrack {
   university: string;
   hasTrack: boolean;
   url: string;
+  verifiedAt?: string;
 }
 
 /** 2027 early-admission guides checked 2026-11-26. These are Korean-national tracks. */
@@ -74,3 +75,7 @@ export const MULTICULTURAL_TRACKS: readonly MulticulturalTrack[] = [
     url: 'https://ipsi.dongguk.edu/upload/file/202605291309499DW33F.PDF',
   },
 ];
+
+for (const track of MULTICULTURAL_TRACKS) {
+  track.verifiedAt = '2026-11';
+}

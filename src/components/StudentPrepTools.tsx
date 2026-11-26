@@ -25,6 +25,7 @@ import { WORK_HOUR_SOURCE, partTimeHours, type WorkStage } from '../data/workHou
 
 export interface StudentPrepToolsProps {
   lang: SupportedLangCode;
+  hideVisa?: boolean;
   onEventLogged: () => void;
 }
 
@@ -36,7 +37,7 @@ const FIELD_BUTTONS: { value: InterestField; label: string }[] = [
   { value: 'health', label: '보건·간호' },
 ];
 
-export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps) {
+export function StudentPrepTools({ lang, hideVisa = false, onEventLogged }: StudentPrepToolsProps) {
   const [today] = useState(() => new Date().toISOString().slice(0, 10));
   const copy = getCoreCopy(lang);
   const ui = getUiMessages(lang);
@@ -422,7 +423,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
       </section>
 
       {/* 5. TOPIK 유효기간(2년) & 합법 알바 허용시간 계산기 */}
-      <section className="kb-section">
+      {hideVisa ? null : <section className="kb-section">
         <h2 className="kb-section-title">{gap.workSection}</h2>
         <p className="kb-subtitle">
           {gap.workSource}{' '}
@@ -514,7 +515,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
             </div>
           </div>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

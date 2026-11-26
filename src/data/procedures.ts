@@ -1,4 +1,5 @@
 import type { ProcedureLevel } from './visaPaths';
+import { stampVerifiedAt } from './freshness';
 
 export interface ProcedureStep {
   id: string;
@@ -8,6 +9,7 @@ export interface ProcedureStep {
   sourceUrl: string;
   sourceLabel: string;
   verifiedOn: string;
+  verifiedAt?: string;
   verification: 'verified' | 'unverified';
   unverifiedReason?: string;
 }
@@ -147,3 +149,5 @@ export function proceduresFor(level: ProcedureLevel): ProcedureStep[] {
 }
 
 export const PROCEDURE_SOURCES = { PREP_NOTICE, SPECIAL, NIKL, EBS };
+
+stampVerifiedAt(PROCEDURES);
