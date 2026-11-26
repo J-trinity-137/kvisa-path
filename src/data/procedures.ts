@@ -21,6 +21,7 @@ export interface OfficialForm {
 }
 
 const CHECKED = '2026-11-26';
+const LAW19 = 'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=273709';
 const RETURNEE = 'https://www.sen.go.kr/resources/www/data/intoschool_7_02.pdf';
 const SPECIAL = 'https://www.sen.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20250729131137773&q_bbsSn=1068';
 const PREP = 'https://www.sen.go.kr/www/eduinfo/edumaterial/alternative/alternative_2.jsp';
@@ -45,9 +46,19 @@ export const PROCEDURES: readonly ProcedureStep[] = [
     levels: ['elementary'],
     title: '초등학교 입학·편입학',
     body:
-      '같은 계획은 외국 유학 후 국내 초등학교에 편입학하는 학생과 외국인 학생을 적용 대상에 넣습니다. 학년은 외국 학교 재학기간과 성적의 이수 내용을 한국 학제에 맞추어 학교장이 정합니다. 거주지 학교 배정 창구는 이 PDF가 교육청 전편입학 안내로 안내합니다. 체류자격이 없을 때의 취학 조항은 이번 점검에서 법령 원문을 열지 못했습니다.',
+      '같은 계획은 외국 유학 후 국내 초등학교에 편입학하는 학생과 외국인 학생을 적용 대상에 넣습니다. 학년은 외국 학교 재학기간과 성적의 이수 내용을 한국 학제에 맞추어 학교장이 정합니다. 거주지 학교 배정 창구는 이 PDF가 교육청 전편입학 안내로 안내합니다. 체류자격이 없을 때의 초등학교 입학은 바로 아래 시행령 제19조 카드를 보세요.',
     sourceUrl: RETURNEE,
     sourceLabel: '2026학년도 귀국자 편입학 시행계획',
+    verifiedOn: CHECKED,
+    verification: 'verified',
+  },
+  {
+    id: 'elementary-article19',
+    levels: ['elementary'],
+    title: '초등학교 입학·전학 (시행령 제19조)',
+    body: '초·중등교육법 시행령 제19조는 외국인 아동이 사는 학구의 초등학교장에게 입학이나 전학을 신청할 수 있다고 적습니다. 출입국 사실 확인에 보호자가 동의하지 않으면 임대차계약서나 거주 인우보증서로 거주 사실만 확인하면 됩니다. 이 조문의 신청 상대는 초등학교장입니다. 중학교·고등학교에는 이 문장을 그대로 적용하지 않습니다.',
+    sourceUrl: LAW19,
+    sourceLabel: '국가법령정보센터 초·중등교육법 시행령 (시행 2025-09-19) 제19조',
     verifiedOn: CHECKED,
     verification: 'verified',
   },

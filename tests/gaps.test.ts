@@ -7,6 +7,8 @@ import { optionsForVisa, VISA_CODES, VISA_PATHS } from '../src/data/visaPaths';
 import { partTimeHours } from '../src/data/workHours';
 import { scheduleToIcs } from '../src/share/ics';
 import { isSpecificHttpUrl } from '../src/data/validateFacts';
+import { UNIVERSITY_IDS } from '../src/data/admissionsData';
+import { TABLE_COPY_LANGS, counselorHeads, universityCell } from '../src/i18n/tableCopy';
 
 const REQUIRED = ['F-1', 'F-2', 'F-3', 'F-4', 'F-5', 'F-6', 'D-2', 'D-4', 'D-10', 'E-7', 'E-9', 'H-2', 'G-1', 'undocumented'] as const;
 
@@ -62,5 +64,17 @@ describe('new checked facts', () => {
     const checked = SEOUL_SUPPORT_CENTERS.filter((center) => center.phoneVerifiedOn);
     expect(checked.length).toBeGreaterThan(6);
     expect(checked.every((center) => center.phoneSourceUrl && isSpecificHttpUrl(center.phoneSourceUrl))).toBe(true);
+  });
+
+  it('translates counselor headers and university notes', () => {
+    for (const lang of TABLE_COPY_LANGS) {
+      expect(counselorHeads(lang).term).not.toBe(counselorHeads('ko').term);
+      for (const id of UNIVERSITY_IDS) {
+        const cell = universityCell(lang, id);
+        expect(cell.note.length).toBeGreaterThan(8);
+        expect(cell.ged.length).toBeGreaterThan(0);
+        expect(cell.track.length).toBeGreaterThan(0);
+      }
+    }
   });
 });

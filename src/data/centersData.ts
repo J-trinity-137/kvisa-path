@@ -13,6 +13,8 @@ export interface SupportCenter {
   /** Set only when this pass opened an official page that showed the number. */
   phoneVerifiedOn?: string;
   phoneSourceUrl?: string;
+  /** Why this pass did not treat the listed number as confirmed. */
+  phoneUnverifiedReason?: string;
 }
 
 /**
@@ -24,9 +26,11 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     id: 'center-guro',
     district: '구로구',
     name: '구로구가족센터 · 남부권 다문화교육 거점',
-    phone: '02-830-0456',
+    phone: '02-869-0317',
+    phoneVerifiedOn: '2026-11-26',
+    phoneSourceUrl: 'https://www.guro.go.kr/www/contents.do?key=2375',
     hours: '평일 09:00~18:00 (수요일 20:00까지)',
-    asOfDate: '2026-06-30 기준',
+    asOfDate: '2026-11-26 센터 소개 페이지. 보육 안내(key=2336, 2026-09-23 수정)는 02-830-0456을 따로 적음',
     interpreters: { 'zh-Hans': 4, 'zh-Hant': 2, vi: 2, mn: 1, ru: 1, en: 1 },
     freeCareerProgram: '이주배경 중·고등학생 특성화고·대입 1:1 통역 컨설팅',
   },
@@ -39,6 +43,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     asOfDate: '2026-06-30 기준',
     interpreters: { 'zh-Hans': 5, vi: 2, ru: 1, mn: 1, th: 1, en: 1 },
     freeCareerProgram: '중도입국 청소년 학력인정·고입 특례 서류 동행 지원',
+    phoneUnverifiedReason: '2026-11-26 다누리 센터검색 결과와 구청 페이지에서 대표 전화를 확인하지 못했습니다. 표의 02-846-5432는 이전 숫자입니다.',
   },
   {
     id: 'center-geumcheon',
@@ -61,6 +66,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     asOfDate: '2026-06-30 기준',
     interpreters: { en: 2, vi: 1, ar: 0, ru: 1, id: 1, 'zh-Hans': 1 },
     freeCareerProgram: '다국적·무슬림 청소년 진로 및 체류자격 무료 상담',
+    phoneUnverifiedReason: '2026-11-26 다누리 검색에서 대표 전화를 확인하지 못했습니다. 프로그램 문의 070-7492-2648은 대표번호로 확인되지 않아 바꾸지 않았습니다. 표의 02-797-9184는 이전 숫자입니다.',
   },
   {
     id: 'center-ddm',

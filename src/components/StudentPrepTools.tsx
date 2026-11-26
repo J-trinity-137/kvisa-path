@@ -493,13 +493,13 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
             ) : null}
             <div className="kb-card-soft">
               <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-                <strong>{partTimeInfo.hours}h</strong>
+                <strong>{partTimeInfo.verified ? `${partTimeInfo.hours}h` : '—'}</strong>
                 <span className={`kb-tag ${partTimeInfo.verified ? 'kb-status-safe' : 'kb-status-check'}`}>
                   {partTimeInfo.verified ? (copy?.verified ?? '확인') : gap.workUnverified}
                 </span>
               </div>
               <p className="kb-subtitle" style={{ margin: '6px 0 0' }}>
-                {partTimeInfo.ruleLabel}
+                {lang === 'ko' ? partTimeInfo.ruleLabel : workStageLabel(lang, studentStage)}
                 {partTimeInfo.weekendUnlimited ? ' · weekend/vacation unlimited' : ''}
               </p>
               <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>

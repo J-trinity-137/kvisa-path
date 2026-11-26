@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from '../kbridge';
 import { ADMISSION_TERMS } from '../data/admissionsData';
 import { gapUi } from '../i18n/gapUi';
+import { counselorHeads } from '../i18n/tableCopy';
 import { shareOrCopy } from '../share/parentShare';
 import {
   WEEKLY_DID_SERIES,
@@ -30,6 +31,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
   );
 
   const gap = gapUi(lang);
+  const cols = counselorHeads(lang);
   const termRows = computeTermBottlenecks(liveEvents);
   const allFunnelRows = computeDistrictFunnels(liveEvents);
   const funnelRows = allFunnelRows.filter((row) => {
@@ -136,13 +138,13 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <table className="kv-table">
             <thead>
               <tr>
-                <th>입시 용어</th>
-                <th>TF-IDF 주제 군집</th>
-                <th className="num">선택/유효응답 (x/n)</th>
-                <th className="num">응답률</th>
-                <th className="num">평활화 병목률</th>
-                <th className="num">예상 영향 인원</th>
-                <th>교사 개입 시뮬레이션</th>
+                <th>{cols.term}</th>
+                <th>{cols.cluster}</th>
+                <th className="num">{cols.selected}</th>
+                <th className="num">{cols.responseRate}</th>
+                <th className="num">{cols.bottleneck}</th>
+                <th className="num">{cols.affected}</th>
+                <th>{cols.teacher}</th>
               </tr>
             </thead>
             <tbody>
@@ -325,15 +327,15 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <table className="kv-table">
             <thead>
               <tr>
-                <th>자치구</th>
-                <th>요청 언어</th>
-                <th className="num">필요 표시</th>
-                <th className="num">연락 시도</th>
-                <th className="num">7일 연결됨</th>
-                <th className="num">실패 보고</th>
-                <th className="num">후속 미응답</th>
-                <th className="num">7일 연결율</th>
-                <th>주요 중단 원인 · 통역 배치</th>
+                <th>{cols.district}</th>
+                <th>{cols.language}</th>
+                <th className="num">{cols.asked}</th>
+                <th className="num">{cols.tried}</th>
+                <th className="num">{cols.connected}</th>
+                <th className="num">{cols.failed}</th>
+                <th className="num">{cols.noFollowup}</th>
+                <th className="num">{cols.connectRate}</th>
+                <th>{cols.dropoff}</th>
               </tr>
             </thead>
             <tbody>
@@ -373,8 +375,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
             <table className="kv-table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
-                  <th>장애 사유</th>
-                  <th className="num">누적 건수</th>
+                  <th>{cols.barrier}</th>
+                  <th className="num">{cols.count}</th>
                 </tr>
               </thead>
               <tbody>
@@ -402,8 +404,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
             <table className="kv-table" style={{ marginTop: 8 }}>
               <thead>
                 <tr>
-                  <th>분류 토픽</th>
-                  <th className="num">질문 건수</th>
+                  <th>{cols.topic}</th>
+                  <th className="num">{cols.questions}</th>
                 </tr>
               </thead>
               <tbody>

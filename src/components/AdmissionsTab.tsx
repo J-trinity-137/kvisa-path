@@ -25,6 +25,7 @@ import { filterAdmissionTracks, filterVocationalSchools } from '../data/trackFil
 import { EASY_VISA_PATHS, optionsForVisa, VISA_PATHS, type ProcedureLevel, type VisaCode } from '../data/visaPaths';
 import { getCoreCopy } from '../i18n/coreCopy';
 import { gapUi } from '../i18n/gapUi';
+import { scholarshipTerm, topikHeads, universityCell } from '../i18n/tableCopy';
 import { getUiMessages } from '../i18n/messages';
 import { pageLink, shareOrCopy } from '../share/parentShare';
 import { loadVocationalSnapshot } from '../services/neisClient';
@@ -510,14 +511,16 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                     <th>{gap.tableUniversity}</th>
                     <th>{copy?.gedHead ?? '검정고시'}</th>
                     <th className="num">{gap.topik3}</th>
-                    <th className="num">4급</th>
-                    <th className="num">5급</th>
-                    <th className="num">6급</th>
+                    <th className="num">{topikHeads(lang).t4}</th>
+                    <th className="num">{topikHeads(lang).t5}</th>
+                    <th className="num">{topikHeads(lang).t6}</th>
                     <th>{gap.tableRest}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUniversities.map((u) => (
+                  {filteredUniversities.map((u) => {
+                    const cell = universityCell(lang, u.id as UniversityId);
+                    return (
                     <tr key={u.id}>
                       <td>
                         <strong>{u.university}</strong>
@@ -526,12 +529,12 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                             ? (copy?.verified ?? '확인')
                             : (copy?.unverified ?? '미확인')}
                           {' · '}
-                          {UNIVERSITY_SCHOLARSHIP_RULES[u.id as UniversityId].applicableTerm}
+                          {scholarshipTerm(lang, UNIVERSITY_SCHOLARSHIP_RULES[u.id as UniversityId].applicableTerm)}
                         </div>
                       </td>
                       <td>
                         <span className={`kb-tag ${u.gedAccepted === '불인정' ? 'kb-status-avoid' : ''}`}>
-                          {u.gedAccepted}
+                          {cell.ged}
                         </span>
                         <div className="kb-subtitle" style={{ margin: 0 }}>
                           {UNIVERSITY_GED_RULES[u.id as UniversityId].verification === 'verified'
@@ -548,10 +551,11 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                         <strong>{u.topik6}</strong>
                       </td>
                       <td style={{ fontSize: 13 }}>
-                        {u.vocationalTrack} · {u.note}
+                        {cell.track} · {cell.note}
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -703,7 +707,8 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             <a className="kv-link" href="https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do" target="_blank" rel="noreferrer">{gap.centerSite}</a>
             {' · '}
             {center.hours}
-            {center.phoneVerifiedOn ? ` · ${center.phoneVerifiedOn}` : ` · ${center.asOfDate}`}
+            {center.phoneVerifiedOn ? ` · ${center.phoneVerifiedOn}` : ` · ${copy?.unverified ?? '미확인'}`}
+            {center.phoneUnverifiedReason ? ` · ${center.phoneUnverifiedReason}` : ''}
           </p>
           <p className="kb-subtitle" style={{ margin: 0 }}>
             진로 프로그램: {center.freeCareerProgram}

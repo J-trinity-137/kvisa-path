@@ -75,15 +75,15 @@ export function partTimeHours(stage: WorkStage, meetsKoreanRule: boolean, excell
       hours: 0,
       weekendUnlimited: false,
       verified: false,
-      ruleLabel: '고교생 F-1·F-3·D-4-3 시간제는 이 표에 없습니다',
+      ruleLabel: '2026.6 매뉴얼의 시간제취업 표는 D-2와 어학 D-4만 다룹니다. 고등학생을 전면 금지한다는 문장은 찾지 못했습니다.',
     };
   }
   if (stage === 'd2_kcore') {
     return {
-      hours: meetsKoreanRule ? 35 : 10,
+      hours: 0,
       weekendUnlimited: false,
       verified: false,
-      ruleLabel: '육성형 35시간은 이 표에 없습니다',
+      ruleLabel: '육성형 전문기술학과 주 35시간은 2026.6 매뉴얼의 시간제취업 표에서 찾지 못했습니다. 같은 매뉴얼의 35시간은 대학원 성적 우수의 평일 상한입니다.',
     };
   }
   const row = VERIFIED[stage];
