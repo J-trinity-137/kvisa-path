@@ -242,9 +242,19 @@ export interface QuestionClassification {
 /**
  * 비정형 학생 질문 텍스트를 클라이언트 측 규칙·키워드로 즉시 토픽 분류하고 맞춤 가이드를 반환한다.
  */
+const TOPIC_KEYWORDS: Record<QuestionTopicCode, readonly string[]> = {
+  ged: ['검정고시', 'ged', '중퇴', '검정신분', '同等学力', '检定', '檢定', 'tương đương', 'экстерн', 'тэнцэх шалгалт', 'معادلة'],
+  scholarship: ['장학', '등록금', '돈', '비용', '학비', '奖学金', '學費', '學費', 'học bổng', 'học phí', 'стипенд', 'тэтгэлэг', 'منحة', 'رسوم'],
+  part_time: ['알바', '아르바이트', '취업', '시간제', '打工', '兼职', 'làm thêm', 'подработ', 'ажил', 'عمل'],
+  visa_status: ['비자', '체류', '미등록', 'd-2', 'f-1', '签证', '簽證', '居留', 'visa', 'виза', 'виз', 'تأشيرة', 'إقامة'],
+  documents: ['서류', '아포스티유', '공증', '성적', '材料', '公证', '海牙', 'giấy tờ', 'apostille', 'апостил', '문서', 'бичиг', 'وثائق', 'تصديق'],
+  other: [],
+};
+
 export function classifyQuestionTopic(rawText: string): QuestionClassification {
   const q = rawText.toLowerCase();
-  if (q.includes('검정고시') || q.includes('ged') || q.includes('중퇴')) {
+  const hit = (code: QuestionTopicCode) => TOPIC_KEYWORDS[code].some((word) => q.includes(word.toLowerCase()));
+  if (hit('ged') || q.includes('검정고시') || q.includes('ged') || q.includes('중퇴')) {
     return {
       topicCode: 'ged',
       topic: '검정고시·학력인정',
@@ -252,7 +262,7 @@ export function classifyQuestionTopic(rawText: string): QuestionClassification {
         '검정고시 합격은 국내에서 고등학교 졸업과 같은 학력으로 인정돼요. 대학 순수외국인 전형은 이와 달라서, 정규 고등학교 졸업만 받고 검정고시를 받지 않는 곳이 많아요. 이 앱의 대학 표는 모두 불인정 또는 원칙 불인정으로 표시돼 있어요. 그중 숭실대 2027학년도 1학기 모집요강만 국내·외 검정고시 지원 불가를 확인했고, 다른 대학 칸은 아직 요강 원문을 확인하지 못했습니다.',
     };
   }
-  if (q.includes('장학') || q.includes('등록금') || q.includes('돈') || q.includes('비용') || q.includes('학비')) {
+  if (hit('scholarship')) {
     return {
       topicCode: 'scholarship',
       topic: '장학금·비용 지원',
@@ -260,7 +270,7 @@ export function classifyQuestionTopic(rawText: string): QuestionClassification {
         '한국 국적 학생은 국가장학금과 다문화 장학금을 따로 확인하고, 외국 국적 학생은 대학별 TOPIK 장학을 확인해요. 숭실대 입학장학금(TOPIK 3급 40%·4급 60%·5급 80%·6급 100%)은 입학 직후 첫 학기만 적용돼요. 다른 대학 숫자는 이번 점검에서 원문을 확인하지 못했습니다.',
     };
   }
-  if (q.includes('알바') || q.includes('아르바이트') || q.includes('취업') || q.includes('시간제')) {
+  if (hit('part_time')) {
     return {
       topicCode: 'part_time',
       topic: '시간제 취업·알바',
@@ -268,7 +278,7 @@ export function classifyQuestionTopic(rawText: string): QuestionClassification {
         '외국 국적 학생은 출입국 사전 허가 없이 일하면 체류 연장에 불이익이 생길 수 있어요. 학교 국제교류팀에 먼저 확인하세요. 질문 문장 자체는 저장하지 않아요.',
     };
   }
-  if (q.includes('비자') || q.includes('d-2') || q.includes('f-1') || q.includes('미등록') || q.includes('체류')) {
+  if (hit('visa_status')) {
     return {
       topicCode: 'visa_status',
       topic: '비자·체류자격 전환',
@@ -276,7 +286,7 @@ export function classifyQuestionTopic(rawText: string): QuestionClassification {
         '대학 입학 때는 표준입학허가서로 유학 체류자격 변경이 필요한지 하이코리아에서 확인해요. 체류 상태가 불안정하면 가족센터나 다누리콜센터 1577-1366에 문의할 수 있어요. 질문 문장과 체류자격은 저장하지 않아요.',
     };
   }
-  if (q.includes('서류') || q.includes('아포스티유') || q.includes('공증') || q.includes('성적')) {
+  if (hit('documents')) {
     return {
       topicCode: 'documents',
       topic: '해외 학력·서류 준비',
