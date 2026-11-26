@@ -32,7 +32,8 @@ export function signalsFor(profile: StudentProfile): EligibilitySignals {
   if (profile.studentType === 'foreign_family' && parent === null && koreanNational !== true) {
     if (!backgrounds.includes('both_foreign')) backgrounds.push('both_foreign');
   }
-  if ((profile.studentType === 'domestic_multicultural' || koreanNational === true) && bothParentsForeign !== true) {
+  const oneForeignParent = parent === 'father' || parent === 'mother';
+  if (bothParentsForeign !== true && (oneForeignParent || (profile.studentType === 'domestic_multicultural' && parent !== 'neither'))) {
     backgrounds.push('multicultural');
   }
   if (profile.studentType === 'mid_entry' || profile.bornAbroad === true || (profile.yearsSchoolingAbroad ?? 0) > 0) {
@@ -169,6 +170,41 @@ function baseBlock(row: SchemaPathway, query: TrackQuery): WhyCode | null {
   return null;
 }
 
+function offeringKey(row: SchemaPathway): string | null {
+  const track = (row.track ?? '').replace(/\s+/g, '');
+  if (!track || !row.url) return null;
+  return `${row.url}|${track}`;
+}
+
+function preferOffering(current: SchemaPathway, next: SchemaPathway): SchemaPathway {
+  const rank = (row: SchemaPathway) => (row.role === 'current_target' ? 2 : row.role === 'standing' ? 1 : 0);
+  if (rank(next) !== rank(current)) return rank(next) > rank(current) ? next : current;
+  const campus = (row: SchemaPathway) => (row.university ?? '').length;
+  if (campus(next) !== campus(current)) return campus(next) > campus(current) ? next : current;
+  return current;
+}
+
+/** Same official track published in two files (same source URL and track name) counts once. */
+export function dedupeOfferings(rows: readonly SchemaPathway[]): SchemaPathway[] {
+  const kept: SchemaPathway[] = [];
+  const at = new Map<string, number>();
+  for (const row of rows) {
+    const key = offeringKey(row);
+    if (!key) {
+      kept.push(row);
+      continue;
+    }
+    const index = at.get(key);
+    if (index == null) {
+      at.set(key, kept.length);
+      kept.push(row);
+      continue;
+    }
+    kept[index] = preferOffering(kept[index]!, row);
+  }
+  return kept;
+}
+
 function toSchemaTrack(row: SchemaPathway, reasons: WhyCode[]): EligibleTrack {
   const referenceKind = referenceKindOf(row);
   return {
@@ -186,7 +222,7 @@ function toSchemaTrack(row: SchemaPathway, reasons: WhyCode[]): EligibleTrack {
     category: row.category,
     reasons,
     referenceKind,
-    hasNamedTrack: row.hasTrack === true,
+    hasNamedTrack: row.hasTrack === true || (row.hasTrack == null && Boolean(row.track)),
   };
 }
 
@@ -210,6 +246,7 @@ export function explainTracks(
   const note = (code: WhyCode) => withheld.set(code, (withheld.get(code) ?? 0) + 1);
   const source = catalog ?? pathwayCatalog();
   const fromCatalog = source.flatMap((record) => {
+    if (!record.verified) return [];
     if (!matches(record.when, profile, signals)) return [];
     const blocked = blockForCatalog(profile, record.id, record.kind);
     if (blocked) {
@@ -240,29 +277,31 @@ export function explainTracks(
     ];
   });
 
-  const published = catalog
-    ? []
-    : rows.flatMap((row) => {
-        const foreignSchool = profile.schoolType === 'foreign_school';
-        if (row.hasTrack === false && !(foreignSchool && row.category === 'foreign_school_graduate')) return [];
-        const decision = decideSchemaRow(row, profile, signals);
-        if (decision.skip) return [];
-        if (!decision.ok) {
-          if (decision.block) note(decision.block);
-          return [];
-        }
-        if (!gradeAllows(row.category, profile.grade)) {
-          note(isUnder14(profile) ? 'too_young' : 'grade');
-          return [];
-        }
-        const blocked = baseBlock(row, trackQuery(profile, signals));
-        if (blocked) {
-          note(blocked);
-          return [];
-        }
-        if (!matchPathways([row], trackQuery(profile, signals)).length) return [];
-        return [toSchemaTrack(row, decision.reasons)];
-      });
+  const accepted: SchemaPathway[] = [];
+  if (!catalog) {
+    for (const row of rows) {
+      if (row.status !== 'verified' || row.languageBridge) continue;
+      if (row.hasTrack === false) continue;
+      const decision = decideSchemaRow(row, profile, signals);
+      if (decision.skip) continue;
+      if (!decision.ok) {
+        if (decision.block) note(decision.block);
+        continue;
+      }
+      if (!gradeAllows(row.category, profile.grade)) {
+        note(isUnder14(profile) ? 'too_young' : 'grade');
+        continue;
+      }
+      const blocked = baseBlock(row, trackQuery(profile, signals));
+      if (blocked) {
+        note(blocked);
+        continue;
+      }
+      if (!matchPathways([row], trackQuery(profile, signals)).length) continue;
+      accepted.push(row);
+    }
+  }
+  const published = dedupeOfferings(accepted).map((row) => toSchemaTrack(row, decideSchemaRow(row, profile, signals).reasons));
 
   const tracks = [...fromCatalog, ...published].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, 'ko'));
   return {

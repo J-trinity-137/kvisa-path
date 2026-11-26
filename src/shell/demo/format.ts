@@ -5,7 +5,7 @@ export function formatWhen(iso: string, lang: SupportedLangCode): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
   const locale = languageMeta(lang).locale;
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Seoul' }).format(date);
 }
 
 export function formatDay(isoDate: string, lang: SupportedLangCode): string {

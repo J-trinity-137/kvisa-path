@@ -1,3 +1,4 @@
+import ical from 'node-ical';
 import { describe, expect, it } from 'vitest';
 import { DDAY_SCHEDULES } from '../src/data/interactiveModules';
 import { collectDeadlines } from '../src/deadlines/list';
@@ -87,5 +88,39 @@ describe('calendar export', () => {
     expect(ics).not.toContain('F-2');
     expect(ics).not.toContain('미등록');
     expect(foldLine('x'.repeat(80)).includes('\r\n ')).toBe(true);
+  });
+
+  it('imports in an ics parser', () => {
+    const events: CalendarEvent[] = [
+      ...collectDeadlines(['korea-2028-multicultural']).map((item) => ({
+        uid: `${item.id}@kvisa-path`,
+        title: item.title,
+        start: item.start,
+        end: item.end,
+        description: item.sourceUrl,
+        url: item.sourceUrl,
+      })),
+      ...DDAY_SCHEDULES.map((schedule) => ({
+        uid: `${schedule.id}@kvisa-path`,
+        title: schedule.title,
+        start: schedule.dateStr,
+        end: schedule.endDateStr ?? schedule.dateStr,
+        description: schedule.sourceLabel,
+        url: schedule.sourceUrl,
+      })),
+    ];
+    const parsed = ical.parseICS(eventsToIcs(events, new Date('2026-11-26T00:00:00Z')));
+    const vevents = Object.values(parsed).flatMap((item) => {
+      if (!item || item.type !== 'VEVENT') return [];
+      const start = (item as { start?: unknown }).start;
+      const summary = (item as { summary?: unknown }).summary;
+      return [{ start, summary: typeof summary === 'string' ? summary : '' }];
+    });
+    expect(vevents).toHaveLength(events.length);
+    for (const item of vevents) {
+      expect(item.start).toBeInstanceOf(Date);
+      expect(Number.isNaN((item.start as Date).getTime())).toBe(false);
+      expect(item.summary.length).toBeGreaterThan(0);
+    }
   });
 });

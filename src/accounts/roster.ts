@@ -1,6 +1,7 @@
 import type { GradeLevel, StudentProfile } from '../profile/profile';
 import { stepAnswered, visibleSteps } from '../profile/profile';
-import { explainTracks } from '../rules/evaluate';
+import { seoulDate } from '../deadlines/seoul';
+import { admissionTracks, explainTracks } from '../rules/evaluate';
 import type { EligibleTrack, WhyCode } from '../rules/types';
 import { accountById, profileFor, type DemoDb, type EnrollmentStatus } from './model';
 
@@ -14,7 +15,7 @@ export function onboardingPercent(profile: StudentProfile): number {
 const ISO_DATE = /\d{4}-\d{2}-\d{2}/g;
 
 export function nextDeadline(tracks: readonly EligibleTrack[], now: Date): { date: string; title: string } | null {
-  const today = now.toISOString().slice(0, 10);
+  const today = seoulDate(now);
   let best: { date: string; title: string } | null = null;
   for (const track of tracks) {
     const dates = track.yearLabel.match(ISO_DATE) ?? [];
@@ -48,6 +49,7 @@ export function rosterRows(db: DemoDb, classId: string, now: Date): RosterRow[] 
       const account = accountById(db, item.studentId);
       const profile = profileFor(db, item.studentId);
       const explained = explainTracks(profile);
+      const listed = admissionTracks(explained.tracks);
       return {
         studentId: item.studentId,
         nickname: account?.nickname ?? '',
@@ -57,9 +59,9 @@ export function rosterRows(db: DemoDb, classId: string, now: Date): RosterRow[] 
         status: item.status,
         grade: profile.grade,
         percent: onboardingPercent(profile),
-        tracks: explained.tracks,
+        tracks: listed,
         withheld: explained.withheld,
-        deadline: nextDeadline(explained.tracks, now),
+        deadline: nextDeadline(listed, now),
       };
     })
     .sort((a, b) => {

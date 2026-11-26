@@ -1,3 +1,6 @@
+import { navCopy } from '../../i18n/navCopy';
+import { regionLabel } from '../../i18n/regionLabels';
+import { LANGUAGES } from '../../kbridge';
 import type { BoardCategory, BoardPost, BoardRegion } from './types';
 
 export interface BoardQuery {
@@ -12,7 +15,12 @@ export function filterBoard(posts: readonly BoardPost[], query: BoardQuery): Boa
     if (query.category && query.category !== 'all' && post.category !== query.category) return false;
     if (query.region && query.region !== 'all' && post.region !== 'all' && post.region !== query.region) return false;
     if (!words.length) return true;
-    const hay = `${post.title} ${post.summary} ${post.body} ${post.tags.join(' ')} ${post.phone ?? ''}`.toLowerCase();
+    const labels = LANGUAGES.map((lang) => {
+      const copy = navCopy(lang.code);
+      const region = post.region === 'all' ? copy.all : regionLabel(lang.code, post.region);
+      return `${copy.cats[post.category]} ${region}`;
+    }).join(' ');
+    const hay = `${post.title} ${post.summary} ${post.body} ${post.tags.join(' ')} ${post.phone ?? ''} ${labels}`.toLowerCase();
     return words.every((word) => hay.includes(word));
   });
 }

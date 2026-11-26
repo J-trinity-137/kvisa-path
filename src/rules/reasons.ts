@@ -4,7 +4,8 @@ import type { PathwayRecord as SchemaPathway, TrackCategory } from '../data/trac
 import type { StudentProfile } from '../profile/profile';
 import { pathwayCatalog } from './catalog';
 import { gradeAllows, signalsFor, topikFloor } from './evaluate';
-import type { PathwayRecord, PathwayWhen } from './types';
+import { decideSchemaRow } from './situation';
+import type { PathwayRecord, PathwayWhen, WhyCode } from './types';
 import { FOREIGN_TRACKS } from '../data/foreignTracks';
 import { PATHWAYS_2028 } from '../data/pathways2028';
 import { isShippedPathway } from '../data/trackSchema';
@@ -26,6 +27,7 @@ export const REASON_CODES = [
   'years_abroad',
   'years_in_korea',
   'domestic_school',
+  'not_multicultural_family',
 ] as const;
 
 export type ReasonCode = (typeof REASON_CODES)[number];
@@ -114,7 +116,60 @@ function schemaFailures(profile: StudentProfile, row: SchemaPathway, today: stri
   if (stay?.domesticSchool && profile.schoolType === 'not_enrolled') {
     fails.push({ row: 'school', code: 'domestic_school' });
   }
+  const oneForeign = profile.parentForeign === 'father' || profile.parentForeign === 'mother';
+  const multiculturalChild =
+    profile.nkThirdCountryBorn === true || signals.koreanNational === false || signals.bothParentsForeign === true || profile.parentForeign === 'neither'
+      ? false
+      : signals.koreanNational === true && (oneForeign || profile.studentType === 'domestic_multicultural')
+        ? true
+        : undefined;
+  if (
+    multiculturalChild === false &&
+    row.eligibility.multiculturalFamilyChild === true &&
+    row.eligibility.nationality === 'korean_citizen_only'
+  ) {
+    fails.push({ row: 'nationality', code: 'not_multicultural_family' });
+  }
+  if (row.languageBridge) fails.push({ row: 'school', code: 'school_type' });
+  const decision = decideSchemaRow(row, profile, signals);
+  if (!decision.ok && !decision.skip && decision.block) {
+    const mapped = failureForBlock(decision.block);
+    if (mapped) {
+      if (mapped.code === 'years_abroad' && mapped.need == null) mapped.need = row.category === 'overseas_12yr' ? 12 : 3;
+      fails.push(mapped);
+    }
+  }
   return fails;
+}
+
+function failureForBlock(code: WhyCode): RuleFailure | null {
+  switch (code) {
+    case 'too_young':
+    case 'grade':
+      return { row: 'school', code: 'grade_not_eligible' };
+    case 'not_korean_national':
+      return { row: 'nationality', code: 'needs_korean_national' };
+    case 'not_foreign_national':
+      return { row: 'nationality', code: 'needs_foreign_national' };
+    case 'not_both_parents':
+      return { row: 'nationality', code: 'needs_both_parents_foreign' };
+    case 'not_multicultural_family':
+      return { row: 'nationality', code: 'not_multicultural_family' };
+    case 'overseas_years_short':
+    case 'not_overseas_posting':
+      return { row: 'school', code: 'years_abroad' };
+    case 'not_foreign_school':
+    case 'not_ged':
+    case 'not_nk':
+    case 'not_mid_entry':
+    case 'ged_rejected':
+    case 'ged_unconfirmed':
+    case 'foreign_school_excluded':
+    case 'not_this_overview':
+      return { row: 'school', code: 'school_type' };
+    default:
+      return null;
+  }
 }
 
 function catalogFailures(profile: StudentProfile, when: PathwayWhen): RuleFailure[] {
