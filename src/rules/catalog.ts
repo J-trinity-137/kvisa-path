@@ -93,7 +93,7 @@ function baseCatalog(): PathwayRecord[] {
       verifiedAt: facts[0]?.verifiedAt,
       verified: true,
       sort: 35,
-      when: { backgrounds: ['multicultural'], koreanNational: 'required', bothParentsForeign: 'rejected' },
+      when: { grades: ['high'], backgrounds: ['multicultural'], koreanNational: 'required', bothParentsForeign: 'rejected' },
     });
   }
 

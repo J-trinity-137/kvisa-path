@@ -105,7 +105,10 @@ export function decideSchemaRow(row: SchemaRow, profile: StudentProfile, signals
     if (!mid && !foreignChild && !elementaryEnrollment) return { ok: false, reasons: [], block: 'not_mid_entry' };
   }
 
-  if (category === 'foreign_school_graduate' && !foreignSchool) return { ok: false, reasons: [], block: 'not_foreign_school' };
+  if (category === 'foreign_school_graduate' && !foreignSchool) {
+    const gedPath = ged && row.eligibility.gedAccepted === true;
+    if (!gedPath) return { ok: false, reasons: [], block: 'not_foreign_school' };
+  }
 
   if (category === 'ged' && !ged) return { ok: false, reasons: [], block: 'not_ged' };
 
@@ -118,6 +121,13 @@ export function decideSchemaRow(row: SchemaRow, profile: StudentProfile, signals
     return { ok: false, reasons: [], block: 'ged_unconfirmed' };
   }
 
+  if (foreignSchool && !ged && row.eligibility.gedAccepted === true && /검정고시/.test(row.eligibility.textKo)) {
+    return { ok: false, reasons: [], block: 'not_ged' };
+  }
+  const domesticSchoolBar = `${row.eligibility.textKo} ${row.eligibility.ageResidency?.noteKo ?? ''}`;
+  if (foreignSchool && /외국인학교/.test(domesticSchoolBar) && /(지원할 수 없|지원 불가|불인정)/.test(domesticSchoolBar)) {
+    return { ok: false, reasons: [], block: 'foreign_school_excluded' };
+  }
   if (foreignSchool && row.eligibility.foreignHighSchoolExcluded) return { ok: false, reasons: [], block: 'foreign_school_excluded' };
   if (foreignSchool && (category === 'foreign_special' || category === 'overseas_12yr' || category === 'overseas_3yr' || category === 'international_college' || category === 'junior_college')) {
     return { ok: false, reasons: [], block: 'foreign_school_excluded' };
@@ -125,8 +135,11 @@ export function decideSchemaRow(row: SchemaRow, profile: StudentProfile, signals
 
   if (category === 'overseas_12yr' && years < 12) return { ok: false, reasons: [], block: 'overseas_years_short' };
   if (category === 'overseas_3yr') {
-    if (signals.bothParentsForeign === true && signals.koreanNational !== true) return { ok: false, reasons: [], block: 'not_overseas_posting' };
-    if (signals.koreanNational !== true || years < 3) return { ok: false, reasons: [], block: 'overseas_years_short' };
+    const coversTwelve = row.alsoCovers.includes('overseas_12yr') && years >= 12;
+    if (!coversTwelve) {
+      if (signals.bothParentsForeign === true && signals.koreanNational !== true) return { ok: false, reasons: [], block: 'not_overseas_posting' };
+      if (signals.koreanNational !== true || years < 3) return { ok: false, reasons: [], block: 'overseas_years_short' };
+    }
   }
 
   if (category === 'admission_overview' && row.alsoCovers.length > 0) {
@@ -148,7 +161,10 @@ export function blockForCatalog(profile: StudentProfile, id: string, kind: strin
     return id === 'univ-foreign-parents' ? 'ged_rejected' : null;
   }
   if (profile.schoolType === 'foreign_school' && (id.startsWith('univ-') || kind === 'multicultural-univ')) return 'foreign_school_excluded';
-  if (isUnder14(profile) && (id.startsWith('univ-') || id.startsWith('hs-') || kind === 'multicultural-univ' || kind === 'vocational')) return 'too_young';
+  if (isUnder14(profile) && (id.startsWith('univ-') || id.startsWith('hs-') || kind === 'multicultural-univ' || kind === 'vocational' || kind === 'scholarship')) return 'too_young';
+  if (profile.grade && profile.grade !== 'high' && (kind === 'scholarship' || kind === 'multicultural-univ' || id.startsWith('univ-'))) {
+    return 'grade';
+  }
   return null;
 }
 

@@ -5,7 +5,7 @@ import { accountsCopy } from './i18n/accountsCopy';
 import { navCopy } from './i18n/navCopy';
 import { regionLabel } from './i18n/regionLabels';
 import { readCompare, readSaved, toggleId, writeCompare, writeSaved, COMPARE_MAX, type ToggleStatus } from './library/tracks';
-import { activeAccount, profileFor, setAccountLang } from './accounts/model';
+import { activeAccount, emptyDemo, profileFor, setAccountLang } from './accounts/model';
 import { readDemo } from './accounts/persist';
 import { useDemo } from './accounts/useDemo';
 import { noteProfileEdit, switchAccount } from './accounts/session';
@@ -90,7 +90,8 @@ export function App() {
       setPrefs(readPrefs());
       setCompareIds([]);
       setSavedIds([]);
-      replace((prev) => noteProfileEdit(prev, cleared));
+      appliedStudent.current = null;
+      replace(emptyDemo());
       window.location.hash = '#/onboarding';
     };
     window.addEventListener(RECORDS_CLEARED_EVENT, onCleared);

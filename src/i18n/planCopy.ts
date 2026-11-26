@@ -111,6 +111,7 @@ const en: PlanCopy = {
     years_abroad: 'Years of school abroad do not match this track ({need}).',
     years_in_korea: 'The guide asks for {need} years in Korea. The arrival year on this profile is too recent.',
     domestic_school: 'The guide expects study in a school in Korea. This profile says not enrolled.',
+    not_multicultural_family: 'This track is for a child of a multicultural family.',
   },
   kinds: {
     admission: 'Admission',
@@ -182,6 +183,7 @@ const ko: PlanCopy = {
     years_abroad: '해외 학교 기간이 이 전형의 기준({need}년)과 맞지 않습니다.',
     years_in_korea: '안내는 국내 {need}년을 적습니다. 프로필의 입국 연도가 그보다 늦습니다.',
     domestic_school: '안내는 국내 학교를 다닌 경우입니다. 프로필은 학교 밖입니다.',
+    not_multicultural_family: '다문화가족의 자녀를 위한 전형입니다.',
   },
   kinds: {
     admission: '입학 전형',
@@ -251,6 +253,7 @@ const zhHans: PlanCopy = {
     years_abroad: '海外就读年数与这项招生的要求（{need}年）不符。',
     years_in_korea: '指南要求在韩国满 {need} 年。资料里的入境年份比这更晚。',
     domestic_school: '指南要求在韩国的学校就读。资料写的是未在学。',
+    not_multicultural_family: '此招生对象为多元文化家庭子女。',
   },
   kinds: {
     admission: '招生',
@@ -320,6 +323,7 @@ const zhHant: PlanCopy = {
     years_abroad: '海外就讀年數與這項招生的要求（{need}年）不符。',
     years_in_korea: '說明要求在韓國滿 {need} 年。資料裡的入境年份比這更晚。',
     domestic_school: '說明要求在韓國的學校就讀。資料寫的是未在學。',
+    not_multicultural_family: '此招生對象為多元文化家庭子女。',
   },
   kinds: {
     admission: '招生',
@@ -389,6 +393,7 @@ const vi: PlanCopy = {
     years_abroad: 'Số năm học ở nước ngoài không khớp mức của tuyển sinh này ({need}).',
     years_in_korea: 'Hướng dẫn yêu cầu {need} năm ở Hàn Quốc. Năm nhập cảnh trong hồ sơ muộn hơn.',
     domestic_school: 'Hướng dẫn cần học tại trường ở Hàn Quốc. Hồ sơ ghi là không đang học.',
+    not_multicultural_family: 'Tuyển sinh này dành cho con của gia đình đa văn hóa.',
   },
   kinds: {
     admission: 'Tuyển sinh',
@@ -458,6 +463,7 @@ const ru: PlanCopy = {
     years_abroad: 'Годы учёбы за рубежом не совпадают с условием трека ({need}).',
     years_in_korea: 'В правилах указано {need} лет в Корее. Год приезда в профиле позже.',
     domestic_school: 'Правила ждут учёбу в школе в Корее. В профиле указано, что человек не учится.',
+    not_multicultural_family: 'Эта программа для ребёнка из многокультурной семьи.',
   },
   kinds: {
     admission: 'Поступление',
@@ -527,6 +533,7 @@ const mn: PlanCopy = {
     years_abroad: 'Гадаадад сурсан жил энэ элсэлтийн хэмжээнд ({need}) таарахгүй.',
     years_in_korea: 'Зааварт Солонгост {need} жил гэж бичсэн. Бүртгэлийн ирсэн он үүнээс хойш.',
     domestic_school: 'Зааварт Солонгосын сургуульд сурсан байх ёстой. Бүртгэлд сургуульгүй гэж байна.',
+    not_multicultural_family: 'Энэ элсэлт нь олон соёлын гэр бүлийн хүүхдэд зориулагдсан.',
   },
   kinds: {
     admission: 'Элсэлт',
@@ -596,6 +603,7 @@ const ar: PlanCopy = {
     years_abroad: 'سنوات الدراسة في الخارج لا تطابق شرط هذا المسار ({need}).',
     years_in_korea: 'يذكر الدليل {need} سنوات في كوريا. سنة الوصول في الملف أحدث من ذلك.',
     domestic_school: 'يتوقع الدليل الدراسة في مدرسة في كوريا. الملف يقول إن الطالب غير ملتحق.',
+    not_multicultural_family: 'هذا المسار لأبناء الأسرة متعددة الثقافات.',
   },
   kinds: {
     admission: 'قبول',

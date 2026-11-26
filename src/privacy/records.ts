@@ -29,6 +29,7 @@ const RECORD_KEYS = [
   CONSENT_KEY,
   LAST_SENT_WEEK_KEY,
   DELETE_TOKENS_KEY,
+  'kvisa-path.demo-accounts',
 ];
 
 export function clearMyRecords(): void {
@@ -46,4 +47,11 @@ export function clearMyRecords(): void {
     }
   }
   window.dispatchEvent(new Event(RECORDS_CLEARED_EVENT));
+  if (typeof indexedDB !== 'undefined') {
+    try {
+      indexedDB.deleteDatabase('kvisa-path-demo');
+    } catch {
+      /* the localStorage copy is already gone */
+    }
+  }
 }
