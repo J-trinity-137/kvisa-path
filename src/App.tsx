@@ -1,56 +1,57 @@
-import { useState } from 'react';
-import {
-  ActionBar,
-  LanguagePicker,
-  readAnonymousEvents,
-  useLanguage,
-  type AnonymousEvent,
-} from 'kbridge-core';
+import { useEffect, useState } from 'react';
+import { ActionBar, LanguagePicker, readAnonymousEvents, useLanguage, type AnonymousEvent } from './kbridge';
 import { AdmissionsTab } from './components/AdmissionsTab';
 import { AnalyticsTab } from './components/AnalyticsTab';
 import { MethodologyTab } from './components/MethodologyTab';
 import { StudentPrepTools } from './components/StudentPrepTools';
 import { getUiMessages } from './i18n/messages';
+import { EVENT_STORAGE_KEY, RECORDS_CLEARED_EVENT, clearMyRecords } from './privacy/records';
 import './styles/app.css';
 
-type TabKey = 'admissions' | 'prep' | 'analytics' | 'methodology';
-
-const EVENTS_KEY = 'kvisa-path.events';
+type StudentTab = 'admissions' | 'prep';
+type CounselorTab = 'analytics' | 'methodology';
+type Audience = 'student' | 'counselor';
 
 export function App() {
   const { lang, meta, setLang } = useLanguage('kvisa-path.lang');
-  const [activeTab, setActiveTab] = useState<TabKey>('admissions');
+  const [audience, setAudience] = useState<Audience>('student');
+  const [studentTab, setStudentTab] = useState<StudentTab>('admissions');
+  const [counselorTab, setCounselorTab] = useState<CounselorTab>('analytics');
   const [langOpen, setLangOpen] = useState(false);
-  const [neisApiKey, setNeisApiKey] = useState('');
-  const [liveEvents, setLiveEvents] = useState<AnonymousEvent[]>(() => readAnonymousEvents(EVENTS_KEY));
+  const [liveEvents, setLiveEvents] = useState<AnonymousEvent[]>(() => readAnonymousEvents(EVENT_STORAGE_KEY));
+  const [clearedNote, setClearedNote] = useState<string | null>(null);
 
   const ui = getUiMessages(lang);
 
   const refreshEvents = () => {
-    setLiveEvents(readAnonymousEvents(EVENTS_KEY));
+    setLiveEvents(readAnonymousEvents(EVENT_STORAGE_KEY));
   };
 
+  useEffect(() => {
+    const onCleared = () => {
+      setLiveEvents([]);
+      setClearedNote(ui.clearRecordsDone);
+    };
+    window.addEventListener(RECORDS_CLEARED_EVENT, onCleared);
+    return () => window.removeEventListener(RECORDS_CLEARED_EVENT, onCleared);
+  }, [ui.clearRecordsDone]);
+
   const clearEvents = () => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(EVENTS_KEY);
-    }
-    setLiveEvents([]);
+    clearMyRecords();
   };
 
   const nextTabLabel =
-    activeTab === 'admissions'
-      ? ui.nextToPrep
-      : activeTab === 'prep'
-        ? `${ui.nextToAnalytics} (${liveEvents.length})`
-        : activeTab === 'analytics'
-          ? ui.nextToMethodology
-          : ui.backToAdmissions;
+    audience === 'student'
+      ? studentTab === 'admissions'
+        ? ui.nextToPrep
+        : ui.backToAdmissions
+      : counselorTab === 'analytics'
+        ? ui.nextToMethodology
+        : ui.nextToAnalytics;
 
   const handlePrimaryAction = () => {
-    if (activeTab === 'admissions') setActiveTab('prep');
-    else if (activeTab === 'prep') setActiveTab('analytics');
-    else if (activeTab === 'analytics') setActiveTab('methodology');
-    else setActiveTab('admissions');
+    if (audience === 'student') setStudentTab((tab) => (tab === 'admissions' ? 'prep' : 'admissions'));
+    else setCounselorTab((tab) => (tab === 'analytics' ? 'methodology' : 'analytics'));
   };
 
   return (
@@ -65,60 +66,53 @@ export function App() {
         </button>
       </header>
 
-      <nav className="kv-tabs" role="tablist" aria-label="화면 전환">
-        <button
-          type="button"
-          role="tab"
-          className="kv-tab"
-          aria-selected={activeTab === 'admissions'}
-          onClick={() => setActiveTab('admissions')}
-        >
-          {ui.tabAdmissions}
+      <div className="kb-row kv-no-print" style={{ marginTop: 12 }}>
+        <button type="button" className="kb-chip" aria-pressed={audience === 'student'} onClick={() => setAudience('student')}>
+          {ui.studentView}
         </button>
-        <button
-          type="button"
-          role="tab"
-          className="kv-tab"
-          aria-selected={activeTab === 'prep'}
-          onClick={() => setActiveTab('prep')}
-        >
-          {ui.tabPrep}
+        <button type="button" className="kb-chip" aria-pressed={audience === 'counselor'} onClick={() => setAudience('counselor')}>
+          {ui.counselorView}
         </button>
-        <button
-          type="button"
-          role="tab"
-          className="kv-tab"
-          aria-selected={activeTab === 'analytics'}
-          onClick={() => setActiveTab('analytics')}
-        >
-          {ui.tabAnalytics} ({liveEvents.length})
-        </button>
-        <button
-          type="button"
-          role="tab"
-          className="kv-tab"
-          aria-selected={activeTab === 'methodology'}
-          onClick={() => setActiveTab('methodology')}
-        >
-          {ui.tabMethodology}
-        </button>
-      </nav>
+        {audience === 'student' ? (
+          <button type="button" className="kb-chip" onClick={clearEvents}>
+            {ui.clearRecords}
+          </button>
+        ) : null}
+      </div>
+      {audience === 'student' ? <p className="kb-subtitle">{ui.clearRecordsHint}</p> : null}
+      {clearedNote ? <p className="kb-subtitle">{clearedNote}</p> : null}
+
+      {audience === 'student' ? (
+        <nav className="kv-tabs" role="tablist" aria-label="학생 화면">
+          <button type="button" role="tab" className="kv-tab" aria-selected={studentTab === 'admissions'} onClick={() => setStudentTab('admissions')}>
+            {ui.tabAdmissions}
+          </button>
+          <button type="button" role="tab" className="kv-tab" aria-selected={studentTab === 'prep'} onClick={() => setStudentTab('prep')}>
+            {ui.tabPrep}
+          </button>
+        </nav>
+      ) : (
+        <nav className="kv-tabs" role="tablist" aria-label="상담 교사 화면">
+          <button type="button" role="tab" className="kv-tab" aria-selected={counselorTab === 'analytics'} onClick={() => setCounselorTab('analytics')}>
+            {ui.tabAnalytics} ({liveEvents.length})
+          </button>
+          <button type="button" role="tab" className="kv-tab" aria-selected={counselorTab === 'methodology'} onClick={() => setCounselorTab('methodology')}>
+            {ui.tabMethodology}
+          </button>
+        </nav>
+      )}
 
       <div style={{ marginTop: 16 }}>
-        {activeTab === 'admissions' ? (
-          <AdmissionsTab lang={lang} neisApiKey={neisApiKey} onEventLogged={refreshEvents} />
-        ) : activeTab === 'prep' ? (
-          <StudentPrepTools lang={lang} onEventLogged={refreshEvents} />
-        ) : activeTab === 'analytics' ? (
+        {audience === 'student' && studentTab === 'admissions' ? (
+          <AdmissionsTab lang={lang} onEventLogged={refreshEvents} />
+        ) : null}
+        {audience === 'student' && studentTab === 'prep' ? <StudentPrepTools lang={lang} onEventLogged={refreshEvents} /> : null}
+        {audience === 'counselor' && counselorTab === 'analytics' ? (
           <AnalyticsTab lang={lang} liveEvents={liveEvents} onEventLogged={refreshEvents} />
-        ) : (
-          <MethodologyTab
-            neisApiKey={neisApiKey}
-            onNeisApiKeyChange={setNeisApiKey}
-            liveEvents={liveEvents}
-            onClearEvents={clearEvents}
-          />
-        )}
+        ) : null}
+        {audience === 'counselor' && counselorTab === 'methodology' ? (
+          <MethodologyTab liveEvents={liveEvents} onClearEvents={clearEvents} />
+        ) : null}
       </div>
 
       <ActionBar
@@ -133,6 +127,8 @@ export function App() {
         currentLang={lang}
         onSelect={setLang}
         onClose={() => setLangOpen(false)}
+        title={ui.pickerTitle}
+        closeLabel={ui.closeLabel}
       />
     </main>
   );

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { recordAnonymousEvent, type SupportedLangCode } from 'kbridge-core';
+import { useEffect, useState } from 'react';
+import { recordAnonymousEvent, type SupportedLangCode } from '../kbridge';
 import type { InterestField } from '../data/admissionsData';
 import {
   ADMISSION_QUIZ_ITEMS,
@@ -7,9 +7,15 @@ import {
   DDAY_SCHEDULES,
   DOC_BARRIER_LABELS,
   DOC_CHECKLIST_ITEMS,
+  buildQuestionLog,
   classifyQuestionTopic,
+  daysUntil,
+  schedulePhase,
   type DocBarrierReason,
 } from '../data/interactiveModules';
+import { getCoreCopy } from '../i18n/coreCopy';
+import { getUiMessages } from '../i18n/messages';
+import { DOCS_STORAGE_KEY, QUIZ_STORAGE_KEY, RECORDS_CLEARED_EVENT, clearMyRecords } from '../privacy/records';
 
 export interface StudentPrepToolsProps {
   lang: SupportedLangCode;
@@ -24,11 +30,10 @@ const FIELD_BUTTONS: { value: InterestField; label: string }[] = [
   { value: 'health', label: '보건·간호' },
 ];
 
-const DOCS_STORAGE_KEY = 'kvisa-path.done_docs';
-const QUIZ_STORAGE_KEY = 'kvisa-path.quiz_answers';
-
 export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps) {
-  const [today] = useState(() => new Date());
+  const [today] = useState(() => new Date().toISOString().slice(0, 10));
+  const copy = getCoreCopy(lang);
+  const ui = getUiMessages(lang);
 
   // 1. 서류 체크리스트 상태 (기기 영구 저장)
   const [doneDocs, setDoneDocs] = useState<string[]>(() => {
@@ -58,6 +63,17 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
   const [questionText, setQuestionText] = useState('');
   const [questionResult, setQuestionResult] = useState<{ topic: string; answer: string } | null>(null);
 
+  useEffect(() => {
+    const reset = () => {
+      setDoneDocs([]);
+      setQuizAnswers({});
+      setQuestionResult(null);
+      setQuestionText('');
+    };
+    window.addEventListener(RECORDS_CLEARED_EVENT, reset);
+    return () => window.removeEventListener(RECORDS_CLEARED_EVENT, reset);
+  }, []);
+
   // 4. 커리어넷 계열 탐색 상태
   const [careerField, setCareerField] = useState<InterestField>('it');
 
@@ -74,7 +90,8 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
     if (Number.isNaN(issued.getTime())) return null;
     const expiry = new Date(issued);
     expiry.setFullYear(expiry.getFullYear() + 2);
-    const diffDays = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    const todayDate = new Date(`${today}T00:00:00`);
+    const diffDays = Math.ceil((expiry.getTime() - todayDate.getTime()) / (1000 * 60 * 60 * 24));
     return {
       expiryStr: expiry.toISOString().slice(0, 10),
       diffDays,
@@ -143,7 +160,6 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
       kind: 'doc_barrier',
       lang,
       choiceCode: reason,
-      spanText: docId,
     });
     setBarrierDocId(null);
     setDocNotice(`서류 준비 어려움(${DOC_BARRIER_LABELS[reason]})을 익명 통계에 반영했어요.`);
@@ -174,15 +190,12 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
     const trimmed = questionText.trim();
     if (!trimmed) return;
     const classified = classifyQuestionTopic(trimmed);
-    recordAnonymousEvent('kvisa-path.events', {
-      app: 'kvisa-path',
-      opportunityId: 'free-question-box',
-      kind: 'free_question',
-      lang,
-      choiceCode: classified.topic,
-      spanText: trimmed.slice(0, 80),
+    const logged = buildQuestionLog(trimmed, lang);
+    recordAnonymousEvent('kvisa-path.events', logged);
+    setQuestionResult({
+      topic: classified.topic,
+      answer: copy?.guides[logged.choiceCode] ?? classified.guideAnswer,
     });
-    setQuestionResult({ topic: classified.topic, answer: classified.guideAnswer });
     setQuestionText('');
     onEventLogged();
   };
@@ -211,7 +224,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
             return (
               <div key={doc.id} className="kb-card kb-stack">
                 <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-                  <strong>{doc.name}</strong>
+                  <strong>{copy?.docs[doc.id]?.name ?? doc.name}</strong>
                   <div className="kb-row">
                     <button
                       type="button"
@@ -231,9 +244,9 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
                     </button>
                   </div>
                 </div>
-                <p style={{ margin: 0, fontSize: 14 }}>발급처: {doc.whereToGet}</p>
+                <p style={{ margin: 0, fontSize: 14 }}>{copy?.whereLead ?? '발급처'}: {copy?.docs[doc.id]?.whereToGet ?? doc.whereToGet}</p>
                 <p className="kb-subtitle" style={{ margin: 0 }}>
-                  안내: {doc.tip}
+                  {copy?.tipLead ?? '안내'}: {copy?.docs[doc.id]?.tip ?? doc.tip}
                 </p>
 
                 {isBarrierOpen ? (
@@ -249,7 +262,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
                           className="kb-chip"
                           onClick={() => handleReportBarrier(doc.id, reason)}
                         >
-                          {DOC_BARRIER_LABELS[reason]}
+                          {copy?.barriers[reason] ?? DOC_BARRIER_LABELS[reason]}
                         </button>
                       ))}
                     </div>
@@ -274,7 +287,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
             return (
               <div key={item.id} className="kb-card kb-stack">
                 <p style={{ margin: 0, fontWeight: 600 }}>
-                  Q{idx + 1}. {item.question}
+                  Q{idx + 1}. {copy?.quiz[item.id]?.question ?? item.question}
                 </p>
                 <div className="kb-row">
                   <button
@@ -303,7 +316,7 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
                 </div>
                 {chosen ? (
                   <p className="kb-subtitle" style={{ margin: 0 }}>
-                    해설: {item.explanation}
+                    {copy?.explainLead ?? '해설'}: {copy?.quiz[item.id]?.explanation ?? item.explanation}
                   </p>
                 ) : null}
               </div>
@@ -314,7 +327,8 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
 
       {/* 3. 1줄 입시·진로 질문함 (비정형 텍스트 수집 + 토픽 분류) */}
       <section className="kb-section">
-        <h2 className="kb-section-title">3. 1줄 입시·진로 질문함 (비정형 질문 분석)</h2>
+        <h2 className="kb-section-title">{copy?.questionTitle ?? '3. 1줄 입시·진로 질문'}</h2>
+        <p className="kb-subtitle">{copy?.topicSaved ?? '질문 문장은 저장하지 않아요.'}</p>
         <form className="kb-card kb-stack" onSubmit={handleSubmitQuestion}>
           <div>
             <label htmlFor="free-question-input" className="kv-label">
@@ -331,14 +345,17 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
           </div>
           <div className="kb-row">
             <button type="submit" className="kb-chip" disabled={!questionText.trim()}>
-              질문 보내고 가이드 보기
+              {copy?.questionSubmit ?? '질문 보내고 가이드 보기'}
+            </button>
+            <button type="button" className="kb-chip" onClick={() => clearMyRecords()}>
+              {ui.clearRecords}
             </button>
           </div>
           {questionResult ? (
             <div className="kb-card-soft kb-stack" role="status">
               <div className="kb-row" style={{ justifyContent: 'space-between' }}>
                 <strong>자동 분류 토픽: {questionResult.topic}</strong>
-                <span className="kb-tag">비정형 로그 반영됨</span>
+                <span className="kb-tag">{copy?.topicSaved ?? '주제만 기록됨'}</span>
               </div>
               <p style={{ margin: 0, fontSize: 14 }}>{questionResult.answer}</p>
             </div>
@@ -353,18 +370,30 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
           <div className="kb-card kb-stack">
             <strong style={{ fontSize: 14 }}>입시·시험 일정 D-Day</strong>
             {DDAY_SCHEDULES.map((s) => {
-              const targetDate = new Date(`${s.dateStr}T00:00:00`);
-              const diffDays = Math.ceil((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-              const dLabel = diffDays > 0 ? `D-${diffDays}` : diffDays === 0 ? 'D-Day' : `D+${Math.abs(diffDays)}`;
+              const phase = schedulePhase(s, today);
+              const end = s.endDateStr ?? s.dateStr;
+              const range = s.endDateStr ? `${s.dateStr} ~ ${end}` : s.dateStr;
+              const label =
+                phase === 'closed'
+                  ? ui.scheduleClosed
+                  : phase === 'open'
+                    ? ui.scheduleOpen
+                    : `D-${daysUntil(s.dateStr, today)}`;
+              const shown = copy?.schedules[s.id];
               return (
-                <div key={s.id} className="kb-row" style={{ justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: 14 }}>{s.title}</div>
-                    <div className="kb-subtitle" style={{ margin: 0 }}>
-                      {s.target} · {s.dateStr}
+                <div key={s.id} className="kb-stack">
+                  <div className="kb-row" style={{ justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 14 }}>{shown?.title ?? s.title}</div>
+                      <div className="kb-subtitle" style={{ margin: 0 }}>
+                        {shown?.target ?? s.target} · {range}
+                      </div>
                     </div>
+                    <span className={`kb-tag ${phase === 'closed' ? 'kb-status-avoid' : phase === 'open' ? 'kb-status-safe' : ''}`}>{label}</span>
                   </div>
-                  <span className="kb-tag">{dLabel}</span>
+                  <a className="kv-link" href={s.sourceUrl} target="_blank" rel="noreferrer">
+                    {s.sourceLabel} · {s.verifiedOn}
+                  </a>
                 </div>
               );
             })}
@@ -391,18 +420,18 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
                     onEventLogged();
                   }}
                 >
-                  {fb.label}
+                  {copy?.fields[fb.value] ?? fb.label}
                 </button>
               ))}
             </div>
             <p style={{ margin: 0, fontSize: 14 }}>
-              <strong>대표 직업:</strong> {careerInfo.jobs.join(', ')}
+              <strong>{copy?.jobsLead ?? '대표 직업'}:</strong> {copy?.career[careerField]?.jobs ?? careerInfo.jobs.join(', ')}
             </p>
             <p style={{ margin: 0, fontSize: 14 }}>
-              <strong>관련 학과:</strong> {careerInfo.majors.join(', ')}
+              <strong>{copy?.majorsWord ?? '관련 학과'}:</strong> {copy?.career[careerField]?.majors ?? careerInfo.majors.join(', ')}
             </p>
             <p className="kb-subtitle" style={{ margin: 0 }}>
-              {careerInfo.note}
+              {copy?.career[careerField]?.note ?? careerInfo.note}
             </p>
           </div>
         </div>

@@ -1,29 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   SpeakCard,
   recordAnonymousEvent,
   type SupportedLangCode,
-} from 'kbridge-core';
+} from '../kbridge';
 import {
   ADMISSION_TERMS,
-  ADMISSION_TRACKS,
   APOSTILLE_COUNTRIES,
   EXTERNAL_SCHOLARSHIPS,
-  SEOUL_VOCATIONAL_SCHOOLS,
+  UNIVERSITY_GED_RULES,
+  UNIVERSITY_SCHOLARSHIP_RULES,
   UNIVERSITY_TOPIK_TABLE,
   VISA_SKILL_TREE,
   type BackgroundType,
   type InterestField,
   type KoreanLevel,
   type SchoolLevel,
+  type UniversityId,
 } from '../data/admissionsData';
 import { SEOUL_DISTRICTS, SEOUL_SUPPORT_CENTERS } from '../data/centersData';
+import { HELP_LINKS } from '../data/helpLinks';
+import { filterAdmissionTracks, filterVocationalSchools } from '../data/trackFilter';
+import { getCoreCopy } from '../i18n/coreCopy';
 import { getUiMessages } from '../i18n/messages';
-import { fetchSeoulVocationalMajors, type NeisSchoolQueryResult } from '../services/neisClient';
+import { loadVocationalSnapshot } from '../services/neisClient';
 
 export interface AdmissionsTabProps {
   lang: SupportedLangCode;
-  neisApiKey: string;
   onEventLogged: () => void;
 }
 
@@ -48,7 +51,7 @@ const FIELD_OPTIONS: { value: InterestField; label: string }[] = [
   { value: 'health', label: '보건·간호' },
 ];
 
-export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTabProps) {
+export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel>('high');
   const [background, setBackground] = useState<BackgroundType>('both_foreign');
   const [koreanLevel, setKoreanLevel] = useState<KoreanLevel>('topik_3_4');
@@ -58,37 +61,13 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
   const [schoolSearch, setSchoolSearch] = useState<string>('');
 
   const [activeTermId, setActiveTermId] = useState<string | null>(null);
-  const [neisResult, setNeisResult] = useState<NeisSchoolQueryResult | null>(null);
   const [referralFeedback, setReferralFeedback] = useState<string | null>(null);
+  const snapshot = loadVocationalSnapshot();
+  const copy = getCoreCopy(lang);
 
-  useEffect(() => {
-    let active = true;
-    void fetchSeoulVocationalMajors(field, neisApiKey).then((res) => {
-      if (active) setNeisResult(res);
-    });
-    return () => {
-      active = false;
-    };
-  }, [field, neisApiKey]);
-
-  const levelTracks = ADMISSION_TRACKS.filter(
-    (track) => track.level === schoolLevel && track.eligibleBackgrounds.includes(background),
-  );
-  const matchedTracks = levelTracks.filter((track) => track.minKorean.includes(koreanLevel));
-  const gapTracks = levelTracks.filter((track) => !track.minKorean.includes(koreanLevel));
-
+  const { matched: matchedTracks, gaps: gapTracks } = filterAdmissionTracks(schoolLevel, background, koreanLevel);
+  const filteredVocationalSchools = filterVocationalSchools(field, schoolSearch);
   const query = schoolSearch.trim().toLowerCase();
-  const baseVocationalSchools =
-    neisResult?.source === 'live_neis'
-      ? neisResult.schools
-      : SEOUL_VOCATIONAL_SCHOOLS.filter((s) => (query ? true : s.field === field));
-  const filteredVocationalSchools = baseVocationalSchools.filter(
-    (s) =>
-      !query ||
-      s.name.toLowerCase().includes(query) ||
-      s.district.toLowerCase().includes(query) ||
-      s.majors.some((m) => m.toLowerCase().includes(query)),
-  );
 
   const filteredUniversities = UNIVERSITY_TOPIK_TABLE.filter(
     (u) =>
@@ -122,10 +101,10 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
   const handleReferralStep = (kind: 'referral_opened' | 'referral_connected' | 'referral_failed', msg: string) => {
     recordAnonymousEvent('kvisa-path.events', {
       app: 'kvisa-path',
-      opportunityId: `referral-${district}`,
+      opportunityId: 'referral',
       kind,
       lang,
-      spanText: district,
+      choiceCode: district,
     });
     setReferralFeedback(msg);
     onEventLogged();
@@ -156,32 +135,38 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
 
       {/* 1. 조건 선택 */}
       <section className="kb-section" style={{ marginTop: 12 }}>
-        <h2 className="kb-section-title">1. 내 조건 선택하기 (4단계)</h2>
+        <h2 className="kb-section-title">{copy?.conditionsTitle ?? '1. 내 조건 선택하기'}</h2>
         <div className="kb-card kb-stack">
           <div>
-            <span className="kv-label">현재 학교급</span>
+            <span className="kv-label">
+              {lang === 'ko'
+                ? '현재 학교급'
+                : lang === 'zh-Hans'
+                  ? '现在的学校阶段'
+                  : lang === 'zh-Hant'
+                    ? '現在的學校階段'
+                    : lang === 'vi'
+                      ? 'Cấp học hiện tại'
+                      : lang === 'ru'
+                        ? 'Ступень школы'
+                        : lang === 'mn'
+                          ? 'Одоогийн сургууль'
+                          : lang === 'ar'
+                            ? 'المرحلة الحالية'
+                            : 'School level'}
+            </span>
             <div className="kb-row">
-              <button
-                type="button"
-                className="kb-chip"
-                aria-pressed={schoolLevel === 'middle'}
-                onClick={() => setSchoolLevel('middle')}
-              >
-                중학생 (고교 입학전형)
+              <button type="button" className="kb-chip" aria-pressed={schoolLevel === 'middle'} onClick={() => setSchoolLevel('middle')}>
+                {copy?.levelMiddle ?? '중학생 (고교 입학전형)'}
               </button>
-              <button
-                type="button"
-                className="kb-chip"
-                aria-pressed={schoolLevel === 'high'}
-                onClick={() => setSchoolLevel('high')}
-              >
-                고등학생 (대학 입학전형 · TOPIK 장학)
+              <button type="button" className="kb-chip" aria-pressed={schoolLevel === 'high'} onClick={() => setSchoolLevel('high')}>
+                {copy?.levelHigh ?? '고등학생 (대학 입학전형 · TOPIK 장학)'}
               </button>
             </div>
           </div>
 
           <div>
-            <span className="kv-label">가정·학력 배경 (서버 미저장)</span>
+            <span className="kv-label">{copy?.backgroundHeading ?? '가정·학력 배경 (서버 미저장)'}</span>
             <div className="kb-row">
               {BACKGROUND_OPTIONS.map((opt) => (
                 <button
@@ -191,14 +176,14 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                   aria-pressed={background === opt.value}
                   onClick={() => setBackground(opt.value)}
                 >
-                  {opt.label}
+                  {copy?.backgrounds[opt.value] ?? opt.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <span className="kv-label">한국어 수준</span>
+            <span className="kv-label">{copy?.koreanHeading ?? '한국어 수준'}</span>
             <div className="kb-row">
               {KOREAN_OPTIONS.map((opt) => (
                 <button
@@ -208,14 +193,14 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                   aria-pressed={koreanLevel === opt.value}
                   onClick={() => setKoreanLevel(opt.value)}
                 >
-                  {opt.label}
+                  {copy?.koreanLevels[opt.value] ?? opt.label}
                 </button>
               ))}
             </div>
           </div>
 
           <div>
-            <span className="kv-label">관심 계열 (NEIS·커리어넷 연계)</span>
+            <span className="kv-label">{copy?.fieldHeading ?? '관심 계열'}</span>
             <div className="kb-row">
               {FIELD_OPTIONS.map((opt) => (
                 <button
@@ -225,7 +210,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                   aria-pressed={field === opt.value}
                   onClick={() => setField(opt.value)}
                 >
-                  {opt.label}
+                  {copy?.fields[opt.value] ?? opt.label}
                 </button>
               ))}
             </div>
@@ -237,19 +222,17 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
       {(background === 'both_foreign' || background === 'mid_entry') ? (
         <div className="kb-card" style={{ borderColor: 'var(--kb-avoid)' }} role="alert">
           <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-            <strong style={{ color: 'var(--kb-avoid)' }}>사전 경고: 입시·비자 3대 함정 체크</strong>
+            <strong style={{ color: 'var(--kb-avoid)' }}>{copy?.warningTitle ?? '사전 경고: 입시·비자 3대 함정 체크'}</strong>
             <span className="kb-tag kb-status-avoid">필독</span>
           </div>
           <ul className="kv-list">
-            <li>
-              <strong>검정고시 함정:</strong> 외국 국적 학생이 검정고시를 선택하면 서울시립대·서울과기대·한국외대 등 주요 대학 순수외국인 전형 지원 자격이 박탈돼요.
-            </li>
-            <li>
-              <strong>마이스터고 대입 제외:</strong> 마이스터고 졸업생은 대입 정원 외 특성화고교 졸업자 특별전형에 지원할 수 없어요.
-            </li>
-            <li>
-              <strong>고교생 알바 금지 &amp; 사설환전소 주의:</strong> F-1·F-3·D-4-3 고교생은 알바가 원칙 금지되며, 등록금은 반드시 대학 공식 은행 가상계좌로 납부하세요.
-            </li>
+            {(copy?.warnings ?? [
+              '검정고시 함정: 외국 국적 학생이 검정고시를 선택하면 이 앱의 대학 표에 있는 순수외국인 전형은 받지 않아요. 숭실대 2027학년도 1학기 요강만 원문으로 확인했습니다.',
+              '마이스터고 졸업생은 대입 정원 외 특성화고 졸업자 특별전형에 지원할 수 없어요.',
+              'F-1·F-3·D-4-3 고교생은 아르바이트가 원칙적으로 금지돼요. 등록금은 대학 공식 계좌로 내세요.',
+            ]).map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
           </ul>
         </div>
       ) : null}
@@ -257,37 +240,40 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
       {/* 2. 지원 가능 입학전형 조회 결과 + Gap 진단 */}
       <section className="kb-section">
         <h2 className="kb-section-title">
-          2. 지원 가능한 {schoolLevel === 'middle' ? '고교 입학전형' : '대학 특별전형'} ({matchedTracks.length}건)
+          {copy?.matchedTitle ?? '2. 지원 가능한 전형'} ({matchedTracks.length})
         </h2>
 
         {matchedTracks.length > 0 ? (
           <div className="kb-stack">
-            {matchedTracks.map((track) => (
+            {matchedTracks.map((track) => {
+              const shown = copy?.tracks[track.id];
+              return (
               <article key={track.id} className="kb-card kb-stack">
                 <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-                  <strong style={{ fontSize: 16 }}>{track.title}</strong>
+                  <strong style={{ fontSize: 16 }}>{shown?.title ?? track.title}</strong>
                   <span className="kb-tag">
                     {track.quotaType} · {track.asOfYear}
                   </span>
                 </div>
-                <p style={{ margin: 0 }}>{track.summary}</p>
+                <p style={{ margin: 0 }}>{shown?.summary ?? track.summary}</p>
                 <p className="kb-subtitle" style={{ margin: 0 }}>
-                  근거: {track.legalBasis}
+                  {copy?.legalLead ?? '근거'}: {track.legalBasis}
+                  {track.verification === 'unverified' ? ` · ${copy?.unverified ?? '미확인'}` : ''}
                 </p>
 
                 <div className="kv-grid-2">
                   <div className="kb-card-soft">
-                    <strong style={{ fontSize: 13 }}>주요 지원 자격</strong>
+                    <strong style={{ fontSize: 13 }}>{copy?.requirementsLabel ?? '주요 지원 자격'}</strong>
                     <ul className="kv-list">
-                      {track.requirements.map((req) => (
+                      {(shown?.requirements ?? track.requirements).map((req) => (
                         <li key={req}>{req}</li>
                       ))}
                     </ul>
                   </div>
                   <div className="kb-card-soft">
-                    <strong style={{ fontSize: 13 }}>필요 서류 체크리스트</strong>
+                    <strong style={{ fontSize: 13 }}>{copy?.docsLabel ?? '필요 서류 체크리스트'}</strong>
                     <ul className="kv-list">
-                      {track.requiredDocs.map((doc) => (
+                      {(shown?.requiredDocs ?? track.requiredDocs).map((doc) => (
                         <li key={doc}>{doc}</li>
                       ))}
                     </ul>
@@ -295,7 +281,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                 </div>
 
                 <div>
-                  <span className="kv-label">이해가 어려운 입시 용어를 눌러 보세요 (쉬운 풀이 + 익명 통계 반영)</span>
+                  <span className="kv-label">{copy?.termHint ?? '이해가 어려운 입시 용어를 눌러 보세요. 용어 코드만 이 기기에 남아요.'}</span>
                   <div className="kb-row">
                     {track.termIds.map((tid) => {
                       const t = ADMISSION_TERMS[tid];
@@ -317,28 +303,32 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
 
                 <div className="kb-row" style={{ justifyContent: 'space-between' }}>
                   <span className="kb-subtitle" style={{ margin: 0 }}>
-                    {track.visaNote}
+                    {shown?.visaNote ?? track.visaNote}
                   </span>
-                  <a className="kv-link" href={track.referenceUrl} target="_blank" rel="noreferrer">
-                    {track.referenceLabel}
-                  </a>
+                  {track.referenceUrl ? (
+                    <a className="kv-link" href={track.referenceUrl} target="_blank" rel="noreferrer">
+                      {track.referenceLabel}
+                    </a>
+                  ) : (
+                    <span className="kb-subtitle">{copy?.sourceMissing ?? track.referenceLabel}</span>
+                  )}
                 </div>
               </article>
-            ))}
+            );
+            })}
           </div>
         ) : null}
 
-        {/* 조건 미충족(Gap) 진단 카드 */}
         {gapTracks.length > 0 ? (
           <div className="kb-stack" style={{ marginTop: 12 }}>
             {gapTracks.map((track) => (
               <div key={track.id} className="kb-card-soft kb-stack">
                 <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-                  <strong>{track.title}</strong>
-                  <span className="kb-tag kb-status-check">조건 보완 시 지원 가능</span>
+                  <strong>{copy?.tracks[track.id]?.title ?? track.title}</strong>
+                  <span className="kb-tag kb-status-check">{copy?.gapBadge ?? '조건 보완 시 지원 가능'}</span>
                 </div>
                 <p style={{ margin: 0, fontSize: 14 }}>
-                  <strong>부족한 조건(Gap) 해결 가이드:</strong> {track.gapHint}
+                  <strong>{copy?.gapLead ?? '부족한 조건:'}</strong> {copy?.tracks[track.id]?.gapHint ?? track.gapHint}
                 </p>
               </div>
             ))}
@@ -364,12 +354,14 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
       {/* 3. 서울 특성화고 12개교 / 주요 대학 12개교 TOPIK 장학금 비교 + 검색 */}
       <section className="kb-section">
         <h2 className="kb-section-title">
-          3. {schoolLevel === 'middle' ? '서울 특성화고·마이스터고 12개교 조회 (NEIS 연계)' : '서울 주요 대학 12개교 TOPIK 장학금 · 전형 비교 (2026~2027)'}
+          {schoolLevel === 'middle'
+            ? (copy?.schoolsTitle ?? '3. 서울 특성화고·마이스터고')
+            : (copy?.universitiesTitle ?? '3. 서울 주요 대학 TOPIK 장학금')}
         </h2>
 
         <div style={{ marginBottom: 12 }}>
-          <label htmlFor="school-search-input" className="kv-label">
-            학교명 · 학과 · 키워드 검색
+            <label htmlFor="school-search-input" className="kv-label">
+            {copy?.searchLabel ?? '학교명 · 학과 · 키워드 검색'}
           </label>
           <input
             id="school-search-input"
@@ -379,8 +371,8 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
             onChange={(e) => setSchoolSearch(e.target.value)}
             placeholder={
               schoolLevel === 'middle'
-                ? '예: 성암국제무역, 관광, 소프트웨어, 마이스터'
-                : '예: 숭실대, 건국대, 검정고시, 수시'
+                ? (copy?.searchMiddle ?? '예: 성암국제무역, 관광, 소프트웨어')
+                : (copy?.searchHigh ?? '예: 숭실대, TOPIK')
             }
           />
         </div>
@@ -388,7 +380,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
         {schoolLevel === 'middle' ? (
           <div className="kb-stack">
             <p className="kb-subtitle" style={{ margin: 0 }}>
-              {neisResult?.notice ?? '서울 특성화고 학과 정보를 불러오는 중이에요.'} ({neisResult?.asOf ?? '-'})
+              {snapshot.notice} ({snapshot.asOf})
             </p>
             <div className="kv-grid-2">
               {filteredVocationalSchools.map((s) => (
@@ -400,7 +392,8 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                     </span>
                   </div>
                   <p className="kb-subtitle">{s.specialTrack}</p>
-                  <p style={{ margin: '8px 0 0', fontSize: 14 }}>대표 학과: {s.majors.join(', ')}</p>
+                  <p style={{ margin: '8px 0 0', fontSize: 14 }}>{copy?.majorsLead ?? '대표 학과'}: {s.majors.join(', ')}</p>
+                  <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>NEIS {s.neisCode} · {s.verifiedOn}</p>
                 </div>
               ))}
             </div>
@@ -412,7 +405,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                 <thead>
                   <tr>
                     <th>대학</th>
-                    <th>검정고시</th>
+                    <th>{copy?.gedHead ?? '검정고시'}</th>
                     <th className="num">TOPIK 3급</th>
                     <th className="num">4급</th>
                     <th className="num">5급</th>
@@ -425,11 +418,23 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                     <tr key={u.id}>
                       <td>
                         <strong>{u.university}</strong>
+                        <div className="kb-subtitle" style={{ margin: 0 }}>
+                          {UNIVERSITY_SCHOLARSHIP_RULES[u.id as UniversityId].verification === 'verified'
+                            ? (copy?.verified ?? '확인')
+                            : (copy?.unverified ?? '미확인')}
+                          {' · '}
+                          {UNIVERSITY_SCHOLARSHIP_RULES[u.id as UniversityId].applicableTerm}
+                        </div>
                       </td>
                       <td>
                         <span className={`kb-tag ${u.gedAccepted === '불인정' ? 'kb-status-avoid' : ''}`}>
                           {u.gedAccepted}
                         </span>
+                        <div className="kb-subtitle" style={{ margin: 0 }}>
+                          {UNIVERSITY_GED_RULES[u.id as UniversityId].verification === 'verified'
+                            ? (copy?.verified ?? '확인')
+                            : (copy?.unverified ?? '미확인')}
+                        </div>
                       </td>
                       <td className="num">{u.topik3}</td>
                       <td className="num">{u.topik4}</td>
@@ -450,23 +455,28 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
 
             <div className="kb-card kb-stack">
               <strong style={{ fontSize: 14 }}>
-                내 배경({BACKGROUND_OPTIONS.find((b) => b.value === background)?.label}) 맞춤 외부 장학금 필터
+                {copy?.scholarshipTitle ?? '내 배경 맞춤 외부 장학금'} ({copy?.backgrounds[background] ?? BACKGROUND_OPTIONS.find((b) => b.value === background)?.label})
               </strong>
               {matchedScholarships.length === 0 ? (
                 <p className="kb-subtitle" style={{ margin: 0 }}>
-                  미등록 상태에서는 먼저 구제대책(D-4) 전환 후 장학금 지원 자격을 확인해 보세요.
+                  {copy?.noScholarship ?? '미등록 상태에서는 먼저 지원 경로를 확인한 뒤 장학금 자격을 보세요.'}
                 </p>
               ) : (
                 <div className="kv-grid-2">
                   {matchedScholarships.map((sc) => (
                     <div key={sc.id} className="kb-card-soft">
                       <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-                        <strong>{sc.name}</strong>
-                        <span className="kb-tag">{sc.asOfYear}</span>
+                        <strong>{copy?.scholarships[sc.id]?.name ?? sc.name}</strong>
+                        <span className={`kb-tag ${sc.verification === 'verified' ? 'kb-status-safe' : 'kb-status-check'}`}>
+                          {sc.verification === 'verified' ? (copy?.verified ?? '확인') : (copy?.unverified ?? '미확인')}
+                        </span>
                       </div>
-                      <p style={{ margin: '6px 0 0', fontSize: 14 }}>{sc.benefit}</p>
+                      <p style={{ margin: '6px 0 0', fontSize: 14 }}>{copy?.scholarships[sc.id]?.benefit ?? sc.benefit}</p>
                       <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
-                        제외 기준: {sc.excludeRule}
+                        {copy?.applies ?? '적용'}: {sc.applicableTerm}
+                      </p>
+                      <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
+                        {copy?.scholarships[sc.id]?.excludeRule ?? sc.excludeRule}
                       </p>
                     </div>
                   ))}
@@ -479,7 +489,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
 
       {/* 4. 출신국 해외 서류 인증 (2026.9 아포스티유 vs 영사확인 자동 분기) */}
       <section className="kb-section">
-        <h2 className="kb-section-title">4. 해외 학력 서류 인증 판정 (2026년 9월 최신 협약 기준)</h2>
+        <h2 className="kb-section-title">{copy?.apostilleTitle ?? '4. 해외 학력 서류 인증'}</h2>
         <div className="kb-card kb-stack">
           <div className="kb-row">
             {APOSTILLE_COUNTRIES.map((c) => (
@@ -490,13 +500,13 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                 aria-pressed={originCountry === c.code}
                 onClick={() => setOriginCountry(c.code)}
               >
-                {c.name}
+                {copy?.countries[c.code]?.name ?? c.name}
               </button>
             ))}
           </div>
           <div className="kb-card-soft">
             <div className="kb-row" style={{ justifyContent: 'space-between' }}>
-              <strong>{apostilleRule.name}</strong>
+              <strong>{copy?.countries[apostilleRule.code]?.name ?? apostilleRule.name}</strong>
               <span
                 className={`kb-tag ${
                   apostilleRule.status === 'apostille'
@@ -506,44 +516,62 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
                       : 'kb-status-avoid'
                 }`}
               >
-                {apostilleRule.status === 'apostille'
-                  ? '아포스티유 적용'
-                  : apostilleRule.status === 'transition'
-                    ? '전환기 (제출일 확인)'
-                    : '영사확인 필수'}
+                {copy?.apostilleStatus[apostilleRule.status] ??
+                  (apostilleRule.status === 'apostille'
+                    ? '아포스티유 적용'
+                    : apostilleRule.status === 'transition'
+                      ? '전환기 (제출일 확인)'
+                      : '영사확인 필수')}
                 {' · '}
                 {apostilleRule.effectiveDate}
               </span>
             </div>
-            <p style={{ margin: '6px 0 0', fontSize: 14 }}>{apostilleRule.guide}</p>
+            <p style={{ margin: '6px 0 0', fontSize: 14 }}>{copy?.countries[apostilleRule.code]?.guide ?? apostilleRule.guide}</p>
           </div>
         </div>
       </section>
 
       {/* 5. 체류자격·진로 스킬트리 */}
       <section className="kb-section">
-        <h2 className="kb-section-title">5. {visaTree.title}</h2>
+        <h2 className="kb-section-title">5. {copy?.visa[background]?.title ?? visaTree.title}</h2>
         <p className="kb-subtitle" style={{ marginBottom: 12 }}>
-          {visaTree.warning}
+          {copy?.visa[background]?.warning ?? visaTree.warning}
         </p>
         <div className="kv-grid-2">
-          {visaTree.nodes.map((node, idx) => (
+          {visaTree.nodes.map((node, idx) => {
+            const shown = copy?.visa[background]?.nodes[idx];
+            return (
             <div key={node.code} className="kb-card">
               <div className="kb-row" style={{ justifyContent: 'space-between' }}>
                 <span className="kb-tag">
-                  {idx + 1}단계 · {node.stage}
+                  {idx + 1}. {shown?.stage ?? node.stage}
                 </span>
                 <strong>{node.code}</strong>
               </div>
-              <p style={{ margin: '8px 0 0', fontSize: 14 }}>{node.desc}</p>
+              <p style={{ margin: '8px 0 0', fontSize: 14 }}>{shown?.desc ?? node.desc}</p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
       {/* 6. 자치구 가족센터 통역·상담 연결 + 4단계 퍼널 기록 */}
       <section className="kb-section">
-        <h2 className="kb-section-title">6. 우리 구 무료 진로·입시 통역 상담 연결</h2>
+        <h2 className="kb-section-title">{copy?.referralTitle ?? '6. 우리 구 무료 진로·입시 통역 상담'}</h2>
+        <div className="kb-card kb-stack" style={{ marginBottom: 12 }}>
+          <strong>{copy?.helpTitle ?? '공식 도움 창구'}</strong>
+          <p className="kb-subtitle" style={{ margin: 0 }}>{copy?.helpLead ?? '아래 링크는 2026-11-26에 열어서 확인했습니다.'}</p>
+          <ul className="kv-list">
+            {HELP_LINKS.map((link) => (
+              <li key={link.id}>
+                <a className="kv-link" href={link.url} target="_blank" rel="noreferrer">{link.name}</a>
+                {' — '}
+                {link.detail}
+              </li>
+            ))}
+          </ul>
+          <p className="kb-subtitle" style={{ margin: 0 }}>{copy?.centerSnapshot ?? '구별 전화·통역 인원은 이전 스냅샷이에요.'}</p>
+        </div>
         <div className="kb-row" style={{ marginBottom: 12 }}>
           {SEOUL_DISTRICTS.map((d) => (
             <button
@@ -614,7 +642,7 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
 
       {/* 7. 진로상담실 소통 카드 */}
       <section className="kb-section">
-        <h2 className="kb-section-title">7. 진로상담 선생님께 보여 주는 카드</h2>
+        <h2 className="kb-section-title">{copy?.speakTitle ?? '7. 진로상담 선생님께 보여 주는 카드'}</h2>
         <SpeakCard
           caption={ui.speakCardCaption}
           koreanText="제가 지원할 수 있는 고입·대입 특별전형과 필요한 해외 서류 목록을 쉬운 한국어로 알려 주세요."
@@ -623,7 +651,8 @@ export function AdmissionsTab({ lang, neisApiKey, onEventLogged }: AdmissionsTab
       </section>
 
       <footer className="kb-subtitle" style={{ marginTop: 12 }}>
-        면책 고지: 입학전형·TOPIK 장학금·비자 규정은 매년 변경될 수 있으므로 원서 접수 및 체류 변경 전 반드시 대학 입학처·어디가(adiga.kr)·하이코리아(hikorea.go.kr) 공식 요강을 최종 확인하세요.
+        {copy?.disclaimer ??
+          '입학전형·장학금·체류 규정은 바뀔 수 있어요. 접수 전에 대학 요강과 하이코리아를 다시 확인하세요. 미확인으로 표시된 내용은 이번 점검에서 원문을 확인하지 못했습니다.'}
       </footer>
     </div>
   );

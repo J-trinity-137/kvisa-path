@@ -1,4 +1,4 @@
-import type { SupportedLangCode } from 'kbridge-core';
+import type { SupportedLangCode } from '../kbridge';
 
 export interface UiMessages {
   appTitle: string;
@@ -17,6 +17,16 @@ export interface UiMessages {
   nextToAnalytics: string;
   nextToMethodology: string;
   backToAdmissions: string;
+  clearRecords: string;
+  clearRecordsHint: string;
+  clearRecordsDone: string;
+  studentView: string;
+  counselorView: string;
+  scheduleClosed: string;
+  scheduleOpen: string;
+  pickerTitle: string;
+  closeLabel: string;
+  syntheticBadge: string;
 }
 
 const EN_MESSAGES: UiMessages = {
@@ -26,7 +36,17 @@ const EN_MESSAGES: UiMessages = {
   tabPrep: '2. Docs · Quiz · Q&A',
   tabAnalytics: '3. Data Analytics',
   tabMethodology: '4. API & Validation',
-  langButton: '21 Languages',
+  langButton: 'Language',
+  clearRecords: 'Clear records on this device',
+  clearRecordsHint: 'On a shared school computer, clear this before you leave. Questions and choices stay only in this browser until you do.',
+  clearRecordsDone: 'Records in this browser were deleted.',
+  studentView: 'Student',
+  counselorView: 'Counselor',
+  scheduleClosed: 'Closed',
+  scheduleOpen: 'Open',
+  pickerTitle: 'Language',
+  closeLabel: 'Close',
+  syntheticBadge: 'Synthetic example',
   statelessNoticeTitle: 'Zero-Tracking (Stateless):',
   statelessNoticeBody:
     'Visa status and background selections are never saved to any server or DB. Only anonymous term clicks and counseling steps are aggregated.',
@@ -48,7 +68,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. 서류 · 퀴즈 · 질문',
     tabAnalytics: '3. 데이터 분석',
     tabMethodology: '4. API · 연구 검증',
-    langButton: '21개 언어',
+    langButton: '언어',
+  clearRecords: '이 기기의 기록 지우기',
+  clearRecordsHint: '학교 공용 컴퓨터에서는 마치기 전에 눌러 주세요. 질문 문장은 저장하지 않고, 남은 선택 기록도 이 브라우저에서 지워져요.',
+  clearRecordsDone: '이 브라우저에 남아 있던 기록을 지웠어요.',
+  studentView: '학생 화면',
+  counselorView: '상담 교사 화면',
+  scheduleClosed: '마감',
+  scheduleOpen: '진행 중',
+  pickerTitle: '언어',
+  closeLabel: '닫기',
+  syntheticBadge: '가상·예시 데이터',
     statelessNoticeTitle: '비저장(Stateless) 조회 원칙:',
     statelessNoticeBody:
       '체류자격·배경 선택값은 서버와 DB에 저장하지 않고 브라우저에서만 판정해요. 익명 통계에는 어려운 용어 선택·상담 연결 단계만 기록돼요.',
@@ -69,7 +99,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. 材料 · 测验 · 提问',
     tabAnalytics: '3. 数据分析',
     tabMethodology: '4. API · 研究验证',
-    langButton: '21种语言',
+    langButton: '语言',
+  clearRecords: '清除这台设备上的记录',
+  clearRecordsHint: '用学校公用电脑时，离开前请清除。问题原文不会保存，已留下的选择也只在这个浏览器里。',
+  clearRecordsDone: '已删除这个浏览器里的记录。',
+  studentView: '学生',
+  counselorView: '咨询老师',
+  scheduleClosed: '已截止',
+  scheduleOpen: '进行中',
+  pickerTitle: '语言',
+  closeLabel: '关闭',
+  syntheticBadge: '虚拟示例数据',
     statelessNoticeTitle: '无痕查询原则 (Stateless)：',
     statelessNoticeBody:
       '您的签证类型和家庭背景绝不会保存到服务器或数据库，仅在浏览器临时判断。匿名统计仅记录难懂术语点击与咨询连接步骤。',
@@ -88,7 +128,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. 文件 · 測驗 · 提問',
     tabAnalytics: '3. 數據分析',
     tabMethodology: '4. API · 研究驗證',
-    langButton: '21種語言',
+    langButton: '語言',
+  clearRecords: '清除這台裝置上的紀錄',
+  clearRecordsHint: '使用學校公用電腦時，離開前請清除。問題原文不會保存，留下的選擇也只在這個瀏覽器裡。',
+  clearRecordsDone: '已刪除這個瀏覽器裡的紀錄。',
+  studentView: '學生',
+  counselorView: '諮詢老師',
+  scheduleClosed: '已截止',
+  scheduleOpen: '進行中',
+  pickerTitle: '語言',
+  closeLabel: '關閉',
+  syntheticBadge: '虛擬示例資料',
     statelessNoticeTitle: '無痕查詢原則 (Stateless)：',
     statelessNoticeBody:
       '您的簽證類型與家庭背景絕不會儲存至伺服器或資料庫，僅在瀏覽器暫時判斷。匿名統計僅記錄難懂術語點擊與諮詢連接步驟。',
@@ -107,7 +157,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. Hồ sơ · Quiz · Hỏi đáp',
     tabAnalytics: '3. Phân tích dữ liệu',
     tabMethodology: '4. API & Kiểm chứng',
-    langButton: '21 Ngôn ngữ',
+    langButton: 'Ngôn ngữ',
+  clearRecords: 'Xóa dữ liệu trên máy này',
+  clearRecordsHint: 'Nếu dùng máy tính dùng chung ở trường, hãy xóa trước khi rời. Câu hỏi không được lưu nguyên văn.',
+  clearRecordsDone: 'Đã xóa dữ liệu trên trình duyệt này.',
+  studentView: 'Học sinh',
+  counselorView: 'Tư vấn',
+  scheduleClosed: 'Đã đóng',
+  scheduleOpen: 'Đang mở',
+  pickerTitle: 'Ngôn ngữ',
+  closeLabel: 'Đóng',
+  syntheticBadge: 'Dữ liệu ví dụ',
     statelessNoticeTitle: 'Nguyên tắc Không lưu trữ (Stateless):',
     statelessNoticeBody:
       'Thông tin visa và hoàn cảnh gia đình không bao giờ được lưu lên máy chủ. Hệ thống chỉ thống kê ẩn danh thuật ngữ khó và bước kết nối tư vấn.',
@@ -127,7 +187,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. Документы · Тест · Вопрос',
     tabAnalytics: '3. Аналитика данных',
     tabMethodology: '4. API и проверка',
-    langButton: '21 язык',
+    langButton: 'Язык',
+  clearRecords: 'Удалить записи на этом устройстве',
+  clearRecordsHint: 'На общем школьном компьютере удалите записи перед уходом. Текст вопроса не сохраняется.',
+  clearRecordsDone: 'Записи в этом браузере удалены.',
+  studentView: 'Ученик',
+  counselorView: 'Консультант',
+  scheduleClosed: 'Закрыто',
+  scheduleOpen: 'Идёт',
+  pickerTitle: 'Язык',
+  closeLabel: 'Закрыть',
+  syntheticBadge: 'Учебный пример',
     statelessNoticeTitle: 'Без сохранения данных (Stateless):',
     statelessNoticeBody:
       'Визовый статус и данные о семье не сохраняются на сервере. В анонимную статистику попадают только клики по сложным терминам и шаги консультации.',
@@ -147,7 +217,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. Бичиг · Тест · Асуулт',
     tabAnalytics: '3. Өгөгдлийн шинжилгээ',
     tabMethodology: '4. API ба Шалгалт',
-    langButton: '21 хэл',
+    langButton: 'Хэл',
+  clearRecords: 'Энэ төхөөрөмжийн тэмдэглэлийг устгах',
+  clearRecordsHint: 'Сургуулийн нийтийн компьютерт гарахын өмнө дар. Асуултын эх текстийг хадгалдаггүй.',
+  clearRecordsDone: 'Энэ хөтөч дээрх тэмдэглэлийг устгалаа.',
+  studentView: 'Сурагч',
+  counselorView: 'Зөвлөх',
+  scheduleClosed: 'Хаагдсан',
+  scheduleOpen: 'Нээлттэй',
+  pickerTitle: 'Хэл',
+  closeLabel: 'Хаах',
+  syntheticBadge: 'Жишээ өгөгдөл',
     statelessNoticeTitle: 'Мэдээлэл хадгалахгүй (Stateless):',
     statelessNoticeBody:
       'Визний төрөл болон гэр бүлийн мэдээллийг серверт хадгалахгүй. Зөвхөн нэр томьёо болон зөвлөгөөний алхмыг нэргүйгээр тооцно.',
@@ -167,7 +247,17 @@ const DICT: Partial<Record<SupportedLangCode, UiMessages>> = {
     tabPrep: '2. المستندات · اختبار · سؤال',
     tabAnalytics: '3. تحليل البيانات',
     tabMethodology: '4. واجهات API والتحقق',
-    langButton: '21 لغة',
+    langButton: 'اللغة',
+  clearRecords: 'مسح السجلات على هذا الجهاز',
+  clearRecordsHint: 'على جهاز المدرسة المشترك، امسح السجلات قبل المغادرة. لا يُحفظ نص السؤال.',
+  clearRecordsDone: 'حُذفت السجلات من هذا المتصفح.',
+  studentView: 'طالب',
+  counselorView: 'مستشار',
+  scheduleClosed: 'مغلق',
+  scheduleOpen: 'جارٍ',
+  pickerTitle: 'اللغة',
+  closeLabel: 'إغلاق',
+  syntheticBadge: 'بيانات توضيحية',
     statelessNoticeTitle: 'مبدأ عدم التخزين (Stateless):',
     statelessNoticeBody:
       'لا يتم حفظ نوع التأشيرة أو الخلفية العائلية في أي خادم أو قاعدة بيانات. يتم جمع إحصاءات مجهولة للمصطلحات الصعبة وخطوات الاستشارة فقط.',

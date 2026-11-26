@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from 'kbridge-core';
+import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from '../kbridge';
 import {
   WEEKLY_DID_SERIES,
   computeDidEffect,
@@ -81,8 +81,8 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
   return (
     <div className="kb-stack">
       <div className="kv-notice-box" role="note">
-        <strong>데이터 출처 표시:</strong> 가상 중·고교 6곳(432명) 12주 합성 데이터 + 현재 세션 실시간 입력{' '}
-        <strong>{liveEvents.length}건</strong> 반영 · 공공자료(가족센터·통번역사) 기준일 2026-06-30.
+        <strong>가상·예시 데이터:</strong> DiD 효과와 TF-IDF F1은 작은 합성 표본으로 만든 예시예요. 실제 합격·상담 결과가 아닙니다.
+        가상 중·고교 6곳(432명) 12주 합성 데이터에 이 브라우저의 주제 코드 {liveEvents.length}건을 더했습니다.
       </div>
 
       {/* KPI 4개 */}
@@ -98,7 +98,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
         </div>
 
         <div className="kb-card">
-          <p className="kv-kpi-label">개입(쉬운 용어 카드) DiD 효과</p>
+          <p className="kv-kpi-label">개입 DiD 효과 <span className="kb-tag">가상·예시</span></p>
           <p className="kv-kpi-value">+{did.didEstimate}%p</p>
           <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
             조기군 +{did.earlyDiff}%p vs 지연군 +{did.lateDiff}%p (6~8주 비교)
@@ -195,7 +195,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
 
       {/* 차트 2: 조기·지연 도입 학급 DiD 전후 검증 */}
       <section className="kb-section">
-        <h2 className="kb-section-title">2. 교사 개입(쉬운 입시 용어 카드) 전후 이해도 검증 (DiD)</h2>
+        <h2 className="kb-section-title">2. 이해도 변화 예시 (DiD) <span className="kb-tag kb-status-check">가상·예시 데이터</span></h2>
         <p className="kb-subtitle" style={{ marginBottom: 12 }}>
           6주차에 조기 도입한 학급(실선)과 9주차에 지연 도입한 학급(점선)의 전형 이해 정답률을 비교해요.
           4·8주차 시험주간의 응답률 하락(회색 점선)을 정답률과 분리해 선택 편향을 통제했어요.
