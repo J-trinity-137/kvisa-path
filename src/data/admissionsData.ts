@@ -1,4 +1,14 @@
-import type { SupportedLangCode } from 'kbridge-core';
+import type { SupportedLangCode } from '../kbridge';
+
+export type VerificationState = 'verified' | 'unverified';
+
+export interface SourcedClaim {
+  sourceUrl: string;
+  verifiedOn: string;
+  applicableTerm: string;
+  verification: VerificationState;
+  unverifiedReason?: string;
+}
 
 export type SchoolLevel = 'middle' | 'high';
 export type BackgroundType = 'both_foreign' | 'multicultural' | 'mid_entry' | 'undocumented';
@@ -30,6 +40,8 @@ export interface AdmissionTrack {
   referenceUrl: string;
   referenceLabel: string;
   asOfYear: string;
+  verification: VerificationState;
+  unverifiedReason?: string;
 }
 
 export interface SeoulVocationalSchool {
@@ -42,6 +54,10 @@ export interface SeoulVocationalSchool {
   majors: string[];
   specialTrack: string;
   univSpecialEligible: boolean; // 마이스터고는 대입 특성화고 특별전형 제외
+  sourceUrl: string;
+  verifiedOn: string;
+  majorsSourceUrl: string;
+  majorsApplicableTerm: string;
 }
 
 export interface UniversityTopikRow {
@@ -67,6 +83,11 @@ export interface ExternalScholarshipRule {
   eligibleBackgrounds: BackgroundType[];
   excludeRule: string;
   asOfYear: string;
+  sourceUrl: string;
+  verifiedOn: string;
+  applicableTerm: string;
+  verification: VerificationState;
+  unverifiedReason?: string;
 }
 
 export interface ApostilleCountryRule {
@@ -247,9 +268,11 @@ export const ADMISSION_TRACKS: AdmissionTrack[] = [
     termIds: ['supernumerary', 'foreign_credit', 'apostille'],
     visaNote: '아포스티유·영사확인에 2~6주 걸리므로 중3 7월 초부터 서류를 준비하세요.',
     gapHint: '외국 학교 재학 이력이 없다면 아래 특성화고 미래인재전형으로 바로 지원할 수 있어요.',
-    referenceUrl: 'https://www.sen.go.kr',
-    referenceLabel: '서울시교육청 고입 특례 공고',
+    referenceUrl: '',
+    referenceLabel: '특례 공고의 특정 게시글은 이번 점검에서 확인하지 못함',
     asOfYear: '2026~2027학년도',
+    verification: 'unverified',
+    unverifiedReason: '초·중등교육법 시행령 제82조를 근거로 적은 안내이나, 서울시교육청 특례 공고의 개별 URL은 이번 점검에서 확인하지 못했습니다.',
   },
   {
     id: 'hs-vocational-future',
@@ -268,9 +291,10 @@ export const ADMISSION_TRACKS: AdmissionTrack[] = [
     termIds: ['foreign_credit', 'equal_opportunity'],
     visaNote: '국내 7년+ 체류·초중고 졸업 외국인 청소년은 대학 없이 고졸 직행 취업비자(E-7-Y) 및 구직(D-10, 3년)이 가능해요.',
     gapHint: '모든 배경·한국어 수준에서 바로 지원 가능한 가장 열린 고입 경로예요.',
-    referenceUrl: 'https://high-job.sen.go.kr',
-    referenceLabel: '서울시교육청 하이잡(High-Job)',
-    asOfYear: '2027학년도 확정',
+    referenceUrl: 'https://www.sen.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20261029094009856&q_bbsSn=1028',
+    referenceLabel: '서울시교육청 2027학년도 특성화고 모집 안내',
+    asOfYear: '2027학년도',
+    verification: 'verified',
   },
   {
     id: 'univ-foreign-parents',
@@ -289,9 +313,11 @@ export const ADMISSION_TRACKS: AdmissionTrack[] = [
     termIds: ['supernumerary', 'd2_change', 'financial_proof', 'apostille'],
     visaNote: '등록금 납부 시 사설환전소 이용은 보이스피싱 연루 위험이 크니 반드시 대학 공식 은행 가상계좌를 쓰세요.',
     gapHint: '현재 TOPIK 초급이라면 먼저 TOPIK 3급(숭실·시립·과기 등) 또는 4급(건국 등)을 취득하면 바로 지원 가능해요.',
-    referenceUrl: 'https://www.adiga.kr',
-    referenceLabel: '대교협 어디가 · 대학 국제처',
+    referenceUrl: 'https://ssu.ac.kr/%ED%95%99%EC%82%AC/%ED%95%99%EC%82%AC%EC%A0%95%EB%B3%B4/%EC%9E%A5%ED%95%99/%EC%99%B8%EA%B5%AD%EC%9D%B8-%EC%9C%A0%ED%95%99%EC%83%9D-%EC%9E%A5%ED%95%99%EA%B8%88/',
+    referenceLabel: '예시: 숭실대 외국인 유학생 장학금 (대학마다 다름)',
     asOfYear: '2026~2027학년도',
+    verification: 'unverified',
+    unverifiedReason: '트랙 설명의 대학별 인원·급수 예시는 이번 점검에서 대학별로 다시 확인하지 못했습니다. 링크는 확인한 숭실대 장학 페이지입니다.',
   },
   {
     id: 'univ-multicultural-eq',
@@ -310,9 +336,11 @@ export const ADMISSION_TRACKS: AdmissionTrack[] = [
     termIds: ['equal_opportunity', 'supernumerary'],
     visaNote: '한국 국적 보유 시 국가장학금 및 우리다문화·명인다문화장학재단(중위소득 100% 이하) 지원이 가능해요.',
     gapHint: '교과 학습 한국어(TOPIK 4급 이상 수준)를 갖추면 학생부종합 서류 경쟁력이 크게 올라가요.',
-    referenceUrl: 'https://www.adiga.kr',
-    referenceLabel: '대교협 어디가 다문화전형',
+    referenceUrl: '',
+    referenceLabel: '대학별 다문화 전형 페이지는 이번 점검에서 확인하지 못함',
     asOfYear: '2027학년도 기준',
+    verification: 'unverified',
+    unverifiedReason: '어디가 홈페이지 주소만 있었고, 전형별 공고 URL은 확인하지 못했습니다.',
   },
   {
     id: 'univ-vocational-grad',
@@ -331,152 +359,174 @@ export const ADMISSION_TRACKS: AdmissionTrack[] = [
     termIds: ['supernumerary', 'd2_change'],
     visaNote: '국내 체류 7년 미만 외국 국적 특성화고 졸업생은 법무부 지정 전문대 육성형 전문기술학과(E-7-M) 연계도 가능해요.',
     gapHint: '전문교과 30단위(2028년부터 24학점) 이수와 TOPIK 3~4급을 함께 챙기면 수시 서류형 지원이 열려요.',
-    referenceUrl: 'https://www.adiga.kr',
-    referenceLabel: '대교협 특성화고 특별전형',
+    referenceUrl: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=103993&lev=0&m=020402&opType=N&page=1&s=moe&searchType=null&statusYN=W',
+    referenceLabel: '교육부 2028학년도 대학입학전형기본사항 보도',
     asOfYear: '2027학년도 기준',
+    verification: 'unverified',
+    unverifiedReason: '일정 틀은 대교협 기본사항으로 확인했으나, 대학별 모집 인원 숫자는 이번 점검에서 요강 원문을 확인하지 못했습니다.',
   },
 ];
 
-export const SEOUL_VOCATIONAL_SCHOOLS: SeoulVocationalSchool[] = [
-  {
-    neisCode: '7010531',
+const SCHOOL_CODE_CHECKED_ON = '2026-11-26';
+const MAJOR_GUIDE_URL =
+  'https://buseo.sen.go.kr/component/file/ND_fileDownload.do?q_fileId=a925241d-36f4-45a7-8248-0276bf55c975&q_fileSn=2142453';
+const MAJOR_TERM = '서울시교육청 특성화고·마이스터고 안내 문서(본문 표기 2025학년도). 2027 모집학과는 학교 요강이 우선입니다.';
+
+function neisSchoolUrl(code: string): string {
+  return `https://open.neis.go.kr/hub/schoolInfo?Type=json&pIndex=1&pSize=5&ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=${code}`;
+}
+
+function school(
+  partial: Omit<SeoulVocationalSchool, 'officeCode' | 'sourceUrl' | 'verifiedOn' | 'majorsSourceUrl' | 'majorsApplicableTerm'>,
+): SeoulVocationalSchool {
+  return {
+    ...partial,
     officeCode: 'B10',
+    sourceUrl: neisSchoolUrl(partial.neisCode),
+    verifiedOn: SCHOOL_CODE_CHECKED_ON,
+    majorsSourceUrl: MAJOR_GUIDE_URL,
+    majorsApplicableTerm: MAJOR_TERM,
+  };
+}
+
+export const SEOUL_VOCATIONAL_SCHOOLS: SeoulVocationalSchool[] = [
+  school({
+    neisCode: '7010837',
     name: '성암국제무역고등학교',
     schoolType: '특성화고',
     district: '강북구',
     field: 'business',
     majors: ['미주무역과', '중국무역과', '일본무역과', '국제문화콘텐츠과'],
-    specialTrack: '국내 유일 무역 특성화고 · 이중언어 강점 최적',
+    specialTrack: '무역 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010524',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7010739',
     name: '서울관광고등학교',
     schoolType: '특성화고',
     district: '관악구',
     field: 'culinary',
-    majors: ['외식조리과', '카페경영과', '관광경영계열'],
-    specialTrack: '2027 미래인재전형(160명, 교과 미반영·면접 중심)',
+    majors: ['카페경영과', '관광서비스과', '외식조리과'],
+    specialTrack: '조리·관광 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010516',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7011213',
     name: '서울컨벤션고등학교',
     schoolType: '특성화고',
     district: '강동구',
     field: 'culinary',
-    majors: ['컨벤션·관광·비즈니스 계열'],
-    specialTrack: '2027 미래인재전형(출결·봉사·면접, 교과 미반영)',
+    majors: ['미디어사운드과', '베이커리카페과', '컨벤션외식조리과', '관광레저과'],
+    specialTrack: '컨벤션·조리 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010539',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7010537',
     name: '세명컴퓨터고등학교',
     schoolType: '특성화고',
     district: '은평구',
     field: 'it',
-    majors: ['인공지능소프트웨어과', '게임소프트웨어과', '스마트보안솔루션과', '디바이스소프트웨어과'],
-    specialTrack: '2027 미래인재전형(교과 미반영) · 대입 IT 동일계열 유리',
+    majors: ['스마트보안솔루션과', '모빌리티메이커과', '인공지능소프트웨어과', '게임소프트웨어과'],
+    specialTrack: '소프트웨어 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010541',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7010795',
     name: '서울영상고등학교',
     schoolType: '특성화고',
     district: '양천구',
     field: 'design',
-    majors: ['영상·콘텐츠·미디어 계열'],
-    specialTrack: '2027 미래인재전형 · 비언어 시각 포트폴리오 강점',
+    majors: ['영상프로듀스과', '영상미디어과', '영상콘텐츠과'],
+    specialTrack: '영상 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010545',
-    officeCode: 'B10',
-    name: '이화미디어고등학교',
+  }),
+  school({
+    neisCode: '7010747',
+    name: '이화여자대학교병설미디어고등학교',
     schoolType: '특성화고',
-    district: '중구',
+    district: '중랑구',
     field: 'design',
-    majors: ['미디어·디자인 계열'],
-    specialTrack: '2027 미래인재전형(출결·봉사·면접)',
+    majors: ['국제경영과', '영상콘텐츠과', '디자인과'],
+    specialTrack: '미디어 특성화고(중랑구). 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010518',
-    officeCode: 'B10',
-    name: '단국대부속소프트웨어고등학교',
+  }),
+  school({
+    neisCode: '7011489',
+    name: '단국대학교부속소프트웨어고등학교',
     schoolType: '특성화고',
     district: '강남구',
     field: 'it',
-    majors: ['소프트웨어·AI·IT 계열'],
-    specialTrack: '미래인재전형 · 대입 특성화고 IT 동일계열 연계',
+    majors: ['인공지능소프트웨어과', '사물인터넷소프트웨어과', '게임콘텐츠과'],
+    specialTrack: '소프트웨어 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010513',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7010833',
     name: '대동세무고등학교',
     schoolType: '특성화고',
     district: '종로구',
     field: 'business',
-    majors: ['세무·회계·금융 계열'],
-    specialTrack: '상업계열 대표교 · 경영/회계 대입 동일계열 폭넓음',
+    majors: ['세무회계과', '관세무역과', '세무행정과'],
+    specialTrack: '세무·무역 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010542',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7010740',
     name: '대진디자인고등학교',
     schoolType: '특성화고',
     district: '강남구',
     field: 'design',
-    majors: ['시각디자인·실내디자인·콘텐츠 계열'],
-    specialTrack: '디자인 실무 중심 · 한국어 학술 장벽 상대적 완화',
+    majors: ['시각디자인과', '인테리어디자인과', '메타버스디자인과'],
+    specialTrack: '디자인 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010555',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7011486',
     name: '서울의료보건고등학교',
     schoolType: '특성화고',
     district: '중구',
     field: 'health',
-    majors: ['보건간호과', '의료경영과', '치의보건간호과'],
-    specialTrack: '미래인재전형 · 보건·간호 계열 진학/취업 연계',
+    majors: ['보건간호과'],
+    specialTrack: '보건간호 특성화고. 2027학년도 특별전형 원서(11.23~24)는 마감됐어요.',
     univSpecialEligible: true,
-  },
-  {
-    neisCode: '7010529',
-    officeCode: 'B10',
+  }),
+  school({
+    neisCode: '7011569',
     name: '미림마이스터고등학교',
     schoolType: '마이스터고',
     district: '관악구',
     field: 'it',
-    majors: ['소프트웨어·IT 개발 계열'],
-    specialTrack: '2027 사회통합·고입 특례 명시 (주의: 대입 특성화고 전형 제외)',
+    majors: ['뉴미디어소프트웨어과', '뉴미디어디자인과'],
+    specialTrack: '2027학년도 마이스터고 원서(10.19~22)는 마감. 대입 특성화고 졸업자 특별전형 대상이 아니에요.',
     univSpecialEligible: false,
-  },
-  {
-    neisCode: '7010536',
-    officeCode: 'B10',
-    name: '서울로봇고등학교 · 수도전기공업고',
+  }),
+  school({
+    neisCode: '7010738',
+    name: '서울로봇고등학교',
     schoolType: '마이스터고',
     district: '강남구',
     field: 'it',
-    majors: ['로봇·자동화 · 전기·에너지 계열'],
-    specialTrack: '2027 사회통합(중위소득 160%↓)·고입 특례 명시 (대입 특성화고 전형 제외)',
+    majors: ['로봇설계과', '로봇제어과', '로봇소프트웨어과', '로봇정보통신과'],
+    specialTrack: '2027학년도 마이스터고 원서(10.19~22)는 마감. 대입 특성화고 졸업자 특별전형 대상이 아니에요.',
     univSpecialEligible: false,
-  },
+  }),
+  school({
+    neisCode: '7010346',
+    name: '수도전기공업고등학교',
+    schoolType: '마이스터고',
+    district: '강남구',
+    field: 'it',
+    majors: ['전기에너지과', '에너지전자제어과', '에너지기계과', '에너지정보통신과'],
+    specialTrack: '전기·에너지 마이스터고라 IT 계열 필터에 함께 보여요. 2027학년도 원서는 마감. 대입 특성화고 특별전형 대상이 아니에요.',
+    univSpecialEligible: false,
+  }),
 ];
 
 export const UNIVERSITY_TOPIK_TABLE: UniversityTopikRow[] = [
   {
     id: 'ssu',
     university: '숭실대',
-    gedAccepted: '원칙 불인정(정규고)',
+    gedAccepted: '불인정',
     topik3: '40%',
     topik4: '60%',
     topik5: '80%',
@@ -485,7 +535,7 @@ export const UNIVERSITY_TOPIK_TABLE: UniversityTopikRow[] = [
     vocationalTrack: '정시 다군 10명(수능 100%)',
     multiculturalTrack: '기회균형(수시 학종)',
     fields: ['it', 'business', 'design'],
-    note: '대학 공식 확인 · TOPIK 3~5급 구간 감면율 최상위',
+    note: '입학 첫 학기만 적용(2025학년도 이후 입학자). 3급 40%·4급 60%·5급 80%·6급 100%. 2026-11-26 학교 페이지에서 확인.',
   },
   {
     id: 'konkuk',
@@ -643,6 +693,86 @@ export const UNIVERSITY_TOPIK_TABLE: UniversityTopikRow[] = [
   },
 ];
 
+export const UNIVERSITY_IDS = [
+  'ssu',
+  'konkuk',
+  'kookmin',
+  'seoultech',
+  'uos',
+  'dongguk',
+  'hufs',
+  'khu',
+  'hanyang',
+  'skku',
+  'cau',
+  'smwu',
+] as const;
+
+export type UniversityId = (typeof UNIVERSITY_IDS)[number];
+
+const GED_NOT_RECONFIRMED: SourcedClaim = {
+  sourceUrl: '',
+  verifiedOn: '2026-11-26',
+  applicableTerm: '미확인',
+  verification: 'unverified',
+  unverifiedReason: '이번 점검에서 해당 대학 모집요강 원문의 검정고시 조항을 확인하지 못했습니다. 표의 문구는 이전 정리이며 확정 사실이 아닙니다.',
+};
+
+const SCHOLARSHIP_NOT_RECONFIRMED: SourcedClaim = {
+  sourceUrl: '',
+  verifiedOn: '2026-11-26',
+  applicableTerm: '미확인',
+  verification: 'unverified',
+  unverifiedReason: '이번 점검에서 해당 대학 장학 규정 원문을 확인하지 못했습니다. 급수별 숫자는 이전 정리이며 확정 사실이 아닙니다.',
+};
+
+export const UNIVERSITY_GED_RULES: Record<UniversityId, SourcedClaim> = {
+  ssu: {
+    sourceUrl: 'https://iphak.ssu.ac.kr/upload/SSU(2)_26090184026.pdf',
+    verifiedOn: '2026-11-26',
+    applicableTerm: '2027학년도 1학기 순수외국인 특별전형',
+    verification: 'verified',
+  },
+  konkuk: GED_NOT_RECONFIRMED,
+  kookmin: GED_NOT_RECONFIRMED,
+  seoultech: GED_NOT_RECONFIRMED,
+  uos: GED_NOT_RECONFIRMED,
+  dongguk: GED_NOT_RECONFIRMED,
+  hufs: GED_NOT_RECONFIRMED,
+  khu: GED_NOT_RECONFIRMED,
+  hanyang: GED_NOT_RECONFIRMED,
+  skku: GED_NOT_RECONFIRMED,
+  cau: GED_NOT_RECONFIRMED,
+  smwu: GED_NOT_RECONFIRMED,
+};
+
+export const UNIVERSITY_SCHOLARSHIP_RULES: Record<UniversityId, SourcedClaim> = {
+  ssu: {
+    sourceUrl: 'https://ssu.ac.kr/%ED%95%99%EC%82%AC/%ED%95%99%EC%82%AC%EC%A0%95%EB%B3%B4/%EC%9E%A5%ED%95%99/%EC%99%B8%EA%B5%AD%EC%9D%B8-%EC%9C%A0%ED%95%99%EC%83%9D-%EC%9E%A5%ED%95%99%EA%B8%88/',
+    verifiedOn: '2026-11-26',
+    applicableTerm: '입학 직후 첫 학기 1회 (2025학년도 이후 입학자)',
+    verification: 'verified',
+  },
+  konkuk: SCHOLARSHIP_NOT_RECONFIRMED,
+  kookmin: SCHOLARSHIP_NOT_RECONFIRMED,
+  seoultech: SCHOLARSHIP_NOT_RECONFIRMED,
+  uos: SCHOLARSHIP_NOT_RECONFIRMED,
+  dongguk: SCHOLARSHIP_NOT_RECONFIRMED,
+  hufs: SCHOLARSHIP_NOT_RECONFIRMED,
+  khu: SCHOLARSHIP_NOT_RECONFIRMED,
+  hanyang: SCHOLARSHIP_NOT_RECONFIRMED,
+  skku: SCHOLARSHIP_NOT_RECONFIRMED,
+  cau: SCHOLARSHIP_NOT_RECONFIRMED,
+  smwu: SCHOLARSHIP_NOT_RECONFIRMED,
+};
+
+const EXTERNAL_NOT_RECONFIRMED = {
+  sourceUrl: '',
+  verifiedOn: '2026-11-26',
+  verification: 'unverified' as const,
+  unverifiedReason: '이번 점검에서 해당 장학 공고 원문을 확인하지 못했습니다.',
+};
+
 export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
   {
     id: 'kosaf',
@@ -652,6 +782,8 @@ export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
     eligibleBackgrounds: ['multicultural'],
     excludeRule: '대한민국 국적 대학생 대상 (부모 모두 외국 국적 학생 원칙 제외)',
     asOfYear: '2026 기준',
+    applicableTerm: '미확인',
+    ...EXTERNAL_NOT_RECONFIRMED,
   },
   {
     id: 'woori',
@@ -661,6 +793,8 @@ export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
     eligibleBackgrounds: ['multicultural'],
     excludeRule: '부모 모두 외국 국적인 가정 및 북한이탈주민 지원 불가',
     asOfYear: '2026 공고',
+    applicableTerm: '미확인',
+    ...EXTERNAL_NOT_RECONFIRMED,
   },
   {
     id: 'myungin',
@@ -670,6 +804,8 @@ export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
     eligibleBackgrounds: ['multicultural'],
     excludeRule: '부모 모두 외국 국적 불가 · 입학 첫 학기 및 졸업 직전 학기 제외',
     asOfYear: '2026 1·2학기',
+    applicableTerm: '미확인',
+    ...EXTERNAL_NOT_RECONFIRMED,
   },
   {
     id: 'gks',
@@ -679,6 +815,8 @@ export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
     eligibleBackgrounds: ['both_foreign', 'mid_entry'],
     excludeRule: '외국 국적 학부 진학자 대상 (공관·대학 전형 세부 요강 확인)',
     asOfYear: '2027 기준',
+    applicableTerm: '미확인',
+    ...EXTERNAL_NOT_RECONFIRMED,
   },
   {
     id: 'sdream',
@@ -688,6 +826,8 @@ export const EXTERNAL_SCHOLARSHIPS: ExternalScholarshipRule[] = [
     eligibleBackgrounds: ['both_foreign'],
     excludeRule: '주의: 한국 초·중·고 1학기라도 이수한 학생 및 교포는 지원 불가!',
     asOfYear: '2026~2027',
+    applicableTerm: '미확인',
+    ...EXTERNAL_NOT_RECONFIRMED,
   },
 ];
 

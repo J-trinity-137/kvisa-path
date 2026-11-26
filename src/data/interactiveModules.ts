@@ -20,7 +20,28 @@ export interface DDaySchedule {
   id: string;
   title: string;
   target: string;
-  dateStr: string; // YYYY-MM-DD
+  /** Inclusive start date, YYYY-MM-DD (Korea civil date). */
+  dateStr: string;
+  /** Inclusive end date. Omit when the event is a single day. */
+  endDateStr?: string;
+  sourceUrl: string;
+  sourceLabel: string;
+  verifiedOn: string;
+}
+
+export type SchedulePhase = 'upcoming' | 'open' | 'closed';
+
+export function schedulePhase(schedule: DDaySchedule, today: string): SchedulePhase {
+  const end = schedule.endDateStr ?? schedule.dateStr;
+  if (today < schedule.dateStr) return 'upcoming';
+  if (today > end) return 'closed';
+  return 'open';
+}
+
+export function daysUntil(dateStr: string, today: string): number {
+  const start = Date.parse(`${dateStr}T00:00:00Z`);
+  const now = Date.parse(`${today}T00:00:00Z`);
+  return Math.round((start - now) / 86_400_000);
 }
 
 export interface CareerSuggestion {
@@ -98,9 +119,74 @@ export const ADMISSION_QUIZ_ITEMS: QuizItem[] = [
 ];
 
 export const DDAY_SCHEDULES: DDaySchedule[] = [
-  { id: 'sched-voc', title: '서울 특성화고 특별전형 원서접수', target: '중3 (고입)', dateStr: '2026-11-26' },
-  { id: 'sched-topik', title: '제109회 TOPIK 한국어능력시험', target: '중·고 전체', dateStr: '2027-01-17' },
-  { id: 'sched-susi', title: '2028학년도 대입 수시·외국인전형 1차', target: '고3 (대입)', dateStr: '2027-09-08' },
+  {
+    id: 'sched-meister-apply',
+    title: '서울 마이스터고 원서접수',
+    target: '중3 (고입)',
+    dateStr: '2026-10-19',
+    endDateStr: '2026-10-22',
+    sourceUrl: 'https://jinhak.sen.go.kr/subList/20000000430',
+    sourceLabel: '서울진로진학정보센터 2027학년도 고입 주요 일정',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-voc-apply',
+    title: '서울 특성화고 특별전형 원서접수',
+    target: '중3 (고입)',
+    dateStr: '2026-11-23',
+    endDateStr: '2026-11-24',
+    sourceUrl: 'https://www.sen.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20261029094009856&q_bbsSn=1028',
+    sourceLabel: '서울시교육청 정책돋보기, 2027학년도 서울 특성화고 신입생 모집 (2026-10-29)',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-voc-interview',
+    title: '서울 특성화고 특별전형 면접',
+    target: '중3 (고입)',
+    dateStr: '2026-11-25',
+    endDateStr: '2026-11-26',
+    sourceUrl: 'https://high-job.sen.go.kr/FUS/BO/J1List.do',
+    sourceLabel: '서울시교육청 하이잡 특성화고 입학전형 일정',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-topik-109',
+    title: '제109회 TOPIK I·II (지필)',
+    target: '중·고 전체',
+    dateStr: '2026-11-15',
+    sourceUrl: 'https://www.niied.go.kr/convert/preview/1765176663798/index.html',
+    sourceLabel: '교육부 공고 제2025-317호 (2026년 TOPIK 시행계획), 대한민국 시험일',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-topik-110',
+    title: '제110회 TOPIK I·II (지필)',
+    target: '중·고 전체',
+    dateStr: '2027-01-10',
+    sourceUrl: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=333&boardSeq=107584&lev=0&m=0205&opType=N&page=1&s=moe&searchType=null&statusYN=W',
+    sourceLabel: '교육부 공고 제2026-419호 (2027년 TOPIK 시행계획), 대한민국 시험일 1.10.',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-foreign-early-2028',
+    title: '2028학년도 재외국민·외국인 특별전형 원서접수(7월 창구)',
+    target: '고3 (대입)',
+    dateStr: '2027-07-05',
+    endDateStr: '2027-07-09',
+    sourceUrl: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=103993&lev=0&m=020402&opType=N&page=1&s=moe&searchType=null&statusYN=W',
+    sourceLabel: '대교협 2028학년도 대학입학전형기본사항. 대학은 7.5.~7.9. 또는 9.20.~9.23. 중 3일 이상 접수할 수 있음',
+    verifiedOn: '2026-11-26',
+  },
+  {
+    id: 'sched-susi-2028',
+    title: '2028학년도 수시모집 원서접수',
+    target: '고3 (대입)',
+    dateStr: '2027-09-20',
+    endDateStr: '2027-09-23',
+    sourceUrl: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=103993&lev=0&m=020402&opType=N&page=1&s=moe&searchType=null&statusYN=W',
+    sourceLabel: '대교협 2028학년도 대학입학전형기본사항. 9.20.~9.23. 중 3일 이상',
+    verifiedOn: '2026-11-26',
+  },
 ];
 
 export const CAREER_RECOMMENDATIONS: Record<InterestField, CareerSuggestion> = {
@@ -136,7 +222,19 @@ export const CAREER_RECOMMENDATIONS: Record<InterestField, CareerSuggestion> = {
   },
 };
 
+export const QUESTION_TOPIC_CODES = [
+  'ged',
+  'scholarship',
+  'part_time',
+  'visa_status',
+  'documents',
+  'other',
+] as const;
+
+export type QuestionTopicCode = (typeof QUESTION_TOPIC_CODES)[number];
+
 export interface QuestionClassification {
+  topicCode: QuestionTopicCode;
   topic: string;
   guideAnswer: string;
 }
@@ -148,42 +246,65 @@ export function classifyQuestionTopic(rawText: string): QuestionClassification {
   const q = rawText.toLowerCase();
   if (q.includes('검정고시') || q.includes('ged') || q.includes('중퇴')) {
     return {
+      topicCode: 'ged',
       topic: '검정고시·학력인정',
       guideAnswer:
-        '검정고시 합격자도 국내 고교 졸업 동등 학력으로 인정돼요. 다만 대학 외국인 특별전형은 학교마다 검정고시 인정 여부가 다르니 지원 대학 요강을 꼭 확인하세요.',
+        '검정고시 합격은 국내에서 고등학교 졸업과 같은 학력으로 인정돼요. 대학 순수외국인 전형은 이와 달라서, 정규 고등학교 졸업만 받고 검정고시를 받지 않는 곳이 많아요. 이 앱의 대학 표는 모두 불인정 또는 원칙 불인정으로 표시돼 있어요. 그중 숭실대 2027학년도 1학기 모집요강만 국내·외 검정고시 지원 불가를 확인했고, 다른 대학 칸은 아직 요강 원문을 확인하지 못했습니다.',
     };
   }
   if (q.includes('장학') || q.includes('등록금') || q.includes('돈') || q.includes('비용') || q.includes('학비')) {
     return {
+      topicCode: 'scholarship',
       topic: '장학금·비용 지원',
       guideAnswer:
-        '다문화가정 자녀는 국가장학금·지자체 다문화 장학금을 신청할 수 있고, 외국인 특별전형 학생은 TOPIK 급수별(4~6급) 대학 입학 장학금 감면 제도가 많아요.',
+        '한국 국적 학생은 국가장학금과 다문화 장학금을 따로 확인하고, 외국 국적 학생은 대학별 TOPIK 장학을 확인해요. 숭실대 입학장학금(TOPIK 3급 40%·4급 60%·5급 80%·6급 100%)은 입학 직후 첫 학기만 적용돼요. 다른 대학 숫자는 이번 점검에서 원문을 확인하지 못했습니다.',
     };
   }
-  if (q.includes('알바') || q.includes('아르바이트') || q.includes('취업') || q.includes('일')) {
+  if (q.includes('알바') || q.includes('아르바이트') || q.includes('취업') || q.includes('시간제')) {
     return {
+      topicCode: 'part_time',
       topic: '시간제 취업·알바',
       guideAnswer:
-        '외국 국적 학생(D-2 등)은 출입국관리사무소 사전 허가(시간제 취업 허가) 없이 일하면 체류 연장 불이익이 생겨요. 학교 국제교류팀 확인서를 먼저 받으세요.',
+        '외국 국적 학생은 출입국 사전 허가 없이 일하면 체류 연장에 불이익이 생길 수 있어요. 학교 국제교류팀에 먼저 확인하세요. 질문 문장 자체는 저장하지 않아요.',
     };
   }
   if (q.includes('비자') || q.includes('d-2') || q.includes('f-1') || q.includes('미등록') || q.includes('체류')) {
     return {
+      topicCode: 'visa_status',
       topic: '비자·체류자격 전환',
       guideAnswer:
-        '대학 입학 시 표준입학허가서로 D-2 변경이 필요하며, 미등록 아동은 장기체류 아동 교육권 구제제도를 통해 가족센터·무료 법률상담을 받을 수 있어요.',
+        '대학 입학 때는 표준입학허가서로 유학 체류자격 변경이 필요한지 하이코리아에서 확인해요. 체류 상태가 불안정하면 가족센터나 다누리콜센터 1577-1366에 문의할 수 있어요. 질문 문장과 체류자격은 저장하지 않아요.',
     };
   }
   if (q.includes('서류') || q.includes('아포스티유') || q.includes('공증') || q.includes('성적')) {
     return {
+      topicCode: 'documents',
       topic: '해외 학력·서류 준비',
       guideAnswer:
-        '해외 학교 성적표·재학증명서는 아포스티유 또는 영사확인이 필요해요. 발급 기간이 길어 접수 2개월 전부터 준비하는 게 안전해요.',
+        '해외 학교 성적표·재학증명서는 아포스티유 또는 영사확인이 필요해요. 발급에 여러 주가 걸릴 수 있어 접수보다 일찍 준비하는 편이 안전해요.',
     };
   }
   return {
+    topicCode: 'other',
     topic: '기타 입시·진로 질문',
     guideAnswer:
-      '질문이 익명 통계에 기록됐어요. 구체적인 전형 상담은 1번 탭의 우리 구 가족센터(무료 통역) 또는 다누리 1577-1366 3자 통역을 이용하면 정확히 안내받을 수 있어요.',
+      '질문 문장은 저장하지 않고 주제 코드만 이 기기에 남아요. 구체적인 상담은 우리 구 가족센터 또는 다누리콜센터 1577-1366을 이용하세요.',
+  };
+}
+
+export function buildQuestionLog(rawText: string, lang: string): {
+  app: string;
+  opportunityId: string;
+  kind: string;
+  lang: string;
+  choiceCode: QuestionTopicCode;
+} {
+  const classified = classifyQuestionTopic(rawText);
+  return {
+    app: 'kvisa-path',
+    opportunityId: 'free-question',
+    kind: 'free_question',
+    lang,
+    choiceCode: classified.topicCode,
   };
 }

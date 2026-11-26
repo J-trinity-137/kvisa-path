@@ -1,4 +1,4 @@
-import { applyKAnonymityMask, type AnonymousEvent } from 'kbridge-core';
+import { applyKAnonymityMask, type AnonymousEvent } from '../kbridge';
 import { ADMISSION_TERMS } from './admissionsData';
 
 export interface TermBottleneckRow {
@@ -201,12 +201,13 @@ export function computeDistrictFunnels(liveEvents: AnonymousEvent[]): (DistrictF
   const liveByDistrict = new Map<string, { episodes: number; connected: number; failed: number }>();
 
   for (const ev of liveEvents) {
-    if (!ev.spanText) continue;
-    const prev = liveByDistrict.get(ev.spanText) ?? { episodes: 0, connected: 0, failed: 0 };
+    if (!ev.choiceCode) continue;
+    if (ev.kind !== 'referral_opened' && ev.kind !== 'referral_connected' && ev.kind !== 'referral_failed') continue;
+    const prev = liveByDistrict.get(ev.choiceCode) ?? { episodes: 0, connected: 0, failed: 0 };
     if (ev.kind === 'referral_opened') prev.episodes += 1;
     if (ev.kind === 'referral_connected') prev.connected += 1;
     if (ev.kind === 'referral_failed') prev.failed += 1;
-    liveByDistrict.set(ev.spanText, prev);
+    liveByDistrict.set(ev.choiceCode, prev);
   }
 
   return BASE_DISTRICT_FUNNELS.map((row) => {
@@ -274,12 +275,21 @@ const BASE_DOC_BARRIERS: Record<string, number> = {
 };
 
 const BASE_QUESTION_TOPICS: Record<string, number> = {
-  '장학금·비용 지원': 38,
-  '비자·체류자격 전환': 35,
-  '해외 학력·서류 준비': 29,
-  '시간제 취업·알바': 24,
-  '검정고시·학력인정': 17,
-  '기타 입시·진로 질문': 9,
+  scholarship: 38,
+  visa_status: 35,
+  documents: 29,
+  part_time: 24,
+  ged: 17,
+  other: 9,
+};
+
+const TOPIC_LABELS: Record<string, string> = {
+  scholarship: '장학금·비용 지원',
+  visa_status: '비자·체류자격 전환',
+  documents: '해외 학력·서류 준비',
+  part_time: '시간제 취업·알바',
+  ged: '검정고시·학력인정',
+  other: '기타 입시·진로 질문',
 };
 
 const BARRIER_LABELS: Record<string, string> = {
@@ -321,7 +331,7 @@ export function computeStudentSignalSummary(liveEvents: AnonymousEvent[]): Stude
     .map(([topic, base]) => {
       const liveAdded = liveTopicMap.get(topic) ?? 0;
       return {
-        topic,
+        topic: TOPIC_LABELS[topic] ?? topic,
         count: base + liveAdded,
         liveAdded,
       };

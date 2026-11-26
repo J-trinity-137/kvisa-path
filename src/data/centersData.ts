@@ -1,4 +1,4 @@
-import type { SupportedLangCode } from 'kbridge-core';
+import type { SupportedLangCode } from '../kbridge';
 
 export interface SupportCenter {
   id: string;
@@ -8,7 +8,7 @@ export interface SupportCenter {
   hours: string;
   asOfDate: string;
   /** 언어별 통번역지원사 배치 인원 (0은 배치 0명, undefined는 해당 언어 자료 미제공) */
-  interpreters: Partial<Record<SupportedLangCode, number>>;
+  interpreters: Partial<Record<SupportedLangCode | 'th' | 'id', number>>;
   freeCareerProgram: string;
 }
 
