@@ -4,6 +4,7 @@ import { monthFromDate } from '../data/freshness';
 import type { SupportedLangCode } from '../kbridge';
 import { FRESHNESS_COPY, easySentence } from '../i18n/shellCopy';
 import { factsFor } from '../data/multiculturalContent';
+import { regionLabel } from '../i18n/regionLabels';
 import { REGION_COPY } from '../i18n/regionCopy';
 import { STUDENT_TYPE_COPY } from '../i18n/studentTypeCopy';
 import { FreshnessLine } from './FreshnessLine';
@@ -25,7 +26,8 @@ export function TeacherSheet({ lang, choice, easy }: { lang: SupportedLangCode; 
   const summary = path ? (easy ? easySentence(path.summary) : path.summary) : student.teacherDomestic;
   const labels = REGION_COPY[lang];
   const letter = factsFor('school-supports').find((fact) => fact.name.includes('가정통신문'));
-  const regionName = choice.region === 'seoul' ? copy.seoul : copy.gyeonggi;
+  const regionName = regionLabel(lang, choice.region);
+  const regionKo = regionLabel('ko', choice.region);
   const spoken = `${copy.regionLabel} ${regionName}. ${copy.stage} ${STAGE[choice.stage]}. ${path ? `${copy.visa} ${path.title}. ` : ''}${summary}`;
 
   return (
@@ -52,7 +54,7 @@ export function TeacherSheet({ lang, choice, easy }: { lang: SupportedLangCode; 
       <div className="kv-print-columns">
         <article className="kb-card kb-stack">
           <strong>한국어</strong>
-          <p style={{ margin: 0 }}>{copy.regionLabel}: {choice.region === 'seoul' ? '서울' : '경기'}</p>
+          <p style={{ margin: 0 }}>{copy.regionLabel}: {regionKo}</p>
           <p style={{ margin: 0 }}>학교급: {STAGE[choice.stage]}</p>
           {path ? <p style={{ margin: 0 }}>체류자격: {path.title}</p> : <p style={{ margin: 0 }}>{student.teacherDomestic}</p>}
           <p style={{ margin: 0 }}>{summary}</p>
