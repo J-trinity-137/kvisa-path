@@ -11,6 +11,7 @@ describe('domestic multicultural path', () => {
         lang="ko"
         studentType="domestic_multicultural"
         easy={false}
+        region="seoul"
         onEventLogged={() => undefined}
         onChoice={() => undefined}
       />,
@@ -23,7 +24,10 @@ describe('domestic multicultural path', () => {
     expect(screen.getByText('서울시립대')).toBeTruthy();
     expect(screen.getByText('부모 통역은 가족센터')).toBeTruthy();
     for (const section of MULTICULTURAL_SECTIONS) {
-      expect(document.querySelector(`[data-section-id="${section.id}"]`)).toBeNull();
+      expect(document.querySelector(`[data-section-id="${section.id}"]`)).toBeTruthy();
     }
+    expect(document.body.textContent).not.toContain('1,090');
+    expect(document.body.textContent).toContain('보도 기준');
+    expect(document.body.textContent).toContain('2027학년도(접수 끝남)');
   });
 });

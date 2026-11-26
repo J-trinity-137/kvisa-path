@@ -6,7 +6,10 @@ import { MethodologyTab } from './components/MethodologyTab';
 import { StudentPrepTools } from './components/StudentPrepTools';
 import { StudentTypePicker } from './components/StudentTypePicker';
 import { TeacherSheet } from './components/TeacherSheet';
+import { readRegion, writeRegion } from './data/regionPref';
 import { readStudentType, writeStudentType, type StudentType } from './data/studentType';
+import type { RegionId } from './data/freshness';
+import { REGION_COPY } from './i18n/regionCopy';
 import { shellCopy } from './i18n/shellCopy';
 import { getUiMessages } from './i18n/messages';
 import { EVENT_STORAGE_KEY, RECORDS_CLEARED_EVENT, clearMyRecords } from './privacy/records';
@@ -26,6 +29,7 @@ export function App() {
   const [liveEvents, setLiveEvents] = useState<AnonymousEvent[]>(() => readAnonymousEvents(EVENT_STORAGE_KEY));
   const [clearedNote, setClearedNote] = useState<string | null>(null);
   const [studentType, setStudentType] = useState<StudentType | null>(() => readStudentType());
+  const [region, setRegion] = useState<RegionId>(() => readRegion());
   const [easy, setEasy] = useState(false);
   const [choice, setChoice] = useState<PathChoice>(EMPTY_PATH);
 
@@ -38,6 +42,12 @@ export function App() {
     writeStudentType(value);
     setStudentType(value);
   };
+  const chooseRegion = (value: RegionId) => {
+    writeRegion(value);
+    setRegion(value);
+    setChoice((current) => ({ ...current, region: value }));
+  };
+  const regionCopy = REGION_COPY[lang];
 
   const refreshEvents = () => {
     setLiveEvents(readAnonymousEvents(EVENT_STORAGE_KEY));
@@ -134,12 +144,26 @@ export function App() {
 
       <div style={{ marginTop: 16 }}>
         {audience === 'student' ? (
-          <StudentTypePicker lang={lang} value={studentType} onChange={chooseStudentType} />
+          <>
+            <section className="kb-section" aria-label={regionCopy.regionAsk}>
+              <h2 className="kb-section-title">{regionCopy.regionAsk}</h2>
+              <div className="kb-row" role="group" aria-label={regionCopy.regionAsk}>
+                <button type="button" className="kb-chip" aria-pressed={region === 'seoul'} onClick={() => chooseRegion('seoul')}>
+                  {regionCopy.seoul}
+                </button>
+                <button type="button" className="kb-chip" aria-pressed={region === 'gyeonggi'} onClick={() => chooseRegion('gyeonggi')}>
+                  {regionCopy.gyeonggi}
+                </button>
+              </div>
+            </section>
+            <StudentTypePicker lang={lang} value={studentType} onChange={chooseStudentType} />
+          </>
         ) : null}
         {audience === 'student' && studentType && studentTab === 'admissions' ? (
           <AdmissionsTab
             lang={lang}
             studentType={studentType}
+            region={region}
             easy={easy}
             onEventLogged={refreshEvents}
             onChoice={onChoice}
