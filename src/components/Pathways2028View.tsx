@@ -43,9 +43,14 @@ export function Pathways2028View({ lang, easy }: { lang: SupportedLangCode; easy
                 <article key={row.id} className="kb-card kb-stack" data-pathway-id={row.id} data-role={row.role}>
                   <div className="kb-row" style={{ justifyContent: 'space-between' }}>
                     <strong>{row.name}</strong>
-                    {row.role === 'closed_reference' ? <span className="kb-tag kb-status-check">{copy.closedTag}</span> : null}
+                    {row.guideBasis === '2027_guide' ? (
+                      <span className="kb-tag kb-status-check">{copy.guide2027}</span>
+                    ) : row.role === 'closed_reference' ? (
+                      <span className="kb-tag kb-status-check">{copy.closedTag}</span>
+                    ) : null}
                     {row.hasTrack === false ? <span className="kb-tag">{copy.absent}</span> : null}
                   </div>
+                  {row.languageBridge ? <p className="kb-subtitle" style={{ margin: 0 }}>{copy.afterOffer}</p> : null}
                   {row.track ? (
                     <p className="kb-subtitle" style={{ margin: 0 }}>{[row.university, row.track].filter(Boolean).join(' · ')}</p>
                   ) : null}
@@ -54,6 +59,10 @@ export function Pathways2028View({ lang, easy }: { lang: SupportedLangCode; easy
                   ) : null}
                   {row.eligibility.bothParentsForeign ? (
                     <p className="kb-subtitle" style={{ margin: 0 }}>{copy.bothParents}</p>
+                  ) : null}
+                  {row.language?.noMinimum ? <p className="kb-subtitle" style={{ margin: 0 }}>{copy.topikNone}</p> : null}
+                  {row.language?.topikMin != null ? (
+                    <p className="kb-subtitle" style={{ margin: 0 }}>{copy.topikAtLeast.replace('{level}', String(row.language.topikMin))}</p>
                   ) : null}
                   {seats ? <p className="kb-subtitle" style={{ margin: 0 }}>{seats}</p> : null}
                   {row.phone ? (
