@@ -6,6 +6,8 @@ export const QUIZ_STORAGE_KEY = 'kvisa-path.quiz_answers';
 export const QUIZ_LOGGED_KEY = 'kvisa-path.quiz_logged';
 export const PROFILE_STORAGE_KEY = 'kvisa-path.profile';
 export const PREFS_STORAGE_KEY = 'kvisa-path.prefs';
+export const SAVED_TRACKS_KEY = 'kvisa-path.saved-tracks';
+export const COMPARE_KEY = 'kvisa-path.compare';
 export const WEEK_STORAGE_KEY = 'kvisa-path.week';
 export const STEPS_STORAGE_KEY = 'kvisa-path.steps';
 export const VISA_OPT_IN_KEY = 'kvisa-path.visa-optin';
@@ -18,6 +20,8 @@ const RECORD_KEYS = [
   QUIZ_STORAGE_KEY,
   QUIZ_LOGGED_KEY,
   PROFILE_STORAGE_KEY,
+  SAVED_TRACKS_KEY,
+  COMPARE_KEY,
   WEEK_STORAGE_KEY,
   STEPS_STORAGE_KEY,
   VISA_OPT_IN_KEY,

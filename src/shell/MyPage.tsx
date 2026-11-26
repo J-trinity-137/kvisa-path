@@ -12,6 +12,7 @@ import type { DevicePrefs } from '../profile/prefs';
 import type { StudentProfile } from '../profile/profile';
 import { DOCS_STORAGE_KEY } from '../privacy/records';
 import { getUiMessages } from '../i18n/messages';
+import { SavedTracks } from './SavedTracks';
 
 export function MyPage({
   lang,
@@ -22,6 +23,8 @@ export function MyPage({
   onPrefs,
   onClear,
   onSetup,
+  savedIds = [],
+  onRemoveSaved,
 }: {
   lang: SupportedLangCode;
   setLang: (lang: SupportedLangCode) => void;
@@ -31,6 +34,8 @@ export function MyPage({
   onPrefs: (next: DevicePrefs) => void;
   onClear: () => void;
   onSetup: () => void;
+  savedIds?: readonly string[];
+  onRemoveSaved?: (id: string) => void;
 }) {
   const copy = navCopy(lang);
   const ui = getUiMessages(lang);
@@ -64,6 +69,7 @@ export function MyPage({
           {copy.edit}
         </button>
       </header>
+      <SavedTracks lang={lang} profile={profile} ids={savedIds} onRemove={onRemoveSaved} />
       <div className="my-grid">
         <section className="panel">
           <h2>{copy.dashTitle}</h2>

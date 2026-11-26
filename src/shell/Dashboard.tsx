@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import type { SupportedLangCode } from '../kbridge';
 import { navCopy } from '../i18n/navCopy';
+import { planCopy } from '../i18n/planCopy';
 import { STUDENT_TYPE_COPY } from '../i18n/studentTypeCopy';
 import { PATHWAYS_2028_COPY } from '../i18n/pathways2028Copy';
 import { easySentence } from '../i18n/shellCopy';
 import { FreshnessLine } from '../components/FreshnessLine';
 import { SpeakButton } from '../components/SpeakButton';
 import { regionLabel } from '../i18n/regionLabels';
+import type { ToggleStatus } from '../library/tracks';
 import type { StudentProfile } from '../profile/profile';
+import { isVerifiedTrack } from '../rules/reasons';
 import type { EligibleTrack } from '../rules/types';
 
 export function Dashboard({
@@ -16,14 +19,24 @@ export function Dashboard({
   tracks,
   easy,
   onEdit,
+  compareIds = [],
+  savedIds = [],
+  onToggleCompare,
+  onToggleSave,
 }: {
   lang: SupportedLangCode;
   profile: StudentProfile;
   tracks: EligibleTrack[];
   easy: boolean;
   onEdit: () => void;
+  compareIds?: readonly string[];
+  savedIds?: readonly string[];
+  onToggleCompare?: (id: string) => ToggleStatus;
+  onToggleSave?: (id: string) => void;
 }) {
   const copy = navCopy(lang);
+  const plan = planCopy(lang);
+  const [note, setNote] = useState('');
   const groups = PATHWAYS_2028_COPY[lang].groups;
   const [open, setOpen] = useState<string | null>(null);
   const typeLabel = profile.studentType ? STUDENT_TYPE_COPY[lang].types[profile.studentType] : null;
@@ -53,8 +66,18 @@ export function Dashboard({
           <button type="button" className="btn light" onClick={() => window.print()}>
             {copy.print}
           </button>
+          {compareIds.length > 0 ? (
+            <a className="btn light" href="#/compare">
+              {plan.openCompare} {compareIds.length}
+            </a>
+          ) : null}
         </div>
       </header>
+      {note ? (
+        <p role="status" className="soft">
+          {note}
+        </p>
+      ) : null}
       <div className="chips" aria-label={copy.region}>
         {chips.map((item) => (
           <span key={item} className="pill">
@@ -73,9 +96,41 @@ export function Dashboard({
               {track.category ? <p className="muted">{track.yearLabel}</p> : null}
               <h2>{track.title}</h2>
               <p>{reason}</p>
-              <button type="button" className="btn primary" aria-expanded={expanded} onClick={() => setOpen(expanded ? null : track.id)}>
-                {copy.next}
-              </button>
+              <div className="card-actions">
+                <button type="button" className="btn primary" aria-expanded={expanded} onClick={() => setOpen(expanded ? null : track.id)}>
+                  {copy.next}
+                </button>
+                {track.verified && isVerifiedTrack(track.id) && onToggleCompare ? (
+                  <button
+                    type="button"
+                    className="btn ghost"
+                    aria-pressed={compareIds.includes(track.id)}
+                    aria-label={`${compareIds.includes(track.id) ? plan.inCompare : plan.addCompare}: ${track.title}`}
+                    onClick={() => {
+                      const status = onToggleCompare(track.id);
+                      setNote(status === 'full' ? plan.compareFull : '');
+                    }}
+                  >
+                    {compareIds.includes(track.id) ? plan.inCompare : plan.addCompare}
+                  </button>
+                ) : null}
+                {track.verified && isVerifiedTrack(track.id) && onToggleSave ? (
+                  <button
+                    type="button"
+                    className="btn ghost"
+                    aria-pressed={savedIds.includes(track.id)}
+                    aria-label={`${savedIds.includes(track.id) ? plan.saved : plan.save}: ${track.title}`}
+                    onClick={() => onToggleSave(track.id)}
+                  >
+                    {savedIds.includes(track.id) ? plan.saved : plan.save}
+                  </button>
+                ) : null}
+                {track.verified && isVerifiedTrack(track.id) ? (
+                  <a className="btn ghost" href={`#/track/${encodeURIComponent(track.id)}`}>
+                    {plan.detail}
+                  </a>
+                ) : null}
+              </div>
               {expanded ? (
                 <div className="detail">
                   <ul>
