@@ -35,7 +35,9 @@ import type { PathChoice } from '../session/pathChoice';
 import type { RegionId } from '../data/freshness';
 import type { StudentType } from '../data/studentType';
 import { FreshnessLine } from './FreshnessLine';
+import { isNationwideRegion } from '../data/nationwideRegions';
 import { GyeonggiGuide } from './GyeonggiGuide';
+import { RegionFacts } from './RegionFacts';
 import { MulticulturalPathView } from './MulticulturalPath';
 import { SpeakButton } from './SpeakButton';
 import { loadVocationalSnapshot } from '../services/neisClient';
@@ -205,7 +207,7 @@ export function AdmissionsTab({ lang, studentType, region, easy, onEventLogged, 
                 {copy?.levelHigh ?? '고등학생 (대학 입학전형 · TOPIK 장학)'}
               </button>
             </div>
-            {region === 'gyeonggi' ? <GyeonggiGuide lang={lang} /> : null}
+            {region === 'gyeonggi' ? <GyeonggiGuide lang={lang} /> : isNationwideRegion(region) ? <RegionFacts lang={lang} region={region} /> : null}
           </div>
 
           {hideVisa ? null : <>

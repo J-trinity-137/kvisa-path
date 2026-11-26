@@ -1,7 +1,27 @@
-/** Seoul now. Gyeonggi stays empty until a later verified update. */
-export type RegionId = 'seoul' | 'gyeonggi';
+/** Seventeen 시도. Seoul and Gyeonggi keep their existing guides. */
+export const REGION_IDS = [
+  'seoul',
+  'busan',
+  'daegu',
+  'incheon',
+  'gwangju',
+  'daejeon',
+  'ulsan',
+  'sejong',
+  'gyeonggi',
+  'gangwon',
+  'chungbuk',
+  'chungnam',
+  'jeonbuk',
+  'jeonnam',
+  'gyeongbuk',
+  'gyeongnam',
+  'jeju',
+] as const;
 
-export const REGIONS: readonly RegionId[] = ['seoul', 'gyeonggi'];
+export type RegionId = (typeof REGION_IDS)[number];
+
+export const REGIONS: readonly RegionId[] = REGION_IDS;
 
 export interface DatedEntry {
   id: string;

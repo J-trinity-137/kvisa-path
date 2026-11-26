@@ -9,9 +9,10 @@ import { FaqPanel } from './components/FaqPanel';
 import { PrivacyTools } from './components/PrivacyTools';
 import { TeacherVaultPanel } from './components/TeacherVaultPanel';
 import { TeacherSheet } from './components/TeacherSheet';
+import { REGIONS, type RegionId } from './data/freshness';
 import { readRegion, writeRegion } from './data/regionPref';
 import { readStudentType, writeStudentType, type StudentType } from './data/studentType';
-import type { RegionId } from './data/freshness';
+import { regionLabel } from './i18n/regionLabels';
 import { REGION_COPY } from './i18n/regionCopy';
 import { shellCopy } from './i18n/shellCopy';
 import { getUiMessages } from './i18n/messages';
@@ -154,12 +155,11 @@ export function App() {
             <section className="kb-section" aria-label={regionCopy.regionAsk}>
               <h2 className="kb-section-title">{regionCopy.regionAsk}</h2>
               <div className="kb-row" role="group" aria-label={regionCopy.regionAsk}>
-                <button type="button" className="kb-chip" aria-pressed={region === 'seoul'} onClick={() => chooseRegion('seoul')}>
-                  {regionCopy.seoul}
-                </button>
-                <button type="button" className="kb-chip" aria-pressed={region === 'gyeonggi'} onClick={() => chooseRegion('gyeonggi')}>
-                  {regionCopy.gyeonggi}
-                </button>
+                {REGIONS.map((id) => (
+                  <button key={id} type="button" className="kb-chip" aria-pressed={region === id} onClick={() => chooseRegion(id)}>
+                    {regionLabel(lang, id)}
+                  </button>
+                ))}
               </div>
             </section>
             <StudentTypePicker lang={lang} value={studentType} onChange={chooseStudentType} />
