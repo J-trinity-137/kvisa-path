@@ -1,8 +1,13 @@
 import type { SupportedLangCode } from '../kbridge';
+import type { RegionId } from './freshness';
+import { stampVerifiedAt } from './freshness';
 
 export interface SupportCenter {
   id: string;
+  /** Set for every live row. Gyeonggi rows will use the same field. */
+  region?: RegionId;
   district: string;
+  verifiedAt?: string;
   name: string;
   phone: string;
   hours: string;
@@ -214,3 +219,11 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
 ];
 
 export const SEOUL_DISTRICTS = SEOUL_SUPPORT_CENTERS.map((c) => c.district);
+
+for (const center of SEOUL_SUPPORT_CENTERS) {
+  center.region = 'seoul';
+}
+stampVerifiedAt(SEOUL_SUPPORT_CENTERS, 'phoneVerifiedOn');
+
+/** Empty until a later PR adds verified Gyeonggi family-center rows. */
+export const GYEONGGI_SUPPORT_CENTERS: SupportCenter[] = [];

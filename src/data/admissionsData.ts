@@ -1,10 +1,13 @@
 import type { SupportedLangCode } from '../kbridge';
+import type { RegionId } from './freshness';
+import { stampVerifiedAt } from './freshness';
 
 export type VerificationState = 'verified' | 'unverified';
 
 export interface SourcedClaim {
   sourceUrl: string;
   verifiedOn: string;
+  verifiedAt?: string;
   applicableTerm: string;
   verification: VerificationState;
   unverifiedReason?: string;
@@ -54,8 +57,10 @@ export interface SeoulVocationalSchool {
   majors: string[];
   specialTrack: string;
   univSpecialEligible: boolean; // 마이스터고는 대입 특성화고 특별전형 제외
+  region: RegionId;
   sourceUrl: string;
   verifiedOn: string;
+  verifiedAt?: string;
   majorsSourceUrl: string;
   majorsApplicableTerm: string;
 }
@@ -85,6 +90,7 @@ export interface ExternalScholarshipRule {
   asOfYear: string;
   sourceUrl: string;
   verifiedOn: string;
+  verifiedAt?: string;
   applicableTerm: string;
   verification: VerificationState;
   unverifiedReason?: string;
@@ -377,13 +383,15 @@ function neisSchoolUrl(code: string): string {
 }
 
 function school(
-  partial: Omit<SeoulVocationalSchool, 'officeCode' | 'sourceUrl' | 'verifiedOn' | 'majorsSourceUrl' | 'majorsApplicableTerm'>,
+  partial: Omit<SeoulVocationalSchool, 'officeCode' | 'region' | 'sourceUrl' | 'verifiedOn' | 'verifiedAt' | 'majorsSourceUrl' | 'majorsApplicableTerm'>,
 ): SeoulVocationalSchool {
   return {
     ...partial,
     officeCode: 'B10',
+    region: 'seoul',
     sourceUrl: neisSchoolUrl(partial.neisCode),
     verifiedOn: SCHOOL_CODE_CHECKED_ON,
+    verifiedAt: SCHOOL_CODE_CHECKED_ON.slice(0, 7),
     majorsSourceUrl: MAJOR_GUIDE_URL,
     majorsApplicableTerm: MAJOR_TERM,
   };
@@ -987,3 +995,7 @@ export const VISA_SKILL_TREE: Record<BackgroundType, { title: string; warning: s
     ],
   },
 };
+
+stampVerifiedAt(Object.values(UNIVERSITY_GED_RULES));
+stampVerifiedAt(Object.values(UNIVERSITY_SCHOLARSHIP_RULES));
+stampVerifiedAt(EXTERNAL_SCHOLARSHIPS);

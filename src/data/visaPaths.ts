@@ -1,4 +1,5 @@
 import type { BackgroundType, SchoolLevel } from './admissionsData';
+import { stampVerifiedAt } from './freshness';
 
 export const VISA_CODES = [
   'F-1',
@@ -29,6 +30,7 @@ export interface VisaPath {
   sourceUrl: string;
   sourceLabel: string;
   verifiedOn: string;
+  verifiedAt?: string;
   verification: 'verified' | 'unverified';
   unverifiedReason?: string;
 }
@@ -220,6 +222,8 @@ export function visaPath(code: VisaCode): VisaPath {
   if (!found) throw new Error(code);
   return found;
 }
+
+stampVerifiedAt(VISA_PATHS);
 
 export function optionsForVisa(code: VisaCode, level: ProcedureLevel): VisaPath[] {
   const own = visaPath(code);

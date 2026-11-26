@@ -1,4 +1,5 @@
 import type { InterestField } from './admissionsData';
+import { stampVerifiedAt } from './freshness';
 
 export type DocBarrierReason = 'overseas' | 'cost' | 'format' | 'deadline';
 
@@ -27,6 +28,7 @@ export interface DDaySchedule {
   sourceUrl: string;
   sourceLabel: string;
   verifiedOn: string;
+  verifiedAt?: string;
 }
 
 export type SchedulePhase = 'upcoming' | 'open' | 'closed';
@@ -354,3 +356,5 @@ export function buildQuestionLog(rawText: string, lang: string): {
     choiceCode: classified.topicCode,
   };
 }
+
+stampVerifiedAt(DDAY_SCHEDULES);

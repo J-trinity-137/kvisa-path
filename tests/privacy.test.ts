@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { readAnonymousEvents, recordAnonymousEvent } from '../src/kbridge/events';
 import { buildQuestionLog } from '../src/data/interactiveModules';
 import { clearMyRecords, EVENT_STORAGE_KEY } from '../src/privacy/records';
+import { STUDENT_TYPE_KEY } from '../src/data/studentType';
 
 function installMemoryStorage() {
   const mem = new Map<string, string>();
@@ -65,5 +66,23 @@ describe('privacy', () => {
     expect(mem.get(EVENT_STORAGE_KEY)).not.toContain('F-6');
     clearMyRecords();
     expect(mem.has(EVENT_STORAGE_KEY)).toBe(false);
+  });
+
+  it('keeps the on-device student type out of anonymous events', () => {
+    const mem = installMemoryStorage();
+    mem.set(STUDENT_TYPE_KEY, 'domestic_multicultural');
+    recordAnonymousEvent(EVENT_STORAGE_KEY, {
+      app: 'kvisa-path',
+      opportunityId: 'admission-high-2026',
+      kind: 'term_confused',
+      lang: 'ko',
+      choiceCode: 'topik',
+      studentType: 'domestic_multicultural',
+    } as never);
+    const stored = mem.get(EVENT_STORAGE_KEY) ?? '';
+    expect(stored).not.toContain('studentType');
+    expect(stored).not.toContain('domestic_multicultural');
+    clearMyRecords();
+    expect(mem.get(STUDENT_TYPE_KEY)).toBe('domestic_multicultural');
   });
 });
