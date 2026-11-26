@@ -5,6 +5,7 @@ import { AnalyticsTab } from './components/AnalyticsTab';
 import { MethodologyTab } from './components/MethodologyTab';
 import { StudentPrepTools } from './components/StudentPrepTools';
 import { StudentTypePicker } from './components/StudentTypePicker';
+import { PrivacyTools } from './components/PrivacyTools';
 import { TeacherSheet } from './components/TeacherSheet';
 import { readRegion, writeRegion } from './data/regionPref';
 import { readStudentType, writeStudentType, type StudentType } from './data/studentType';
@@ -99,6 +100,8 @@ export function App() {
           {meta.nativeName}
         </button>
       </header>
+
+      <PrivacyTools lang={lang} easy={easy} />
 
       <div className="kb-row kv-no-print" style={{ marginTop: 12 }}>
         <button type="button" className="kb-chip" aria-pressed={audience === 'student'} onClick={() => setAudience('student')}>
