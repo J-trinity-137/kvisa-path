@@ -20,6 +20,20 @@
 
 내용이 있는 언어만 고를 수 있습니다. 한국어, English, 简体中文, 繁體中文, Tiếng Việt, Русский, Монгол хэл, العربية. 아랍어는 오른쪽에서 왼쪽으로 표시합니다.
 
+## 수집을 켜기 전에 운영자가 할 일
+
+통계와 질문은 기본으로 꺼져 있고, `VITE_KVISA_API_URL`이 없으면 아무 것도 보내지 않습니다. 서버를 쓰려면 저장소 밖에서 다음을 직접 넣습니다. 키는 채팅으로 보내지 않습니다.
+
+1. Cloudflare 계정에서 Workers 하위 도메인을 정합니다.
+2. D1 데이터베이스 `kvisa-path`를 만들고, `worker/wrangler.toml`의 `database_id`를 바꿉니다.
+3. Turnstile 위젯의 사이트 키는 GitHub Variables `VITE_TURNSTILE_SITE_KEY`, 비밀 키는 `wrangler secret put TURNSTILE_SECRET`입니다.
+4. Cloudflare Access로 `/admin*`을 본인 이메일만 허용하고, 팀 도메인과 AUD를 Worker 설정에 넣습니다.
+5. GitHub Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`를 넣습니다. 토큰이 없으면 배포 워크플로는 배포 단계를 건너뜁니다.
+6. GitHub Variables `VITE_KVISA_API_URL`에 Worker 주소를 넣습니다.
+7. 처리방침의 `[TODO: 책임자 이름]`과 `[TODO: 전용 이메일]`을 채웁니다.
+8. 동의 문구 7개 언어는 `원어민 검토 필요`로 표시되어 있습니다. 출시 전에 검토합니다.
+9. 출시 전에 카운터만 남기는 통계가 개인정보 보호법 제58조의2에 해당하는지를 상담 창구에 확인하는 것을 권합니다.
+
 ## 실행
 
 ```bash
