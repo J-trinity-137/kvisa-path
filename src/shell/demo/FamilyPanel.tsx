@@ -46,7 +46,7 @@ export function FamilyPanel({
         <bdi dir="ltr">{DEMO_BANNER}</bdi>
       </p>
       <h1>{copy.familyTitle}</h1>
-      <p>{copy.profileNote}</p>
+      <p className="lead">{copy.profileNote}</p>
       {error ? (
         <p role="alert" className="soft">
           {error}

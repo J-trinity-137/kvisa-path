@@ -7,6 +7,7 @@ import type { SupportedLangCode } from '../kbridge';
 import { navCopy } from '../i18n/navCopy';
 import { FAQ_EMPTY } from '../i18n/faqCopy';
 import { FreshnessLine } from '../components/FreshnessLine';
+import { EmptyState } from '../components/ui';
 import { downloadIcs } from '../share/ics';
 
 export function BoardView({
@@ -33,7 +34,7 @@ export function BoardView({
     const schedule = selected.scheduleId ? DDAY_SCHEDULES.find((item) => item.id === selected.scheduleId) : undefined;
     return (
       <article className="post">
-        <button type="button" className="btn ghost" onClick={onClose}>
+        <button type="button" className="btn text" onClick={onClose}>
           {copy.backList}
         </button>
         <p className="kicker">
@@ -50,7 +51,7 @@ export function BoardView({
           </p>
         ) : null}
         {schedule ? (
-          <button type="button" className="btn ghost" onClick={() => downloadIcs(schedule)}>
+          <button type="button" className="btn text" onClick={() => downloadIcs(schedule)}>
             {copy.calendar}
           </button>
         ) : null}
@@ -62,7 +63,9 @@ export function BoardView({
   return (
     <div className="board">
       <header className="page-head">
-        <h1>{copy.board}</h1>
+        <div>
+          <h1>{copy.board}</h1>
+        </div>
       </header>
       <div className="filters">
         <label>
@@ -92,43 +95,30 @@ export function BoardView({
           </select>
         </label>
       </div>
-      {category === 'faq' && rows.length === 0 ? <p>{FAQ_EMPTY[lang].empty}</p> : null}
-      {rows.length === 0 && category !== 'faq' ? <p className="empty">{copy.noPosts}</p> : null}
-      <table className="board-table">
-        <thead>
-          <tr>
-            <th>{copy.board}</th>
-            <th>{copy.category}</th>
-            <th>{copy.region}</th>
-            <th>{copy.checked}</th>
-          </tr>
-        </thead>
-        <tbody>
+      {category === 'faq' && rows.length === 0 ? <EmptyState title={FAQ_EMPTY[lang].empty} /> : null}
+      {rows.length === 0 && category !== 'faq' ? <EmptyState title={copy.noPosts} /> : null}
+      {rows.length > 0 ? (
+        <ul className="post-list">
           {rows.map((post) => (
-            <tr key={post.id}>
-              <td>
-                <button type="button" className="row-link" onClick={() => onOpen(post.id)}>
-                  <strong>{post.title}</strong>
-                  <span>{post.summary}</span>
-                </button>
-              </td>
-              <td>{copy.cats[post.category]}</td>
-              <td>{post.region === 'all' ? copy.all : regionLabel(lang, post.region)}</td>
-              <td>
-                {post.verifiedAt}
-                {post.sourceUrl ? (
-                  <>
-                    {' · '}
-                    <a href={post.sourceUrl} target="_blank" rel="noreferrer">
-                      {copy.source}
-                    </a>
-                  </>
-                ) : null}
-              </td>
-            </tr>
+            <li key={post.id} className="post-row">
+              <button type="button" className="post-card" onClick={() => onOpen(post.id)}>
+                <span className="post-meta">
+                  <span className="pill">{copy.cats[post.category]}</span>
+                  <span>{post.region === 'all' ? copy.all : regionLabel(lang, post.region)}</span>
+                  <span>{post.verifiedAt}</span>
+                </span>
+                <strong>{post.title}</strong>
+                <span className="muted">{post.summary}</span>
+              </button>
+              {post.sourceUrl ? (
+                <a className="post-source" href={post.sourceUrl} target="_blank" rel="noreferrer">
+                  {copy.source}
+                </a>
+              ) : null}
+            </li>
           ))}
-        </tbody>
-      </table>
+        </ul>
+      ) : null}
     </div>
   );
 }

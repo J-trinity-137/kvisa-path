@@ -17,15 +17,14 @@ export function SavedTracks({
   const copy = planCopy(lang);
   const columns = compareColumns(ids, profile);
   return (
-    <section className="panel" aria-labelledby="saved-tracks">
-      <h2 id="saved-tracks">{copy.savedTitle}</h2>
-      {columns.length === 0 ? <p className="empty">{copy.emptySaved}</p> : null}
+    <section aria-label={copy.savedTitle}>
+      {columns.length === 0 ? <p className="muted">{copy.emptySaved}</p> : null}
       <div className="save-list">
         {columns.map((column) => (
           <article key={column.id}>
-            <h3>
+            <p className="save-name">
               <a href={`#/track/${encodeURIComponent(column.id)}`}>{column.name}</a>
-            </h3>
+            </p>
             {column.university ? <p className="muted">{column.university}</p> : null}
             {onRemove ? (
               <button type="button" className="btn ghost" aria-label={`${copy.remove}: ${column.name}`} onClick={() => onRemove(column.id)}>

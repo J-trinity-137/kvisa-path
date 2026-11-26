@@ -16,7 +16,7 @@ export function parseRoute(hash: string): AppRoute {
   if (path === 'me') return { name: 'me' };
   if (path === 'onboarding') return { name: 'onboarding' };
   if (path === 'compare') return { name: 'compare' };
-  if (path === 'deadlines') return { name: 'deadlines' };
+  if (path === 'deadlines' || path === 'schedule') return { name: 'deadlines' };
   if (path === 'accounts') return { name: 'accounts' };
   if (path === 'class') return { name: 'class' };
   if (path === 'family') return { name: 'family' };

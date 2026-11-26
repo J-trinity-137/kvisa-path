@@ -5,12 +5,19 @@ import type { CareerGoal, GradeBand, GradeLevel, OnboardingStep, ParentForeign, 
 
 export interface NavCopy {
   navLabel: string;
+  more: string;
+  account: string;
+  dates: string;
+  basics: string;
   tracks: string;
   board: string;
   my: string;
   teacher: string;
   dashTitle: string;
   dashLead: string;
+  homeCount: string;
+  nextUp: string;
+  restTracks: string;
   empty: string;
   edit: string;
   skip: string;
@@ -30,7 +37,6 @@ export interface NavCopy {
   calendar: string;
   noPosts: string;
   backList: string;
-  why: string;
   consentLead: string;
   yes: string;
   no: string;
@@ -64,17 +70,23 @@ export interface NavCopy {
   needs: Record<SupportNeed, string>;
   fields: Record<InterestField, string>;
   ask: Record<OnboardingStep, string>;
-  because: Record<OnboardingStep, string>;
 }
 
 const en: NavCopy = {
   navLabel: 'Sections',
+  more: 'More',
+  account: 'Account',
+  dates: 'Schedule',
+  basics: 'Basics',
   tracks: 'My tracks',
   board: 'Board',
   my: 'My page',
   teacher: 'Counselling notes',
   dashTitle: 'Tracks I can use',
   dashLead: 'Next step from the answers on this device.',
+  homeCount: '{n} tracks I can use',
+  nextUp: 'Next date',
+  restTracks: 'Other tracks',
   empty: 'Answer a few questions and matching tracks show up here.',
   edit: 'Edit answers',
   skip: 'Skip',
@@ -94,7 +106,6 @@ const en: NavCopy = {
   calendar: 'Calendar file',
   noPosts: 'Nothing matches.',
   backList: 'Back to the list',
-  why: 'Why we ask',
   consentLead: 'Research use is off unless you turn it on. The app works either way.',
   yes: 'Yes',
   no: 'No',
@@ -181,37 +192,24 @@ const en: NavCopy = {
     support: 'What help do you need?',
     consent: 'May we use anonymous answers for research?',
   },
-  because: {
-    lang: 'So the screens match the language you read.',
-    grade: 'High-school and university tracks are different.',
-    region: 'Seoul and Gyeonggi publish different guides.',
-    type: 'It picks a starting point. You can still answer the questions below.',
-    parents: 'Some tracks need both parents to be foreign nationals, and some exclude that.',
-    countries: 'Origin is used only as a country code, for context and optional statistics.',
-    languages: 'So Korean-class and interpretation posts can be filtered later.',
-    born: 'The arrival year is asked only if you were born abroad.',
-    arrived: 'It is a year, not a status of stay.',
-    years: 'Some high-school tracks expect part of school to have been in Korea.',
-    nationality: 'Multicultural university tracks in the checked guides are for Korean nationals.',
-    school: 'Meister high schools are outside the vocational-graduate university track.',
-    korean: 'Several university tracks need a TOPIK level.',
-    band: 'A lower band still leaves the interview-based vocational track open.',
-    interests: 'Vocational schools are listed by field.',
-    goal: 'Study and work change which card is listed first.',
-    support: 'Korean class, documents, and fees point to different board posts.',
-    consent: 'Off by default. Anonymous fields only, and never visa or an ID number.',
-  },
 };
 
 const ko: NavCopy = {
   ...en,
   navLabel: '메뉴',
+  more: '더보기',
+  account: '계정',
+  dates: '일정',
+  basics: '기본 정보',
   tracks: '내 전형',
   board: '게시판',
-  my: '마이페이지',
+  my: '내 정보',
   teacher: '상담 기록',
   dashTitle: '내가 쓸 수 있는 전형',
   dashLead: '이 기기의 답으로 고른 다음 단계입니다.',
+  homeCount: '내가 쓸 수 있는 전형 {n}개',
+  nextUp: '다음 일정',
+  restTracks: '나머지 전형',
   empty: '몇 가지만 답하면 맞는 전형이 여기에 나옵니다.',
   edit: '답 수정',
   skip: '건너뛰기',
@@ -231,7 +229,6 @@ const ko: NavCopy = {
   calendar: '일정 파일',
   noPosts: '맞는 글이 없습니다.',
   backList: '목록으로',
-  why: '왜 묻나요',
   consentLead: '연구·통계 이용은 켜기 전까지 꺼져 있습니다. 켜지 않아도 앱은 같습니다.',
   yes: '예',
   no: '아니오',
@@ -318,37 +315,24 @@ const ko: NavCopy = {
     support: '어떤 도움이 필요한가요?',
     consent: '익명 답을 연구·통계에 써도 될까요?',
   },
-  because: {
-    lang: '읽는 언어에 맞춰 화면을 바꿉니다.',
-    grade: '고입 전형과 대입 전형이 다릅니다.',
-    region: '서울과 경기 안내가 다릅니다.',
-    type: '출발점입니다. 아래 질문으로 더 정확히 가려집니다.',
-    parents: '부모 모두 외국 국적인 전형과, 그 경우를 빼는 전형이 있습니다.',
-    countries: '국가 코드만 남습니다. 체류자격은 아닙니다.',
-    languages: '한국어 수업·통역 글을 나중에 거르기 위해서입니다.',
-    born: '해외 출생일 때만 입국 연도를 묻습니다.',
-    arrived: '연도만 묻습니다. 체류자격은 묻지 않습니다.',
-    years: '고입 특례는 국내 중학교를 다닌 경우를 봅니다.',
-    nationality: '확인된 다문화 대학 전형은 한국 국적 기준입니다.',
-    school: '마이스터고는 특성화고 졸업자 전형에서 빠집니다.',
-    korean: '여러 대학 전형에 TOPIK 기준이 있습니다.',
-    band: '성적이 낮아도 면접 중심 특성화고 전형은 열려 있습니다.',
-    interests: '특성화고를 분야별로 보여 줍니다.',
-    goal: '진학과 취업에 따라 앞에 오는 카드가 달라집니다.',
-    support: '한국어·서류·비용은 게시판의 다른 글로 이어집니다.',
-    consent: '기본은 끄기입니다. 익명 항목만이며 비자·주민번호는 없습니다.',
-  },
 };
 
 const ar: NavCopy = {
   ...en,
   navLabel: 'الأقسام',
+  more: 'المزيد',
+  account: 'الحساب',
+  dates: 'المواعيد',
+  basics: 'المعلومات الأساسية',
   tracks: 'مساراتي',
   board: 'اللوحة',
   my: 'صفحتي',
   teacher: 'ملاحظات الإرشاد',
   dashTitle: 'المسارات التي أستطيع استخدامها',
   dashLead: 'الخطوة التالية من الإجابات على هذا الجهاز.',
+  homeCount: '{n} من المسارات التي أستطيع استخدامها',
+  nextUp: 'الموعد التالي',
+  restTracks: 'بقية المسارات',
   empty: 'أجب عن بعض الأسئلة لتظهر المسارات المناسبة.',
   edit: 'تعديل الإجابات',
   skip: 'تخطٍ',
@@ -368,7 +352,6 @@ const ar: NavCopy = {
   calendar: 'ملف التقويم',
   noPosts: 'لا نتائج.',
   backList: 'العودة إلى القائمة',
-  why: 'لماذا نسأل',
   consentLead: 'استخدام البحث متوقف إلا إذا فعّلته. التطبيق يعمل في الحالتين.',
   yes: 'نعم',
   no: 'لا',
@@ -428,27 +411,6 @@ const ar: NavCopy = {
     support: 'أي مساعدة تحتاج؟',
     consent: 'هل نستخدم الإجابات المجهولة للبحث؟',
   },
-  because: {
-    ...en.because,
-    parents: 'بعض المسارات تشترط أن يكون الوالدان أجنبيين، وبعضها يستبعد ذلك.',
-    nationality: 'مسارات الجامعات متعددة الثقافة التي تم التحقق منها للحاصلين على الجنسية الكورية.',
-    consent: 'الإعداد الافتراضي متوقف. حقول مجهولة فقط، ومن دون تأشيرة أو رقم هوية.',
-    arrived: 'نسأل عن السنة فقط، وليس عن صفة الإقامة.',
-    lang: 'حتى تطابق الشاشات اللغة التي تقرأها.',
-    grade: 'مسارات الثانوية والجامعة مختلفة.',
-    region: 'سيول وكيونغي تنشران أدلة مختلفة.',
-    type: 'نقطة بداية. يمكنك الإجابة عن الأسئلة التالية.',
-    countries: 'نحتفظ برمز الدولة فقط.',
-    languages: 'لتصفية دروس الكورية والترجمة لاحقًا.',
-    born: 'نسأل عن سنة الوصول فقط إذا وُلدت في الخارج.',
-    years: 'بعض مسارات الثانوية تتوقع جزءًا من الدراسة في كوريا.',
-    school: 'مدرسة مايستر خارج مسار خريجي المدارس المهنية.',
-    korean: 'عدة مسارات جامعية تشترط مستوى TOPIK.',
-    band: 'حتى الدرجة المنخفضة تُبقي مسار المقابلة المهني مفتوحًا.',
-    interests: 'المدارس المهنية تُعرض حسب المجال.',
-    goal: 'الدراسة والعمل يغيّران البطاقة الأولى.',
-    support: 'صف الكورية والوثائق والرسوم تشير إلى منشورات مختلفة.',
-  },
   skipToContent: 'تخطي إلى المحتوى',
   loading: 'جارٍ تحميل المسارات',
   details: 'التفاصيل',
@@ -481,10 +443,17 @@ const ar: NavCopy = {
 
 const zhHans: NavCopy = {
   ...en,
+  more: '更多',
+  account: '账户',
+  dates: '日程',
+  basics: '基本信息',
   tracks: '我的招生',
   board: '信息板',
   my: '我的',
   dashTitle: '我可以申请的招生',
+  homeCount: '我可以申请的招生 {n} 个',
+  nextUp: '下一个日期',
+  restTracks: '其余招生',
   empty: '回答几个问题后，符合的招生会显示在这里。',
   edit: '修改答案',
   skip: '跳过',
@@ -510,7 +479,6 @@ const zhHans: NavCopy = {
   call: '电话',
   calendar: '日程文件',
   backList: '返回列表',
-  why: '为什么问',
   consentLead: '研究使用默认关闭。不开启也能用。',
   yes: '是',
   no: '否',
@@ -548,24 +516,21 @@ const zhHans: NavCopy = {
     band: '成绩大概在哪个区间？', interests: '对哪些领域感兴趣？', goal: '下一步目标是什么？',
     support: '需要哪种帮助？', consent: '可以把匿名回答用于研究吗？',
   },
-  because: {
-    lang: '让界面和你读的语言一致。', grade: '高中招生和大学招生不同。', region: '首尔和京畿的指南不同。',
-    type: '这是起点，后面的问题会再细分。', parents: '有的招生要求父母都是外国人，有的排除这种情况。',
-    countries: '只留下国家代码。', languages: '以后用来筛选韩语课和口译。', born: '只有在国外出生才问到达年份。',
-    arrived: '只问年份，不问停留资格。', years: '有的高中招生要看在韩国读过几年。',
-    nationality: '已核对的多元文化大学招生以韩国国籍为准。', school: '迈斯特高中不能报职业高中毕业生招生。',
-    korean: '不少大学招生有 TOPIK 要求。', band: '成绩偏低也可以看以面试为主的职业高中。',
-    interests: '按领域列出职业高中。', goal: '升学和就业会改变卡片顺序。',
-    support: '韩语、材料和费用对应不同的公告。', consent: '默认关闭。只有匿名字段，没有签证或证件号。',
-  },
 };
 
 const zhHant: NavCopy = {
   ...zhHans,
+  more: '更多',
+  account: '帳戶',
+  dates: '日程',
+  basics: '基本資訊',
   tracks: '我的招生',
   board: '資訊板',
   my: '我的',
   dashTitle: '我可以申請的招生',
+  homeCount: '我可以申請的招生 {n} 個',
+  nextUp: '下一個日期',
+  restTracks: '其餘招生',
   empty: '回答幾個問題後，符合的招生會顯示在這裡。',
   edit: '修改答案',
   skip: '跳過',
@@ -591,7 +556,6 @@ const zhHant: NavCopy = {
   call: '電話',
   calendar: '日程檔',
   backList: '返回列表',
-  why: '為什麼問',
   consentLead: '研究使用預設關閉。不開啟也能用。',
   yes: '是',
   no: '否',
@@ -629,24 +593,21 @@ const zhHant: NavCopy = {
     band: '成績大概在哪個區間？', interests: '對哪些領域有興趣？', goal: '下一步目標是什麼？',
     support: '需要哪種幫助？', consent: '可以把匿名回答用於研究嗎？',
   },
-  because: {
-    lang: '讓介面和你讀的語言一致。', grade: '高中招生和大學招生不同。', region: '首爾和京畿的指南不同。',
-    type: '這是起點，後面的問題會再細分。', parents: '有的招生要求父母都是外國人，有的排除這種情況。',
-    countries: '只留下國家代碼。', languages: '以後用來篩選韓語課和口譯。', born: '只有在國外出生才問到達年份。',
-    arrived: '只問年份，不問停留資格。', years: '有的高中招生要看在韓國讀過幾年。',
-    nationality: '已核對的多元文化大學招生以韓國國籍為準。', school: '邁斯特高中不能報職業高中畢業生招生。',
-    korean: '不少大學招生有 TOPIK 要求。', band: '成績偏低也可以看以面試為主的職業高中。',
-    interests: '按領域列出職業高中。', goal: '升學和就業會改變卡片順序。',
-    support: '韓語、資料和費用對應不同的公告。', consent: '預設關閉。只有匿名欄位，沒有簽證或證件號。',
-  },
 };
 
 const vi: NavCopy = {
   ...en,
+  more: 'Thêm',
+  account: 'Tài khoản',
+  dates: 'Lịch',
+  basics: 'Thông tin cơ bản',
   tracks: 'Tuyển sinh của tôi',
   board: 'Bảng tin',
   my: 'Trang của tôi',
   dashTitle: 'Tuyển sinh tôi có thể dùng',
+  homeCount: '{n} tuyển sinh tôi có thể dùng',
+  nextUp: 'Lịch kế tiếp',
+  restTracks: 'Tuyển sinh còn lại',
   empty: 'Trả lời vài câu để thấy tuyển sinh phù hợp.',
   edit: 'Sửa câu trả lời',
   skip: 'Bỏ qua',
@@ -672,7 +633,6 @@ const vi: NavCopy = {
   call: 'Gọi',
   calendar: 'Tệp lịch',
   backList: 'Về danh sách',
-  why: 'Vì sao hỏi',
   consentLead: 'Dùng cho nghiên cứu đang tắt, trừ khi bạn bật. Ứng dụng vẫn chạy.',
   yes: 'Có',
   no: 'Không',
@@ -710,24 +670,21 @@ const vi: NavCopy = {
     band: 'Điểm khoảng mức nào?', interests: 'Bạn thích lĩnh vực nào?', goal: 'Mục tiêu tiếp theo là gì?',
     support: 'Bạn cần giúp gì?', consent: 'Dùng câu trả lời ẩn danh cho nghiên cứu được không?',
   },
-  because: {
-    lang: 'Để màn hình khớp ngôn ngữ bạn đọc.', grade: 'Tuyển sinh phổ thông và đại học khác nhau.', region: 'Seoul và Gyeonggi có hướng dẫn khác nhau.',
-    type: 'Đây là điểm bắt đầu. Câu sau sẽ lọc rõ hơn.', parents: 'Có tuyển sinh bắt buộc cả bố mẹ là người nước ngoài, có tuyển sinh loại trường hợp đó.',
-    countries: 'Chỉ lưu mã quốc gia.', languages: 'Để sau này lọc lớp tiếng Hàn và phiên dịch.', born: 'Chỉ hỏi năm đến nếu bạn sinh ở nước ngoài.',
-    arrived: 'Chỉ hỏi năm, không hỏi tình trạng cư trú.', years: 'Một số tuyển sinh phổ thông cần thời gian học ở Hàn Quốc.',
-    nationality: 'Tuyển sinh đa văn hóa đã kiểm là cho quốc tịch Hàn.', school: 'Trường Meister không thuộc tuyển sinh tốt nghiệp trường nghề.',
-    korean: 'Nhiều tuyển sinh đại học yêu cầu TOPIK.', band: 'Điểm thấp vẫn có thể xem trường nghề theo phỏng vấn.',
-    interests: 'Trường nghề được liệt kê theo lĩnh vực.', goal: 'Học tiếp hay đi làm đổi thứ tự thẻ.',
-    support: 'Tiếng Hàn, giấy tờ và học phí dẫn tới bài khác nhau.', consent: 'Mặc định tắt. Chỉ trường ẩn danh, không có visa hay số giấy tờ.',
-  },
 };
 
 const ru: NavCopy = {
   ...en,
+  more: 'Ещё',
+  account: 'Аккаунт',
+  dates: 'Даты',
+  basics: 'Основные данные',
   tracks: 'Мои треки',
   board: 'Доска',
   my: 'Моя страница',
   dashTitle: 'Куда я могу поступить',
+  homeCount: '{n} треков, которые мне подходят',
+  nextUp: 'Ближайшая дата',
+  restTracks: 'Остальные треки',
   empty: 'Ответьте на несколько вопросов, и подходящие треки появятся здесь.',
   edit: 'Изменить ответы',
   skip: 'Пропустить',
@@ -753,7 +710,6 @@ const ru: NavCopy = {
   call: 'Позвонить',
   calendar: 'Файл календаря',
   backList: 'К списку',
-  why: 'Зачем спрашиваем',
   consentLead: 'Исследование выключено, пока вы его не включите. Приложение работает в любом случае.',
   yes: 'Да',
   no: 'Нет',
@@ -791,24 +747,21 @@ const ru: NavCopy = {
     band: 'Примерно какие оценки?', interests: 'Какие области интересны?', goal: 'Какая следующая цель?',
     support: 'Какая помощь нужна?', consent: 'Можно использовать анонимные ответы для исследования?',
   },
-  because: {
-    lang: 'Чтобы экраны совпали с языком, который вы читаете.', grade: 'Поступление в школу и в вуз — разные треки.', region: 'У Сеула и Кёнги разные правила.',
-    type: 'Это старт. Следующие вопросы уточняют.', parents: 'Одним трекам нужны оба родителя-иностранца, другие это исключают.',
-    countries: 'Остаётся только код страны.', languages: 'Чтобы позже фильтровать уроки и перевод.', born: 'Год приезда спрашиваем только если родились за рубежом.',
-    arrived: 'Спрашиваем год, не статус пребывания.', years: 'Некоторым школьным трекам нужна учёба в Корее.',
-    nationality: 'Проверенные мультикультурные треки вузов — для граждан Кореи.', school: 'Школа Майстер вне трека выпускников профшкол.',
-    korean: 'У многих вузов есть порог TOPIK.', band: 'Низкие оценки всё ещё оставляют профшколу с собеседованием.',
-    interests: 'Профшколы показаны по области.', goal: 'Учёба и работа меняют порядок карточек.',
-    support: 'Корейский, документы и оплата ведут к разным записям.', consent: 'По умолчанию выключено. Только анонимные поля, без визы и номера.',
-  },
 };
 
 const mn: NavCopy = {
   ...en,
+  more: 'Бусад',
+  account: 'Бүртгэл',
+  dates: 'Хуваарь',
+  basics: 'Үндсэн мэдээлэл',
   tracks: 'Миний элсэлт',
   board: 'Самбар',
   my: 'Миний хуудас',
   dashTitle: 'Миний ашиглаж болох элсэлт',
+  homeCount: 'Ашиглаж болох элсэлт {n}',
+  nextUp: 'Дараагийн огноо',
+  restTracks: 'Бусад элсэлт',
   empty: 'Хэдэн асуултад хариулбал тохирох элсэлт энд гарна.',
   edit: 'Хариулт засах',
   skip: 'Алгасах',
@@ -834,7 +787,6 @@ const mn: NavCopy = {
   call: 'Залгах',
   calendar: 'Календарийн файл',
   backList: 'Жагсаалт руу',
-  why: 'Яагаад асуув',
   consentLead: 'Судалгааг та асаахаас нааш унтраалттай. Апп аль алинд нь ажиллана.',
   yes: 'Тийм',
   no: 'Үгүй',
@@ -872,16 +824,6 @@ const mn: NavCopy = {
     band: 'Дүн ойролцоогоор ямар вэ?', interests: 'Ямар салбар сонирхдог вэ?', goal: 'Дараагийн зорилго юу вэ?',
     support: 'Ямар тусламж хэрэгтэй вэ?', consent: 'Нэргүй хариултыг судалгаанд ашиглаж болох уу?',
   },
-  because: {
-    lang: 'Дэлгэц уншиж буй хэлтэйгээ таарахын тулд.', grade: 'Ахлах сургууль ба их сургуулийн элсэлт өөр.', region: 'Сөүл, Кёнги өөр заавар гаргадаг.',
-    type: 'Эхлэл. Дараагийн асуулт нарийвчилна.', parents: 'Зарим элсэлт эцэг эх хоёуланг нь гадаад иргэн байхыг шаардаж, зарим нь хасна.',
-    countries: 'Зөвхөн улсын код үлдэнэ.', languages: 'Дараа нь солонгос хэл, орчуулгыг шүүхийн тулд.', born: 'Гадаадад төрсөн бол ирсэн оныг асууна.',
-    arrived: 'Он л асууна. Оршин суух статус биш.', years: 'Зарим сургуулийн элсэлт Солонгост сурсан хугацааг үздэг.',
-    nationality: 'Шалгасан олон соёлын их сургуулийн элсэлт Солонгос иргэнд зориулагдсан.', school: 'Майстер сургууль мэргэжлийн сургууль төгсөгчийн элсэлтэд орохгүй.',
-    korean: 'Олон их сургууль TOPIK шаарддаг.', band: 'Дүн бага байсан ч ярилцлагатай мэргэжлийн сургууль нээлттэй.',
-    interests: 'Мэргэжлийн сургуулийг салбараар харуулна.', goal: 'Суралцах, ажиллах нь картын дарааллыг өөрчилнө.',
-    support: 'Хэл, бичиг, төлбөр өөр нийтлэл рүү хүргэнэ.', consent: 'Анхдагч нь унтраалттай. Зөвхөн нэргүй талбар, виз, дугаар байхгүй.',
-  },
 };
 
 const PACK: Record<SupportedLangCode, NavCopy> = {
@@ -897,4 +839,8 @@ const PACK: Record<SupportedLangCode, NavCopy> = {
 
 export function navCopy(lang: SupportedLangCode): NavCopy {
   return PACK[lang];
+}
+
+export function homeHeadline(copy: NavCopy, count: number): string {
+  return copy.homeCount.replaceAll('{n}', String(count));
 }

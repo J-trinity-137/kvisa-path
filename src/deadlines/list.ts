@@ -1,4 +1,4 @@
-import { daysUntil } from '../data/interactiveModules';
+import { DDAY_SCHEDULES, daysUntil } from '../data/interactiveModules';
 import { TARGET_2028_WINDOWS, type PathwayWindow } from '../data/trackSchema';
 import { isIsoDate } from './seoul';
 import { isAdmissionCategory, schemaTrack, shippedSchema } from '../rules/reasons';
@@ -96,6 +96,26 @@ export function undatedChosen(chosenIds: readonly string[]): { id: string; name:
     notes.push({ id: row.id, name: row.name });
   }
   return notes;
+}
+
+/** Exam dates plus verified windows. `collectDeadlines` stays the track-window list. */
+export function allDates(chosenIds: readonly string[]): Deadline[] {
+  const exams: Deadline[] = DDAY_SCHEDULES.map((exam) => ({
+    id: exam.id,
+    title: exam.title,
+    start: exam.dateStr,
+    end: exam.endDateStr ?? exam.dateStr,
+    sourceUrl: exam.sourceUrl,
+    verifiedAt: exam.verifiedOn.slice(0, 7),
+    trackId: exam.id,
+    shared: true,
+    appliesTo: [exam.target],
+  }));
+  return [...collectDeadlines(chosenIds), ...exams].sort((a, b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title, 'ko'));
+}
+
+export function nextUpcoming(chosenIds: readonly string[], today: string): Deadline | null {
+  return allDates(chosenIds).find((item) => item.end >= today) ?? null;
 }
 
 export function ddayState(start: string, end: string, today: string): DdayState {

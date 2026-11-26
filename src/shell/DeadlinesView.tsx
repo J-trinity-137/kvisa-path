@@ -1,4 +1,6 @@
-import { collectDeadlines, ddayState, undatedChosen, type Deadline } from '../deadlines/list';
+import { EmptyState } from '../components/ui';
+import { allDates, ddayState, undatedChosen, type Deadline } from '../deadlines/list';
+import { navCopy } from '../i18n/navCopy';
 import { seoulDate } from '../deadlines/seoul';
 import { planCopy } from '../i18n/planCopy';
 import type { SupportedLangCode } from '../kbridge';
@@ -32,17 +34,20 @@ export function DeadlinesView({
   today?: string;
 }) {
   const copy = planCopy(lang);
+  const shell = navCopy(lang);
   const day = today ?? seoulDate(new Date());
-  const rows = collectDeadlines(chosenIds);
+  const rows = allDates(chosenIds);
   const undated = undatedChosen(chosenIds);
   const filename = (id: string) => `${id.replace(/[^a-z0-9-]+/gi, '-')}.ics`;
   return (
     <div className="due" id="deadlines-print">
       <header className="page-head">
-        <h1>{copy.deadlinesTitle}</h1>
-        <p>{copy.deadlinesLead}</p>
-        <p className="muted">{copy.localFile}</p>
-        <div className="band-actions no-print">
+        <div>
+          <h1>{shell.dates}</h1>
+          <p className="lead">{copy.deadlinesLead}</p>
+          <p className="muted">{copy.localFile}</p>
+        </div>
+        <div className="action-row no-print">
           <button
             type="button"
             className="btn primary"
@@ -56,11 +61,11 @@ export function DeadlinesView({
           </button>
         </div>
       </header>
-      {rows.length === 0 ? <p className="empty">{copy.none}</p> : null}
+      {rows.length === 0 ? <EmptyState title={copy.none} /> : null}
       {rows.length > 0 ? (
         <div className="due-scroll">
           <table className="due-table">
-            <caption>{copy.deadlinesTitle}</caption>
+            <caption>{shell.dates}</caption>
             <thead>
               <tr>
                 <th scope="col">D-Day</th>

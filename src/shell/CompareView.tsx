@@ -1,3 +1,4 @@
+import { EmptyState } from '../components/ui';
 import { categoryText, failText, nationalityText, quotaText, topikText, windowText } from '../compare/format';
 import { compareColumns, rowHasFail, type CompareColumn } from '../compare/model';
 import { planCopy } from '../i18n/planCopy';
@@ -59,9 +60,11 @@ export function CompareView({
   return (
     <div className="cmp" id="compare-print">
       <header className="page-head">
-        <h1>{copy.compareTitle}</h1>
-        <p>{copy.compareLead}</p>
-        <div className="band-actions no-print">
+        <div>
+          <h1>{copy.compareTitle}</h1>
+          <p className="lead">{copy.compareLead}</p>
+        </div>
+        <div className="action-row no-print">
           <a className="btn ghost" href="#/tracks">
             {copy.backTracks}
           </a>
@@ -70,7 +73,7 @@ export function CompareView({
           </button>
         </div>
       </header>
-      {columns.length === 0 ? <p className="empty">{copy.emptyCompare}</p> : null}
+      {columns.length === 0 ? <EmptyState title={copy.emptyCompare} /> : null}
       {columns.some((column) => column.fails.length > 0) ? <p className="soft">{copy.failLegend}</p> : null}
       {columns.length > 0 ? (
         <div className="cmp-scroll">

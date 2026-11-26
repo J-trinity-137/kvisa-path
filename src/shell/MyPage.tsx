@@ -4,15 +4,17 @@ import { TeacherVaultPanel } from '../components/TeacherVaultPanel';
 import { ADMISSION_QUIZ_ITEMS, DOC_CHECKLIST_ITEMS } from '../data/interactiveModules';
 import { getCoreCopy } from '../i18n/coreCopy';
 import { navCopy } from '../i18n/navCopy';
+import { planCopy } from '../i18n/planCopy';
 import { regionLabel } from '../i18n/regionLabels';
 import { REGION_IDS } from '../data/freshness';
 import type { SupportedLangCode } from '../kbridge';
 import { LANGUAGES } from '../kbridge';
+import { Glyph } from '../components/icons';
 import type { DevicePrefs } from '../profile/prefs';
 import type { StudentProfile } from '../profile/profile';
 import { DOCS_STORAGE_KEY } from '../privacy/records';
-import { getUiMessages } from '../i18n/messages';
 import { gapUi } from '../i18n/gapUi';
+import { getUiMessages } from '../i18n/messages';
 import { SavedTracks } from './SavedTracks';
 
 export function MyPage({
@@ -41,8 +43,9 @@ export function MyPage({
   demoSlot?: ReactNode;
 }) {
   const copy = navCopy(lang);
-  const gap = gapUi(lang);
+  const plan = planCopy(lang);
   const ui = getUiMessages(lang);
+  const gap = gapUi(lang);
   const core = getCoreCopy(lang);
   const [done, setDone] = useState<string[]>(() => {
     try {
@@ -67,17 +70,17 @@ export function MyPage({
   return (
     <div className="my">
       <header className="page-head">
-        <h1>{copy.my}</h1>
-        <p>{copy.privacy}</p>
+        <div>
+          <h1>{copy.my}</h1>
+          <p className="lead">{copy.privacy}</p>
+        </div>
         <button type="button" className="btn primary" onClick={onSetup}>
           {copy.edit}
         </button>
       </header>
       {demoSlot}
-      <SavedTracks lang={lang} profile={profile} ids={savedIds} onRemove={onRemoveSaved} />
-      <div className="my-grid">
-        <section className="panel">
-          <h2>{copy.dashTitle}</h2>
+      <section className="panel">
+          <h2>{copy.basics}</h2>
           <label className="field">
             {copy.ask.grade}
             <select value={profile.grade ?? ''} onChange={(event) => onProfile({ ...profile, grade: (event.target.value || null) as StudentProfile['grade'] })}>
@@ -152,21 +155,30 @@ export function MyPage({
               <option value="work">{copy.goals.work}</option>
             </select>
           </label>
-        </section>
-        <section className="panel">
-          <h2>{copy.theme}</h2>
+      </section>
+      <details className="fold">
+        <summary>{plan.savedTitle}</summary>
+        <SavedTracks lang={lang} profile={profile} ids={savedIds} onRemove={onRemoveSaved} />
+      </details>
+      <details className="fold">
+        <summary>{copy.theme}</summary>
           <div className="choice-grid">
             {LANGUAGES.map((item) => (
               <button key={item.code} type="button" className="choice" aria-pressed={item.code === lang} onClick={() => setLang(item.code)}>
-                {item.nativeName}
+                <span className="choice-label">{item.nativeName}</span>
+                <span className="choice-check" aria-hidden="true">
+                  <Glyph name="check" />
+                </span>
               </button>
             ))}
           </div>
-          {(['system', 'light', 'dark'] as const).map((theme) => (
-            <button key={theme} type="button" className="choice" aria-pressed={prefs.theme === theme} onClick={() => onPrefs({ ...prefs, theme })}>
-              {theme === 'system' ? copy.system : theme === 'light' ? copy.light : copy.dark}
-            </button>
-          ))}
+          <div className="segment" role="group" aria-label={copy.theme}>
+            {(['system', 'light', 'dark'] as const).map((theme) => (
+              <button key={theme} type="button" aria-pressed={prefs.theme === theme} onClick={() => onPrefs({ ...prefs, theme })}>
+                {theme === 'system' ? copy.system : theme === 'light' ? copy.light : copy.dark}
+              </button>
+            ))}
+          </div>
           <label className="check">
             <input type="checkbox" checked={prefs.easyKorean} onChange={(event) => onPrefs({ ...prefs, easyKorean: event.target.checked })} />
             {copy.easy}
@@ -187,16 +199,18 @@ export function MyPage({
             <input type="checkbox" checked={prefs.teacherMode} onChange={(event) => onPrefs({ ...prefs, teacherMode: event.target.checked })} />
             {copy.teacher}
           </label>
-        </section>
-      </div>
-      <PrivacyTools lang={lang} easy={prefs.easyKorean} />
-      {prefs.teacherMode ? (
-        <TeacherVaultPanel lang={lang} region={profile.region ?? 'seoul'} studentType={profile.studentType ?? 'unsure'} grade={profile.grade === 'middle' ? 'ms' : 'hs'} />
-      ) : null}
-      <details className="panel">
-        <summary>
-          {done.length}/{DOC_CHECKLIST_ITEMS.length}
-        </summary>
+          {prefs.teacherMode ? (
+            <TeacherVaultPanel lang={lang} region={profile.region ?? 'seoul'} studentType={profile.studentType ?? 'unsure'} grade={profile.grade === 'middle' ? 'ms' : 'hs'} />
+          ) : null}
+          <div className="danger-row">
+            <button type="button" className="btn danger" onClick={onClear}>
+              {ui.clearRecords}
+            </button>
+            <p className="muted">{ui.clearRecordsHint}</p>
+          </div>
+      </details>
+      <details className="fold">
+        <summary>{gap.docSection}</summary>
         {DOC_CHECKLIST_ITEMS.map((doc) => (
           <label key={doc.id} className="check">
             <input type="checkbox" checked={done.includes(doc.id)} onChange={() => toggleDoc(doc.id)} />
@@ -205,10 +219,11 @@ export function MyPage({
         ))}
       </details>
       {quiz ? (
-        <section className="panel">
-          <h2>
-            {quizId + 1}/{ADMISSION_QUIZ_ITEMS.length}
-          </h2>
+        <details className="fold">
+          <summary>{gap.quizSection}</summary>
+          <p className="muted">
+            {quizId + 1} / {ADMISSION_QUIZ_ITEMS.length}
+          </p>
           <p>{question}</p>
           <div className="choice-grid">
             {(['O', 'X'] as const).map((choice) => (
@@ -220,7 +235,7 @@ export function MyPage({
                 aria-label={choice === 'O' ? gap.quizYes : gap.quizNo}
                 onClick={() => setPicked(choice)}
               >
-                {choice === 'O' ? gap.quizYes : gap.quizNo}
+                <span className="choice-label">{choice === 'O' ? gap.quizYes : gap.quizNo}</span>
               </button>
             ))}
           </div>
@@ -239,12 +254,12 @@ export function MyPage({
           >
             {copy.next}
           </button>
-        </section>
+        </details>
       ) : null}
-      <button type="button" className="btn danger" onClick={onClear}>
-        {ui.clearRecords}
-      </button>
-      <p className="muted">{ui.clearRecordsHint}</p>
+      <details className="fold">
+        <summary>{copy.privacy}</summary>
+        <PrivacyTools lang={lang} easy={prefs.easyKorean} />
+      </details>
     </div>
   );
 }

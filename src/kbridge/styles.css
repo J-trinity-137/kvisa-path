@@ -1,66 +1,3 @@
-:root {
-  color-scheme: light;
-  --kb-surface: #ffffff;
-  --kb-on-surface: #191f28;
-  --kb-muted: #656f7c;
-  --kb-line: #e5e8eb;
-  --kb-line-strong: #d1d6db;
-  --kb-soft: #f2f4f6;
-  --kb-disabled-text: #b0b8c1;
-  --kb-primary: #1b64da;
-  --kb-on-primary: #ffffff;
-  --kb-primary-line: #1b64da;
-  --kb-safe: #0e7c55;
-  --kb-check: #b25e09;
-  --kb-avoid: #c92a2a;
-  --kb-radius-xs: 2px;
-  --kb-radius-sm: 4px;
-  --kb-radius-md: 8px;
-  --kb-radius-bar: 10px;
-  --kb-radius-control: 12px;
-  --kb-radius-card: 16px;
-  --kb-radius-float: 18px;
-  --kb-radius-sheet: 20px;
-  --kb-radius-pill: 9999px;
-  --kb-space-2: 8px;
-  --kb-space-3: 12px;
-  --kb-space-4: 16px;
-  --kb-space-5: 20px;
-  --kb-space-6: 24px;
-  --kb-space-8: 32px;
-  --kb-space-10: 40px;
-  --kb-shadow-float: 0 8px 24px rgba(25, 31, 40, 0.08);
-  --kb-shadow-sheet: 0 -8px 28px rgba(25, 31, 40, 0.12);
-  --kb-motion-fast: 0.12s;
-  --kb-motion-base: 0.16s;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --kb-surface: #141416;
-    --kb-on-surface: #ececef;
-    --kb-muted: #8b95a1;
-    --kb-line: #2a2c30;
-    --kb-line-strong: #3b3e45;
-    --kb-soft: #252629;
-    --kb-disabled-text: #666668;
-    --kb-primary: #4c8dff;
-    --kb-on-primary: #141416;
-    --kb-primary-line: #4c8dff;
-    --kb-safe: #34c78b;
-    --kb-check: #f0a243;
-    --kb-avoid: #f26b6b;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --kb-motion-fast: 0ms;
-    --kb-motion-base: 0ms;
-  }
-}
-
 *,
 *::before,
 *::after {
@@ -71,15 +8,6 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--kb-surface);
-  color: var(--kb-on-surface);
-  font-family: Pretendard Variable, Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-html[dir='rtl'] body {
-  font-family: Pretendard Variable, Pretendard, 'Noto Naskh Arabic', 'Noto Sans Arabic', sans-serif;
 }
 
 button {
@@ -93,7 +21,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid var(--kb-primary-line);
+  outline: 2px solid var(--kb-focus);
   outline-offset: 2px;
 }
 
@@ -135,6 +63,7 @@ textarea:focus-visible {
   background: var(--kb-surface);
   border: 1px solid var(--kb-line);
   border-radius: var(--kb-radius-card);
+  box-shadow: var(--kb-shadow-sm);
   padding: var(--kb-space-4);
 }
 
@@ -174,8 +103,10 @@ textarea:focus-visible {
 }
 
 .kb-chip[aria-pressed='true'] {
-  border: 2px solid var(--kb-primary-line);
-  font-weight: 600;
+  border-color: var(--kb-primary);
+  background: var(--kb-primary-soft);
+  color: var(--kb-primary-strong);
+  font-weight: 650;
 }
 
 .kb-tag {
@@ -209,8 +140,7 @@ textarea:focus-visible {
 
 .kb-actionbar-wrap {
   position: fixed;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   bottom: 0;
   padding: 0 var(--kb-space-5) calc(var(--kb-space-5) + env(safe-area-inset-bottom));
   pointer-events: none;
@@ -262,8 +192,9 @@ textarea:focus-visible {
 
 .kb-speak-card {
   background: var(--kb-surface);
-  border: 2px solid var(--kb-on-surface);
+  border: 1px solid var(--kb-line);
   border-radius: var(--kb-radius-card);
+  box-shadow: var(--kb-shadow-sm);
   padding: var(--kb-space-5);
 }
 
