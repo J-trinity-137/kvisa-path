@@ -4,6 +4,10 @@ export interface MulticulturalTrack {
   hasTrack: boolean;
   url: string;
   verifiedAt?: string;
+  /** 2027 early admission is closed. Kept as reference beside the 2028 rows. */
+  cycleYear?: 2027;
+  role?: 'closed_reference';
+  category?: 'multicultural';
 }
 
 /** 2027 early-admission guides checked 2026-11-26. These are Korean-national tracks. */
@@ -114,4 +118,7 @@ export const MULTICULTURAL_TRACKS: readonly MulticulturalTrack[] = [
 
 for (const track of MULTICULTURAL_TRACKS) {
   track.verifiedAt = '2026-11';
+  track.cycleYear = 2027;
+  track.role = 'closed_reference';
+  track.category = 'multicultural';
 }
