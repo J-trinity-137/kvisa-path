@@ -1,12 +1,12 @@
 {
-  "name": "K-Visa 학생 입학전형 · 진로 스킬트리",
+  "name": "K-Visa Path",
   "short_name": "K-Visa Path",
   "start_url": "/kvisa-path/",
   "scope": "/kvisa-path/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1b64da",
-  "description": "서울의 외국인 가정·중도입국 중고등학생이 입학, 체류, 진로 경로를 보는 앱. 체류자격은 저장하지 않습니다.",
+  "background_color": "#f6f3ec",
+  "theme_color": "#0B6B4A",
+  "description": "Admission tracks for multicultural and migrant-background students. Status of stay is not stored.",
   "icons": [
     {
       "src": "/kvisa-path/icons/icon-192.png",

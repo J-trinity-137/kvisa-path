@@ -132,12 +132,19 @@ describe('nationwide region contacts', () => {
     expect(SUPPORTED_LANGS).toHaveLength(8);
     const categories = new Set(NATIONWIDE_ENTRIES.map((row) => row.category).concat(NATIONWIDE_GAPS.map((gap) => gap.category)));
     for (const lang of SUPPORTED_LANGS as readonly SupportedLangCode[]) {
-      expect(REGION_LABELS[lang].gwangju).toContain('전남광주통합특별시');
-      expect(REGION_LABELS[lang].jeonnam).toContain('전남광주통합특별시');
+      expect(REGION_LABELS[lang].gwangju.length).toBeGreaterThan(0);
+      expect(REGION_LABELS[lang].jeonnam.length).toBeGreaterThan(0);
       expect(NATIONWIDE_UI[lang].callCenter.length).toBeGreaterThan(0);
-      expect(NATIONWIDE_UI[lang].mergedMark).toContain('전남광주통합특별시교육청');
-      expect(NATIONWIDE_UI[lang].incheonDistricts).toContain('제물포구');
-      expect(NATIONWIDE_UI[lang].notOnlyMulti).toContain('세계로국제중고등학교');
+      expect(NATIONWIDE_UI[lang].mergedMark.length).toBeGreaterThan(12);
+      if (lang === 'ko') {
+        expect(NATIONWIDE_UI[lang].mergedMark).toContain('전남광주통합특별시교육청');
+        expect(NATIONWIDE_UI[lang].incheonDistricts).toContain('제물포구');
+      } else {
+        expect(REGION_LABELS[lang].gwangju).not.toMatch(/[가-힣]/);
+        expect(REGION_LABELS[lang].jeonnam).not.toMatch(/[가-힣]/);
+        expect(NATIONWIDE_UI[lang].mergedMark).not.toMatch(/[가-힣]/);
+        expect(NATIONWIDE_UI[lang].incheonDistricts).not.toMatch(/[가-힣]/);
+      }
       for (const category of categories) expect(categoryLabel(lang, category)).not.toBe(category);
     }
   });

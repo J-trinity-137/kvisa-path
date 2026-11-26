@@ -233,6 +233,9 @@ describe('roster rules and the one profile store', () => {
     if (!sky || !sea || !star || !cloud) throw new Error('missing sample');
     expect(sky.tracks.map((track) => track.id)).toEqual(eligibleTracks(profileFor(loaded.db, sky.studentId)).map((track) => track.id));
     expect(sea.tracks.map((track) => track.id)).toEqual(eligibleTracks(profileFor(loaded.db, sea.studentId)).map((track) => track.id));
+    expect(sky.tracks.find((track) => track.id === 'multi-univ')?.reasons).toContain('korean_national');
+    expect(sky.withheld.map((item) => item.code)).toContain('not_both_parents');
+    expect(sea.withheld.map((item) => item.code)).toContain('not_korean_national');
     expect(sky.tracks.map((track) => track.id)).toContain('multi-univ');
     expect(sky.tracks.map((track) => track.id)).not.toContain('univ-foreign-parents');
     expect(sea.tracks.map((track) => track.id)).toContain('univ-foreign-parents');
@@ -242,6 +245,8 @@ describe('roster rules and the one profile store', () => {
     expect(onboardingPercent(profileFor(loaded.db, sky.studentId))).toBe(100);
     expect(star.percent).toBeLessThan(100);
     expect(cloud.status).toBe('pending');
+    expect(cloud.tracks.map((track) => track.id)).not.toContain('korea-2028-multicultural');
+    expect(cloud.withheld.map((item) => item.code)).toContain('too_young');
     expect(sky.deadline).toEqual(nextDeadline(sky.tracks, TODAY));
     const dated = sky.tracks.some((track) => /\d{4}-\d{2}-\d{2}/.test(track.yearLabel));
     if (dated) expect(sky.deadline && sky.deadline.date >= '2026-11-26').toBe(true);
@@ -264,6 +269,7 @@ describe('roster rules and the one profile store', () => {
       details: [],
       verified: true,
       sort: 1,
+      reasons: [],
     } satisfies EligibleTrack;
     expect(nextDeadline([track], TODAY)).toEqual({ date: '2027-09-20', title: '예시' });
   });

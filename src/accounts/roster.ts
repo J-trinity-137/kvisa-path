@@ -1,7 +1,7 @@
 import type { GradeLevel, StudentProfile } from '../profile/profile';
 import { stepAnswered, visibleSteps } from '../profile/profile';
-import { eligibleTracks } from '../rules/evaluate';
-import type { EligibleTrack } from '../rules/types';
+import { explainTracks } from '../rules/evaluate';
+import type { EligibleTrack, WhyCode } from '../rules/types';
 import { accountById, profileFor, type DemoDb, type EnrollmentStatus } from './model';
 
 export function onboardingPercent(profile: StudentProfile): number {
@@ -36,6 +36,8 @@ export interface RosterRow {
   grade: GradeLevel | null;
   percent: number;
   tracks: EligibleTrack[];
+  /** Why other published tracks were left out, from the same gates as the dashboard. */
+  withheld: { code: WhyCode; count: number }[];
   deadline: { date: string; title: string } | null;
 }
 
@@ -45,7 +47,7 @@ export function rosterRows(db: DemoDb, classId: string, now: Date): RosterRow[] 
     .map((item) => {
       const account = accountById(db, item.studentId);
       const profile = profileFor(db, item.studentId);
-      const tracks = eligibleTracks(profile);
+      const explained = explainTracks(profile);
       return {
         studentId: item.studentId,
         nickname: account?.nickname ?? '',
@@ -55,8 +57,9 @@ export function rosterRows(db: DemoDb, classId: string, now: Date): RosterRow[] 
         status: item.status,
         grade: profile.grade,
         percent: onboardingPercent(profile),
-        tracks,
-        deadline: nextDeadline(tracks, now),
+        tracks: explained.tracks,
+        withheld: explained.withheld,
+        deadline: nextDeadline(explained.tracks, now),
       };
     })
     .sort((a, b) => {

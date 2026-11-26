@@ -114,7 +114,17 @@ export function BoardView({
               </td>
               <td>{copy.cats[post.category]}</td>
               <td>{post.region === 'all' ? copy.all : regionLabel(lang, post.region)}</td>
-              <td>{post.verifiedAt}</td>
+              <td>
+                {post.verifiedAt}
+                {post.sourceUrl ? (
+                  <>
+                    {' · '}
+                    <a href={post.sourceUrl} target="_blank" rel="noreferrer">
+                      {copy.source}
+                    </a>
+                  </>
+                ) : null}
+              </td>
             </tr>
           ))}
         </tbody>

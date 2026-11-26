@@ -435,6 +435,12 @@ select {
   min-width: 180px;
 }
 
+.board {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .board-table {
   width: 100%;
   border-collapse: collapse;

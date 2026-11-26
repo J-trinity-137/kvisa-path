@@ -7,14 +7,14 @@ export const PROFILE_VERSION = 1 as const;
 
 export type GradeLevel = 'elementary' | 'middle' | 'high';
 export type ParentForeign = 'father' | 'mother' | 'both' | 'neither';
-export type SchoolKind = 'general' | 'vocational' | 'meister' | 'alternative' | 'not_enrolled';
+export type SchoolKind = 'general' | 'vocational' | 'meister' | 'alternative' | 'foreign_school' | 'ged' | 'not_enrolled';
 export type GradeBand = 'upper' | 'middle' | 'lower' | 'unknown';
 export type CareerGoal = 'study' | 'work';
 export type SupportNeed = 'korean_class' | 'documents' | 'counseling' | 'fees' | 'career' | 'interpretation';
 
 const GRADES: readonly GradeLevel[] = ['elementary', 'middle', 'high'];
 const PARENTS: readonly ParentForeign[] = ['father', 'mother', 'both', 'neither'];
-const SCHOOLS: readonly SchoolKind[] = ['general', 'vocational', 'meister', 'alternative', 'not_enrolled'];
+const SCHOOLS: readonly SchoolKind[] = ['general', 'vocational', 'meister', 'alternative', 'foreign_school', 'ged', 'not_enrolled'];
 const BANDS: readonly GradeBand[] = ['upper', 'middle', 'lower', 'unknown'];
 const GOALS: readonly CareerGoal[] = ['study', 'work'];
 const LEVELS: readonly KoreanLevel[] = ['beginner', 'topik_3_4', 'topik_5_6'];
@@ -75,6 +75,12 @@ export interface StudentProfile {
   interests: InterestField[];
   goal: CareerGoal | null;
   supportNeeds: SupportNeed[];
+  /** Saved question id so refresh and “finish later” return here. */
+  onboardingStep: OnboardingStep | null;
+  /** Age in years. Under 14 hides university tracks. Null uses elementary as under 14. */
+  age: number | null;
+  /** Born in a third country while a parent was leaving North Korea. Not the defector themself. */
+  nkThirdCountryBorn: boolean | null;
   updatedAt: string;
 }
 
@@ -102,6 +108,9 @@ export const EMPTY_PROFILE: StudentProfile = {
   interests: [],
   goal: null,
   supportNeeds: [],
+  onboardingStep: null,
+  age: null,
+  nkThirdCountryBorn: null,
   updatedAt: '',
 };
 
@@ -143,6 +152,12 @@ function boolOrNull(value: unknown): boolean | null {
   return typeof value === 'boolean' ? value : null;
 }
 
+function ageOrNull(value: unknown): number | null {
+  const age = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN;
+  if (!Number.isInteger(age) || age < 1 || age > 30) return null;
+  return age;
+}
+
 export function parseProfile(raw: unknown): StudentProfile {
   const value = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
   const skipped = Array.isArray(value.skipped)
@@ -179,6 +194,9 @@ export function parseProfile(raw: unknown): StudentProfile {
     supportNeeds: Array.isArray(value.supportNeeds)
       ? value.supportNeeds.filter((item): item is SupportNeed => (NEEDS as readonly string[]).includes(String(item)))
       : [],
+    onboardingStep: pick(ONBOARDING_STEPS, value.onboardingStep),
+    age: ageOrNull(value.age),
+    nkThirdCountryBorn: boolOrNull(value.nkThirdCountryBorn),
     updatedAt: typeof value.updatedAt === 'string' && value.updatedAt.length < 40 ? value.updatedAt : '',
   };
   return profile;
@@ -310,4 +328,19 @@ export function stepAnswered(profile: StudentProfile, step: OnboardingStep): boo
     default:
       return false;
   }
+}
+
+/** First visit starts at the language question. A saved step resumes. A finished profile opens at the start for editing. */
+export function resumeStep(profile: StudentProfile): OnboardingStep {
+  const steps = visibleSteps(profile);
+  const first = steps[0] ?? 'lang';
+  if (profile.onboarded) return first;
+  if (profile.onboardingStep && steps.includes(profile.onboardingStep)) return profile.onboardingStep;
+  if (!profile.entered && !profile.updatedAt) return first;
+  return steps.find((step) => !stepAnswered(profile, step)) ?? first;
+}
+
+export function isUnder14(profile: StudentProfile): boolean {
+  if (profile.age != null) return profile.age < 14;
+  return profile.grade === 'elementary';
 }
