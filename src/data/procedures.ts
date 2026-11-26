@@ -27,6 +27,9 @@ const SPECIAL = 'https://www.sen.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20250
 const PREP = 'https://www.sen.go.kr/www/eduinfo/edumaterial/alternative/alternative_2.jsp';
 const PREP_NOTICE = 'https://www.sen.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20250106132933510&q_bbsSn=1100';
 const RAINBOW = 'https://www.rainbowyouth.or.kr/posts/rwdboard/19171';
+const DANURI_KOREAN = 'https://www.liveinkorea.kr/web/lay1/S1T16C19/contents.do';
+const NIKL = 'https://kcenter.korean.go.kr/kcenter/search/textbook.do';
+const EBS = 'https://www.ebs.co.kr/durian/kr/course?language=standardKorean';
 const GENERAL = 'https://hinfo.sen.go.kr/high/highContent.do?subMenuNo=03';
 
 export const PROCEDURES: readonly ProcedureStep[] = [
@@ -117,6 +120,16 @@ export const PROCEDURES: readonly ProcedureStep[] = [
     verifiedOn: CHECKED,
     verification: 'verified',
   },
+  {
+    id: 'ksl-online',
+    levels: ['elementary', 'middle', 'high'],
+    title: '온라인 한국어 학습 (공식 안내)',
+    body: '다누리의 한국어 무료 온라인 학습 안내는 누리-세종학당(말하기·듣기·읽기·쓰기)과 EBS 두리안(결혼이민자·다문화가족 자녀, 초·중·고 교과 클립)을 적습니다. 국립국어원 한국어교수학습샘터는 국내 다문화 초등학생과 중고등학생용 교재를 검색 대상으로 둡니다. 수업 정원이나 배정 학교는 이 페이지들이 정하지 않습니다.',
+    sourceUrl: DANURI_KOREAN,
+    sourceLabel: '다누리 한국어 무료 온라인 학습. 샘터와 EBS 두리안은 같은 안내가 연결',
+    verifiedOn: CHECKED,
+    verification: 'verified',
+  },
 ];
 
 export const OFFICIAL_FORMS: readonly OfficialForm[] = [
@@ -133,4 +146,4 @@ export function proceduresFor(level: ProcedureLevel): ProcedureStep[] {
   return PROCEDURES.filter((item) => item.levels.includes(level));
 }
 
-export const PROCEDURE_SOURCES = { PREP_NOTICE, SPECIAL };
+export const PROCEDURE_SOURCES = { PREP_NOTICE, SPECIAL, NIKL, EBS };

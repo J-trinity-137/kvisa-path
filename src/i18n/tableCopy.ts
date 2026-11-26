@@ -21,6 +21,16 @@ const REJECTED: Record<Lang7, string> = {
   ar: 'غير مقبول',
 };
 
+const UNKNOWN: Record<Lang7, string> = {
+  en: 'Not confirmed',
+  'zh-Hans': '未确认',
+  'zh-Hant': '未確認',
+  vi: 'Chưa xác nhận',
+  ru: 'Не подтверждено',
+  mn: 'Баталгаажаагүй',
+  ar: 'غير مؤكد',
+};
+
 const REGULAR: Record<Lang7, string> = {
   en: 'In principle not accepted (regular high school)',
   'zh-Hans': '原则上不承认（正规高中）',
@@ -32,7 +42,7 @@ const REGULAR: Record<Lang7, string> = {
 };
 
 interface Row {
-  ged: 'rejected' | 'regular';
+  ged: 'rejected' | 'regular' | 'unknown';
   track: Record<Lang7, string>;
   note: Record<Lang7, string>;
 }
@@ -228,7 +238,7 @@ const ROWS: Record<UniversityId, Row> = {
     },
   },
   skku: {
-    ged: 'rejected',
+    ged: 'unknown',
     track: {
       en: 'Regular admission, group B, 17 seats (CSAT 100%)',
       'zh-Hans': '正时 B 组 17 人（学能 100%）',
@@ -239,13 +249,13 @@ const ROWS: Record<UniversityId, Row> = {
       ar: 'قبول عام، المجموعة B، 17 مقعدًا (اختبار القدرات 100%)',
     },
     note: {
-      en: 'The 2027 spring undergraduate foreign-student PDF returned 404 here, so the rates and GED rule are not confirmed. The numbers in the table are the older notes. The overseas-Korean guide is a different track and was not used.',
-      'zh-Hans': '2027春季本科外国学生PDF在这里返回404，因此比例和检定考试规则未确认。表中数字是旧记录。在外国民简章是另一种选拔，没有采用。',
-      'zh-Hant': '2027春季本科外國學生PDF在這裡返回404，因此比例和檢定考試規則未確認。表中數字是舊記錄。在外國民簡章是另一種選拔，沒有採用。',
-      vi: 'PDF đại học xuân 2027 cho sinh viên nước ngoài trả về 404, nên tỷ lệ và quy tắc GED chưa được xác nhận. Số trong bảng là ghi cũ. Hướng dẫn kiều bào là tuyển sinh khác và không được dùng.',
-      ru: 'PDF весны 2027 для иностранных бакалавров здесь вернул 404, поэтому доли и правило GED не подтверждены. Цифры в таблице — старые записи. Руководство для зарубежных корейцев — другой трек и не использовалось.',
-      mn: '2027 хаврын гадаад оюутны PDF энд 404 өгсөн тул хувь ба GED дүрмийг баталгаажуулаагүй. Хүснэгтийн тоо хуучин тэмдэглэл. Гадаад солонгосчуудын гарын авлага өөр зам тул ашиглаагүй.',
-      ar: 'ملف PDF لربيع 2027 للطلاب الأجانب أعاد 404 هنا، لذلك النسب وقاعدة المعادلة غير مؤكدة. الأرقام في الجدول ملاحظات قديمة. دليل الكوريين في الخارج مسار مختلف ولم يُستخدم.',
+      en: 'Official scholarship page: overseas high-school graduates, first semester only. TOPIK 6 or Sungkyun Language Institute level 6 is 100%. TOPIK 5 or institute level 5 or the prep class is 50%. Levels 3 and 4 have no rate. The GED rule is not on this page. No multicultural-track URL.',
+      'zh-Hans': '外国学生奖学金页：海外高中毕业录取者，仅入学第一学期。TOPIK 6级或成均语学院6级为100%，TOPIK 5级或语学院5级、升学准备班为50%。3级和4级没有比例。这一页没有检定考试条款，也没有多文化选拔网址。',
+      'zh-Hant': '外國學生獎學金頁：海外高中畢業錄取者，僅入學第一學期。TOPIK 6級或成均語學院6級為100%，TOPIK 5級或語學院5級、升學準備班為50%。3級和4級沒有比例。這一頁沒有檢定考試條款，也沒有多文化選拔網址。',
+      vi: 'Trang học bổng: người tốt nghiệp THPT nước ngoài, chỉ học kỳ đầu. TOPIK 6 hoặc viện ngôn ngữ cấp 6 là 100%. TOPIK 5 hoặc cấp 5 hoặc lớp chuẩn bị là 50%. Cấp 3 và 4 không có tỷ lệ. Trang này không có quy tắc GED và không có địa chỉ tuyển đa văn hóa.',
+      ru: 'Страница стипендии: выпускники зарубежной школы, только первый семестр. TOPIK 6 или 6 уровень языкового института — 100%. TOPIK 5, 5 уровень института или подготовительный класс — 50%. У уровней 3 и 4 доли нет. Правила GED на странице нет. Адреса многокультурного трека нет.',
+      mn: 'Тэтгэлгийн хуудас: гадаад ахлах төгсөгч, зөвхөн эхний улирал. TOPIK 6 эсвэл хэлний дээд сургуулийн 6-р түвшин 100%. TOPIK 5, 5-р түвшин эсвэл бэлтгэл анги 50%. 3 ба 4-р зэрэгт хувь алга. GED дүрэм энэ хуудсанд алга. Олон соёлын замын хаяг алга.',
+      ar: 'صفحة المنحة: خريجو ثانوية في الخارج، الفصل الأول فقط. TOPIK 6 أو المستوى 6 في معهد اللغة 100%. TOPIK 5 أو المستوى 5 أو صف الإعداد 50%. المستويان 3 و4 بلا نسبة. قاعدة المعادلة ليست في هذه الصفحة. لا عنوان لمسار متعدد الثقافات.',
     },
   },
   cau: {
@@ -301,6 +311,15 @@ const TERMS: Record<string, Record<Lang7, string>> = {
     ru: 'Семестр не подтверждён',
     mn: 'Улирал баталгаажаагүй',
     ar: 'الفصل غير مؤكد',
+  },
+  '입학 첫 학기(해외 고교 졸업 합격자)': {
+    en: 'First semester after entry (overseas high-school graduates)',
+    'zh-Hans': '入学后第一学期（海外高中毕业录取者）',
+    'zh-Hant': '入學後第一學期（海外高中畢業錄取者）',
+    vi: 'Học kỳ đầu sau nhập học (tốt nghiệp THPT nước ngoài)',
+    ru: 'Первый семестр (выпускники зарубежной школы)',
+    mn: 'Элсэлтийн дараах эхний улирал (гадаад ахлах төгсөгч)',
+    ar: 'الفصل الأول بعد الالتحاق (خريجو ثانوية في الخارج)',
   },
   '입학 직후 첫 학기 1회 (2025학년도 이후 입학자)': {
     en: 'Once, the first semester after entry (entrants from 2025)',
@@ -387,7 +406,7 @@ export function universityCell(lang: SupportedLangCode, id: UniversityId): Unive
   }
   const row = ROWS[id];
   return {
-    ged: row.ged === 'rejected' ? REJECTED[lang] : REGULAR[lang],
+    ged: row.ged === 'rejected' ? REJECTED[lang] : row.ged === 'unknown' ? UNKNOWN[lang] : REGULAR[lang],
     track: row.track[lang],
     note: row.note[lang],
   };
