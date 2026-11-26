@@ -3,6 +3,7 @@ import { ADMISSION_TRACKS, VISA_SKILL_TREE } from '../src/data/admissionsData';
 import { DOC_CHECKLIST_ITEMS } from '../src/data/interactiveModules';
 import { getCoreCopy, TRANSLATED_LANGS } from '../src/i18n/coreCopy';
 import { applyDocumentLanguage } from '../src/kbridge/documentLang';
+import { CONSENT_COPY } from '../src/i18n/consentCopy';
 import { LANGUAGES, SUPPORTED_LANGS } from '../src/kbridge';
 
 describe('languages actually shipped', () => {
@@ -21,6 +22,16 @@ describe('languages actually shipped', () => {
     );
     expect(html.lang).toBe('ar');
     expect(html.dir).toBe('rtl');
+  });
+
+  it('has the same consent keys in all eight languages', () => {
+    const keys = Object.keys(CONSENT_COPY.ko);
+    for (const lang of SUPPORTED_LANGS) {
+      expect(Object.keys(CONSENT_COPY[lang])).toEqual(keys);
+      for (const key of keys) {
+        expect(CONSENT_COPY[lang][key as keyof typeof CONSENT_COPY.ko].length).toBeGreaterThan(0);
+      }
+    }
   });
 
   it('translates admission tracks, the visa tree, and the document list', () => {

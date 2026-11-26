@@ -5,6 +5,9 @@ import { AnalyticsTab } from './components/AnalyticsTab';
 import { MethodologyTab } from './components/MethodologyTab';
 import { StudentPrepTools } from './components/StudentPrepTools';
 import { StudentTypePicker } from './components/StudentTypePicker';
+import { FaqPanel } from './components/FaqPanel';
+import { PrivacyTools } from './components/PrivacyTools';
+import { TeacherVaultPanel } from './components/TeacherVaultPanel';
 import { TeacherSheet } from './components/TeacherSheet';
 import { readRegion, writeRegion } from './data/regionPref';
 import { readStudentType, writeStudentType, type StudentType } from './data/studentType';
@@ -100,6 +103,9 @@ export function App() {
         </button>
       </header>
 
+      <PrivacyTools lang={lang} easy={easy} />
+      <FaqPanel lang={lang} />
+
       <div className="kb-row kv-no-print" style={{ marginTop: 12 }}>
         <button type="button" className="kb-chip" aria-pressed={audience === 'student'} onClick={() => setAudience('student')}>
           {ui.studentView}
@@ -179,6 +185,12 @@ export function App() {
         {audience === 'teacher' ? (
           <div className="kv-teacher-root">
             <TeacherSheet lang={lang} choice={choice} easy={easy} />
+            <TeacherVaultPanel
+              lang={lang}
+              region={choice.region}
+              studentType={choice.studentType ?? 'unsure'}
+              grade={choice.stage === 'middle' ? 'ms' : choice.stage === 'high' ? 'hs' : 'other'}
+            />
           </div>
         ) : null}
         {audience === 'counselor' && counselorTab === 'analytics' ? (

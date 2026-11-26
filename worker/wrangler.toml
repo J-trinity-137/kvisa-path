@@ -1,0 +1,41 @@
+name = "kvisa-path"
+main = "src/index.ts"
+compatibility_date = "2026-11-26"
+workers_dev = true
+
+# Replace database_id after `wrangler d1 create kvisa-path`. It is not a secret.
+[observability]
+enabled = false
+
+[vars]
+ENVIRONMENT = "production"
+ACCESS_TEAM_DOMAIN = "REPLACE_WITH_TEAM.cloudflareaccess.com"
+ACCESS_AUD = "REPLACE_WITH_ACCESS_AUD"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kvisa-path"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[triggers]
+crons = ["0 18 * * *"]
+
+# Rate limits are counted in the isolate and are not written to D1.
+# Confirm the free-plan Rate Limiting binding before relying on these.
+[[unsafe.bindings]]
+name = "STATS_LIMIT"
+type = "ratelimit"
+namespace_id = "1001"
+
+[unsafe.bindings.simple]
+limit = 5
+period = 60
+
+[[unsafe.bindings]]
+name = "QUESTION_LIMIT"
+type = "ratelimit"
+namespace_id = "1002"
+
+[unsafe.bindings.simple]
+limit = 3
+period = 600
