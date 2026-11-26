@@ -46,6 +46,7 @@ export interface NavCopy {
   privacy: string;
   print: string;
   cats: Record<BoardCategory, string>;
+  koreanOnly: string;
   grades: Record<GradeLevel, string>;
   parents: Record<ParentForeign, string>;
   schools: Record<SchoolKind, string>;
@@ -100,6 +101,7 @@ const en: NavCopy = {
   clear: 'Clear records on this device',
   privacy: 'Nothing is sent unless you opt in. Visa and ID numbers are not asked.',
   print: 'Print this list',
+  koreanOnly: 'This post is in Korean only.',
   cats: {
     support: 'Support and scholarships',
     korean: 'Korean classes',
@@ -107,6 +109,18 @@ const en: NavCopy = {
     schedule: 'Dates',
     faq: 'FAQ',
     notice: 'Notices',
+    scholarship: 'Scholarship',
+    mentoring: 'Mentoring',
+    korean_language: 'Korean language',
+    career: 'Career',
+    counseling_mental: 'Counselling',
+    legal_admin: 'Legal and admin',
+    medical: 'Medical',
+    bilingual: 'Bilingual',
+    education_cost: 'Education costs',
+    family_parent: 'Family and parents',
+    competition: 'Competition',
+    online_learning: 'Online learning',
   },
   grades: { elementary: 'Elementary', middle: 'Middle school', high: 'High school' },
   parents: { father: 'Father', mother: 'Mother', both: 'Both', neither: 'Neither' },
@@ -214,6 +228,7 @@ const ko: NavCopy = {
   clear: '이 기기의 기록 지우기',
   privacy: '동의하기 전에는 보내지 않습니다. 체류자격과 주민번호는 묻지 않습니다.',
   print: '이 목록 인쇄',
+  koreanOnly: '이 글은 한국어입니다.',
   cats: {
     support: '지원사업·장학',
     korean: '한국어 교육',
@@ -221,6 +236,18 @@ const ko: NavCopy = {
     schedule: '일정',
     faq: '자주 묻는 질문',
     notice: '공지',
+    scholarship: '장학',
+    mentoring: '멘토링',
+    korean_language: '한국어 교육',
+    career: '진로',
+    counseling_mental: '상담·마음',
+    legal_admin: '법률·행정',
+    medical: '의료',
+    bilingual: '이중언어',
+    education_cost: '교육비',
+    family_parent: '가족·부모',
+    competition: '대회',
+    online_learning: '온라인 학습',
   },
   grades: { elementary: '초등', middle: '중학교', high: '고등학교' },
   parents: { father: '부', mother: '모', both: '둘 다', neither: '없음' },
@@ -328,6 +355,7 @@ const ar: NavCopy = {
   clear: 'مسح سجلات هذا الجهاز',
   privacy: 'لا يُرسل شيء إلا بموافقتك. لا نسأل عن الإقامة أو رقم الهوية.',
   print: 'طباعة القائمة',
+  koreanOnly: 'هذا المنشور بالكورية فقط.',
   cats: {
     support: 'الدعم والمنح',
     korean: 'تعليم الكورية',
@@ -335,6 +363,18 @@ const ar: NavCopy = {
     schedule: 'المواعيد',
     faq: 'الأسئلة الشائعة',
     notice: 'إعلانات',
+    scholarship: 'منحة',
+    mentoring: 'إرشاد',
+    korean_language: 'اللغة الكورية',
+    career: 'مسار مهني',
+    counseling_mental: 'إرشاد نفسي',
+    legal_admin: 'قانون وإدارة',
+    medical: 'طبي',
+    bilingual: 'ثنائي اللغة',
+    education_cost: 'تكلفة التعليم',
+    family_parent: 'الأسرة والوالدان',
+    competition: 'مسابقة',
+    online_learning: 'تعلم عبر الإنترنت',
   },
   grades: { elementary: 'ابتدائي', middle: 'متوسط', high: 'ثانوي' },
   korean: { beginner: 'مبتدئ', topik_3_4: 'TOPIK 3–4', topik_5_6: 'TOPIK 5–6' },
@@ -387,7 +427,8 @@ const zhHans: NavCopy = {
   seoul: '首尔',
   gyeonggi: '京畿',
   noPosts: '没有相符的内容。',
-  cats: { support: '支援与奖学金', korean: '韩语教育', centers: '中心与电话', schedule: '日程', faq: '常见问题', notice: '公告' },
+  koreanOnly: '正文只有韩语。',
+  cats: { support: '支援与奖学金', korean: '韩语教育', centers: '中心与电话', schedule: '日程', faq: '常见问题', notice: '公告', scholarship: '奖学金', mentoring: '辅导', korean_language: '韩语学习', career: '升学就业', counseling_mental: '心理咨询', legal_admin: '法律行政', medical: '医疗', bilingual: '双语', education_cost: '教育费用', family_parent: '家庭与家长', competition: '比赛', online_learning: '在线学习' },
   privacy: '未经同意不会发送。不问停留资格和身份证号。',
 };
 
@@ -409,7 +450,8 @@ const zhHant: NavCopy = {
   seoul: '首爾',
   gyeonggi: '京畿',
   noPosts: '沒有相符的內容。',
-  cats: { support: '支援與獎學金', korean: '韓語教育', centers: '中心與電話', schedule: '日程', faq: '常見問題', notice: '公告' },
+  koreanOnly: '正文只有韓語。',
+  cats: { support: '支援與獎學金', korean: '韓語教育', centers: '中心與電話', schedule: '日程', faq: '常見問題', notice: '公告', scholarship: '獎學金', mentoring: '輔導', korean_language: '韓語學習', career: '升學就業', counseling_mental: '心理諮詢', legal_admin: '法律行政', medical: '醫療', bilingual: '雙語', education_cost: '教育費用', family_parent: '家庭與家長', competition: '比賽', online_learning: '線上學習' },
   privacy: '未經同意不會傳送。不問停留資格和身分證號。',
 };
 
@@ -431,7 +473,8 @@ const vi: NavCopy = {
   seoul: 'Seoul',
   gyeonggi: 'Gyeonggi',
   noPosts: 'Không có bài phù hợp.',
-  cats: { support: 'Hỗ trợ và học bổng', korean: 'Lớp tiếng Hàn', centers: 'Trung tâm', schedule: 'Lịch', faq: 'Câu hỏi', notice: 'Thông báo' },
+  koreanOnly: 'Bài viết chỉ có tiếng Hàn.',
+  cats: { support: 'Hỗ trợ và học bổng', korean: 'Lớp tiếng Hàn', centers: 'Trung tâm', schedule: 'Lịch', faq: 'Câu hỏi', notice: 'Thông báo', scholarship: 'Học bổng', mentoring: 'Cố vấn', korean_language: 'Tiếng Hàn', career: 'Hướng nghiệp', counseling_mental: 'Tư vấn', legal_admin: 'Pháp lý', medical: 'Y tế', bilingual: 'Song ngữ', education_cost: 'Chi phí học', family_parent: 'Gia đình', competition: 'Cuộc thi', online_learning: 'Học trực tuyến' },
   privacy: 'Không gửi nếu bạn chưa đồng ý. Không hỏi tình trạng cư trú hay số giấy tờ.',
 };
 
@@ -453,7 +496,8 @@ const ru: NavCopy = {
   seoul: 'Сеул',
   gyeonggi: 'Кёнги',
   noPosts: 'Ничего не найдено.',
-  cats: { support: 'Поддержка и стипендии', korean: 'Корейский язык', centers: 'Центры', schedule: 'Даты', faq: 'Вопросы', notice: 'Объявления' },
+  koreanOnly: 'Текст только на корейском.',
+  cats: { support: 'Поддержка и стипендии', korean: 'Корейский язык', centers: 'Центры', schedule: 'Даты', faq: 'Вопросы', notice: 'Объявления', scholarship: 'Стипендия', mentoring: 'Наставничество', korean_language: 'Корейский язык', career: 'Карьера', counseling_mental: 'Консультация', legal_admin: 'Право и документы', medical: 'Медицина', bilingual: 'Два языка', education_cost: 'Стоимость учёбы', family_parent: 'Семья', competition: 'Конкурс', online_learning: 'Онлайн-учёба' },
   privacy: 'Ничего не отправляется без согласия. Визу и номер документа не спрашиваем.',
 };
 
@@ -475,7 +519,8 @@ const mn: NavCopy = {
   seoul: 'Сөүл',
   gyeonggi: 'Кёнги',
   noPosts: 'Тохирох нийтлэл алга.',
-  cats: { support: 'Дэмжлэг, тэтгэлэг', korean: 'Солонгос хэл', centers: 'Төв, утас', schedule: 'Хуваарь', faq: 'Асуулт', notice: 'Мэдээ' },
+  koreanOnly: 'Энэ нийтлэл зөвхөн солонгосоор.',
+  cats: { support: 'Дэмжлэг, тэтгэлэг', korean: 'Солонгос хэл', centers: 'Төв, утас', schedule: 'Хуваарь', faq: 'Асуулт', notice: 'Мэдээ', scholarship: 'Тэтгэлэг', mentoring: 'Ментор', korean_language: 'Солонгос хэл', career: 'Мэргэжил', counseling_mental: 'Зөвлөгөө', legal_admin: 'Хууль, захиргаа', medical: 'Эмнэлэг', bilingual: 'Хоёр хэл', education_cost: 'Сургалтын зардал', family_parent: 'Гэр бүл', competition: 'Тэмцээн', online_learning: 'Онлайн сургалт' },
   privacy: 'Зөвшөөрөлгүйгээр илгээхгүй. Виз, регистрийн дугаар асуухгүй.',
 };
 

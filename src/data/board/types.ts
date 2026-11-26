@@ -1,6 +1,25 @@
 import type { RegionId } from '../freshness';
 
-export const BOARD_CATEGORIES = ['support', 'korean', 'centers', 'schedule', 'faq', 'notice'] as const;
+export const BOARD_CATEGORIES = [
+  'support',
+  'korean',
+  'centers',
+  'schedule',
+  'faq',
+  'notice',
+  'scholarship',
+  'mentoring',
+  'korean_language',
+  'career',
+  'counseling_mental',
+  'legal_admin',
+  'medical',
+  'bilingual',
+  'education_cost',
+  'family_parent',
+  'competition',
+  'online_learning',
+] as const;
 
 export type BoardCategory = (typeof BOARD_CATEGORIES)[number];
 

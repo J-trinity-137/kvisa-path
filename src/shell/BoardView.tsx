@@ -40,6 +40,7 @@ export function BoardView({
           {copy.cats[selected.category]} · {selected.region === 'all' ? copy.all : regionLabel(lang, selected.region)}
         </p>
         <h1>{selected.title}</h1>
+        {lang !== 'ko' ? <p className="muted">{copy.koreanOnly}</p> : null}
         <p>{selected.body}</p>
         {selected.phone ? (
           <p>

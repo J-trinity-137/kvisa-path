@@ -8,6 +8,7 @@ import { DDAY_SCHEDULES } from '../interactiveModules';
 import { factsFor } from '../multiculturalContent';
 import { NATIONAL_LINES, NATIONWIDE_ENTRIES } from '../nationwideRegions';
 import { OFFICIAL_FORMS, PROCEDURES } from '../procedures';
+import { supportProgramPosts } from './supportPosts';
 import type { BoardPost } from './types';
 
 function month(value: string | undefined): string {
@@ -206,5 +207,7 @@ function fromFaq(): BoardPost[] {
 }
 
 export function boardPosts(): BoardPost[] {
-  return [...fromSupport(), ...fromKorean(), ...fromCenters(), ...fromSchedule(), ...fromFaq(), ...fromNotice(), ...EXTRA_BOARD_POSTS];
+  return [...supportProgramPosts(), ...fromSupport(), ...fromKorean(), ...fromCenters(), ...fromSchedule(), ...fromFaq(), ...fromNotice(), ...EXTRA_BOARD_POSTS].filter(
+    (post) => post.sourceUrl.startsWith('http') && /^\d{4}-\d{2}/.test(post.verifiedAt),
+  );
 }

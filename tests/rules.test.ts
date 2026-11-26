@@ -27,6 +27,7 @@ describe('eligible tracks', () => {
     expect(ids).toContain('korea-2028-multicultural');
     expect(ids).not.toContain('univ-foreign-parents');
     expect(ids).not.toContain('kcue-2028-both-parents-foreign');
+    expect(ids).not.toContain('ft-snu-global-1');
     expect(rows.find((row) => row.id === 'multi-univ')?.details).toContain('경희대');
     expect(rows.find((row) => row.id === 'multi-univ')?.reason.length).toBeGreaterThan(8);
     expect(rows.find((row) => row.id === 'multi-univ')?.yearLabel).toContain('2027');
@@ -47,6 +48,9 @@ describe('eligible tracks', () => {
     const ids = rows.map((row) => row.id);
     expect(ids).toContain('univ-foreign-parents');
     expect(ids).toContain('kcue-2028-both-parents-foreign');
+    expect(ids).toContain('ft-snu-global-1');
+    expect(ids).toContain('ft-dongyang-2027');
+    expect(ids).toContain('ft-khu-foreign-2027');
     expect(ids).not.toContain('multi-univ');
     expect(ids).not.toContain('univ-multicultural-eq');
     expect(ids).not.toContain('korea-2028-multicultural');
@@ -109,6 +113,9 @@ describe('eligible tracks', () => {
       }),
     );
     expect(beginner.map((row) => row.id)).not.toContain('univ-foreign-parents');
+    expect(beginner.map((row) => row.id)).not.toContain('ft-khu-foreign-2027');
+    expect(beginner.map((row) => row.id)).not.toContain('ft-jbnu-2027');
+    expect(beginner.map((row) => row.id)).toContain('ft-kookmin-2028');
     const vocational = eligibleTracks(
       profile({
         grade: 'high',

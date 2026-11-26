@@ -2,9 +2,11 @@ import type { BackgroundType } from '../data/admissionsData';
 import { SEOUL_VOCATIONAL_SCHOOLS } from '../data/admissionsData';
 import { GYEONGGI_KLS } from '../data/gyeonggiData';
 import { MULTICULTURAL_TRACKS } from '../data/multiculturalTracks';
+import { FOREIGN_TRACKS } from '../data/foreignTracks';
 import { PATHWAYS_2028 } from '../data/pathways2028';
 import { matchPathways, type PathwayRecord as SchemaPathway, type TrackCategory, type TrackQuery } from '../data/trackSchema';
 import type { GradeLevel, StudentProfile } from '../profile/profile';
+import type { KoreanLevel } from '../data/admissionsData';
 import { pathwayCatalog } from './catalog';
 import type { EligibleTrack, PathwayRecord, PathwayWhen } from './types';
 
@@ -100,6 +102,7 @@ const HIGH_ONLY = new Set<TrackCategory>([
   'foreign_school_graduate',
   'international_college',
   'scholarship',
+  'junior_college',
 ]);
 
 function gradeAllows(category: TrackCategory, grade: GradeLevel | null): boolean {
@@ -113,14 +116,25 @@ function sentence(text: string): string {
   return cut.length > 160 ? `${cut.slice(0, 160)}…` : cut;
 }
 
-/** Published 2028 rows, matched with trackSchema. A later foreign-track file can use the same matcher. */
-export function tracksFromSchema(profile: StudentProfile, rows: readonly SchemaPathway[] = PATHWAYS_2028): EligibleTrack[] {
+function topikFloor(level: KoreanLevel | null): number | undefined {
+  if (level === 'beginner') return 1;
+  if (level === 'topik_3_4') return 3;
+  if (level === 'topik_5_6') return 5;
+  return undefined;
+}
+
+const PUBLISHED_ROWS: readonly SchemaPathway[] = [...PATHWAYS_2028, ...FOREIGN_TRACKS];
+
+/** Published schema rows, including foreign tracks. A later file can be concatenated the same way. */
+export function tracksFromSchema(profile: StudentProfile, rows: readonly SchemaPathway[] = PUBLISHED_ROWS): EligibleTrack[] {
   const signals = signalsFor(profile);
   const query: TrackQuery = {};
   if (signals.koreanNational === true) query.nationality = 'korean';
   else if (signals.koreanNational === false) query.nationality = 'foreign';
   if (signals.bothParentsForeign !== null) query.bothParentsForeign = signals.bothParentsForeign;
   if (profile.studentType === 'domestic_multicultural' && signals.koreanNational !== false) query.multiculturalFamilyChild = true;
+  const topikLevel = topikFloor(profile.koreanLevel);
+  if (topikLevel != null) query.topikLevel = topikLevel;
   return matchPathways(rows, query)
     .filter((row) => row.hasTrack !== false && gradeAllows(row.category, profile.grade))
     .map((row) => ({
@@ -129,12 +143,13 @@ export function tracksFromSchema(profile: StudentProfile, rows: readonly SchemaP
       title: row.name,
       reason: sentence(row.summaryKo || row.eligibility.textKo),
       yearLabel: row.windows[0] ? `${row.windows[0].start} ~ ${row.windows[0].end}` : row.cycleYear ? String(row.cycleYear) : row.verifiedAt,
-      details: [row.eligibility.textKo, row.quote].filter(Boolean),
+      details: [row.language?.noteKo, row.eligibility.textKo, row.quote].filter((line): line is string => Boolean(line)),
       sourceUrl: row.url,
       sourceLabel: row.university ?? row.name,
       verifiedAt: row.verifiedAt,
       verified: row.status === 'verified',
       sort: row.role === 'current_target' ? 4 : row.hasTrack === true ? 8 : 24,
+      category: row.category,
     }));
 }
 

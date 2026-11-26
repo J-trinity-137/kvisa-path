@@ -1,4 +1,5 @@
 import type { BackgroundType, KoreanLevel } from '../data/admissionsData';
+import type { TrackCategory } from '../data/trackSchema';
 import type { RegionId } from '../data/freshness';
 import type { CareerGoal, GradeLevel, SchoolKind, SupportNeed } from '../profile/profile';
 
@@ -60,4 +61,6 @@ export interface EligibleTrack {
   verifiedAt?: string;
   verified: boolean;
   sort: number;
+  /** Set when the card comes from a trackSchema row, including foreign tracks. */
+  category?: TrackCategory;
 }

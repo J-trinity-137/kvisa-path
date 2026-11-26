@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { SupportedLangCode } from '../kbridge';
 import { navCopy } from '../i18n/navCopy';
 import { STUDENT_TYPE_COPY } from '../i18n/studentTypeCopy';
+import { PATHWAYS_2028_COPY } from '../i18n/pathways2028Copy';
 import { easySentence } from '../i18n/shellCopy';
 import { FreshnessLine } from '../components/FreshnessLine';
 import { SpeakButton } from '../components/SpeakButton';
@@ -23,6 +24,7 @@ export function Dashboard({
   onEdit: () => void;
 }) {
   const copy = navCopy(lang);
+  const groups = PATHWAYS_2028_COPY[lang].groups;
   const [open, setOpen] = useState<string | null>(null);
   const typeLabel = profile.studentType ? STUDENT_TYPE_COPY[lang].types[profile.studentType] : null;
   const chips = [
@@ -67,7 +69,8 @@ export function Dashboard({
           const expanded = open === track.id;
           return (
             <article key={track.id} className={`track-card kind-${track.kind}`}>
-              <p className="year">{track.yearLabel}</p>
+              <p className="year">{track.category ? groups[track.category] : track.yearLabel}</p>
+              {track.category ? <p className="muted">{track.yearLabel}</p> : null}
               <h2>{track.title}</h2>
               <p>{reason}</p>
               <button type="button" className="btn primary" aria-expanded={expanded} onClick={() => setOpen(expanded ? null : track.id)}>
