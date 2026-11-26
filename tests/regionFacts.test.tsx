@@ -36,15 +36,28 @@ describe('region facts on the page', () => {
 
   it('switches the region selector to Gangwon and Sejong contacts', async () => {
     localStorage.setItem('kvisa-path.lang', 'ko');
+    localStorage.setItem(
+      'kvisa-path.profile',
+      JSON.stringify({
+        version: 1,
+        entered: true,
+        onboarded: true,
+        region: 'seoul',
+        studentType: 'domestic_multicultural',
+        grade: 'high',
+        updatedAt: '2026-11-26T00:00:00.000Z',
+      }),
+    );
+    window.location.hash = '#/me';
     render(<App />);
-    fireEvent.click(screen.getByRole('button', { name: '국내출생 다문화' }));
-    fireEvent.click(screen.getByRole('button', { name: '강원' }));
+    const region = await screen.findByLabelText('지역');
+    fireEvent.change(region, { target: { value: 'gangwon' } });
     await waitFor(() => expect(document.body.textContent).toContain('033-1396'));
     const gangwon = document.body.textContent ?? '';
     expect(gangwon).toContain('033-640-3315');
     expect(gangwon).toContain('양주출입국');
     expect(gangwon).toContain('031-828-9306');
-    fireEvent.click(screen.getByRole('button', { name: '세종' }));
+    fireEvent.change(region, { target: { value: 'sejong' } });
     expect(document.body.textContent).toContain('대전출입국');
     expect(document.body.textContent).toContain('042-220-2001');
   });

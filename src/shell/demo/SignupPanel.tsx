@@ -49,9 +49,9 @@ export function SignupPanel({
         <bdi dir="ltr">{DEMO_BANNER}</bdi>
       </p>
       <h1>{copy.signupTitle}</h1>
-      <p>{copy.signupLead}</p>
-      <p>{copy.note}</p>
-      <p>{copy.noSecrets}</p>
+      <p className="lead">{copy.signupLead}</p>
+      <p className="muted">{copy.note}</p>
+      <p className="muted">{copy.noSecrets}</p>
       {error ? (
         <p role="alert" className="soft">
           {error}

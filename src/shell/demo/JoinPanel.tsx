@@ -93,7 +93,7 @@ export function JoinPanel({
         <bdi dir="ltr">{DEMO_BANNER}</bdi>
       </p>
       <h1>{copy.joinTitle}</h1>
-      <p>{copy.joinLead}</p>
+      <p className="lead">{copy.joinLead}</p>
       {error ? (
         <p role="alert" className="soft">
           {error}

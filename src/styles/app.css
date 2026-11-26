@@ -89,7 +89,7 @@
 .kv-table td {
   padding: var(--kb-space-3) var(--kb-space-2);
   border-bottom: 1px solid var(--kb-line);
-  text-align: left;
+  text-align: start;
   vertical-align: middle;
 }
 
@@ -101,7 +101,7 @@
 
 .kv-table th.num,
 .kv-table td.num {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -154,7 +154,7 @@
 
 .kv-list {
   margin: var(--kb-space-2) 0 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   font-size: 14px;
 }
 

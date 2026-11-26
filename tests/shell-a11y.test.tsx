@@ -27,7 +27,7 @@ describe('desktop shell accessibility', () => {
     };
     const { container } = render(
       <main lang="ar" dir="rtl">
-        <Dashboard lang="ar" profile={profile} tracks={eligibleTracks(profile)} withheld={[]} easy={false} onEdit={() => undefined} />
+        <Dashboard lang="ar" tracks={eligibleTracks(profile)} easy={false} onEdit={() => undefined} />
         <BoardView lang="ar" posts={boardPosts().slice(0, 6)} onOpen={() => undefined} onClose={() => undefined} />
       </main>,
     );

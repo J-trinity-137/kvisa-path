@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './kbridge/styles.css';
+import './styles/tokens.css';
 import { App } from './App';
 
 if ('serviceWorker' in navigator) {

@@ -1,0 +1,233 @@
+/* Shared tokens for every screen. Keep new UI on these variables and the
+   shell classes (.btn, .panel, .choice, .field, .empty-state, .page-head). */
+
+:root {
+  color-scheme: light;
+  --kb-bg: #f4f6f5;
+  --kb-surface: #ffffff;
+  --kb-on-surface: #1a211e;
+  --kb-muted: #4a5852;
+  --kb-line: #e6ebe8;
+  --kb-line-strong: #d3dbd6;
+  --kb-soft: #f0f3f1;
+  --kb-primary: #146c43;
+  --kb-primary-strong: #0f5a38;
+  --kb-on-primary: #ffffff;
+  --kb-primary-line: #146c43;
+  --kb-primary-soft: #e7f5ee;
+  --kb-accent: #6b4510;
+  --kb-accent-soft: #f8f1e4;
+  --kb-safe: #0f6b40;
+  --kb-safe-soft: #e5f6ec;
+  --kb-check: #8a4b08;
+  --kb-check-soft: #fbf3e6;
+  --kb-avoid: #a3261f;
+  --kb-avoid-soft: #fdecec;
+  --kb-band: #f3faf6;
+  --kb-on-band: #1a211e;
+  --kb-frame: #f4f6f5;
+  --kb-tint-path: #f3faf6;
+  --kb-tint-week: #fbf8f1;
+  --kb-tint-center: #f6f7f6;
+  --kb-focus: #146c43;
+  --kb-disabled-text: #6d7b74;
+  --kb-bar: rgba(255, 255, 255, 0.92);
+  --kb-overlay: rgba(20, 28, 24, 0.46);
+  --kb-radius-xs: 4px;
+  --kb-radius-sm: 8px;
+  --kb-radius-md: 10px;
+  --kb-radius-bar: 12px;
+  --kb-radius-control: 12px;
+  --kb-radius-card: 16px;
+  --kb-radius-float: 16px;
+  --kb-radius-sheet: 20px;
+  --kb-radius-pill: 999px;
+  --kb-space-1: 4px;
+  --kb-space-2: 8px;
+  --kb-space-3: 12px;
+  --kb-space-4: 16px;
+  --kb-space-5: 20px;
+  --kb-space-6: 24px;
+  --kb-space-8: 32px;
+  --kb-space-10: 40px;
+  --kb-space-12: 48px;
+  --kb-space-16: 64px;
+  --kb-shadow-sm: 0 1px 2px rgba(22, 32, 27, 0.05);
+  --kb-shadow-card: 0 8px 24px rgba(22, 32, 27, 0.06);
+  --kb-shadow-float: 0 12px 32px rgba(22, 32, 27, 0.1);
+  --kb-shadow-sheet: 0 -12px 40px rgba(22, 32, 27, 0.14);
+  --kb-text-xs: 12px;
+  --kb-text-sm: 13px;
+  --kb-text-md: 14px;
+  --kb-text-base: 16px;
+  --kb-text-lg: 18px;
+  --kb-text-xl: 22px;
+  --kb-text-2xl: 28px;
+  --kb-text-3xl: 32px;
+  --kb-max: 1120px;
+  --kb-onboard: 720px;
+  --kb-header: 64px;
+  --kb-font: "Pretendard Variable", Pretendard, "Noto Sans KR", "Noto Sans", "Noto Sans Arabic", "Noto Sans SC", "Noto Sans TC", system-ui, sans-serif;
+  --kb-font-ar: "Noto Sans Arabic", "Noto Naskh Arabic", "Pretendard Variable", "Noto Sans", system-ui, sans-serif;
+  --kb-font-sc: "Noto Sans SC", "Pretendard Variable", "Noto Sans", system-ui, sans-serif;
+  --kb-font-tc: "Noto Sans TC", "Pretendard Variable", "Noto Sans", system-ui, sans-serif;
+  --kb-font-intl: "Noto Sans", "Pretendard Variable", "Noto Sans KR", system-ui, sans-serif;
+  --kb-motion-fast: 0.12s;
+  --kb-motion-base: 0.16s;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --kb-bg: #101614;
+  --kb-surface: #18211d;
+  --kb-on-surface: #f2f5f3;
+  --kb-muted: #a8b5ae;
+  --kb-line: #2a3832;
+  --kb-line-strong: #3c4d45;
+  --kb-soft: #22302a;
+  --kb-primary: #3dbe86;
+  --kb-primary-strong: #8ee0b8;
+  --kb-on-primary: #06281a;
+  --kb-primary-line: #3dbe86;
+  --kb-primary-soft: #16382c;
+  --kb-accent: #e6c48a;
+  --kb-accent-soft: #3a2e18;
+  --kb-safe: #7ddeaf;
+  --kb-safe-soft: #16382c;
+  --kb-check: #e6c48a;
+  --kb-check-soft: #3a2e18;
+  --kb-avoid: #f0a8a4;
+  --kb-avoid-soft: #3a1c1c;
+  --kb-band: #16382c;
+  --kb-on-band: #f2f5f3;
+  --kb-frame: #101614;
+  --kb-tint-path: #163028;
+  --kb-tint-week: #2c2618;
+  --kb-tint-center: #22302a;
+  --kb-focus: #8ee0b8;
+  --kb-disabled-text: #8a9a93;
+  --kb-bar: rgba(16, 22, 20, 0.92);
+  --kb-overlay: rgba(0, 0, 0, 0.55);
+  --kb-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --kb-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --kb-shadow-float: 0 12px 32px rgba(0, 0, 0, 0.36);
+  --kb-shadow-sheet: 0 -12px 40px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme='light']) {
+    color-scheme: dark;
+    --kb-bg: #101614;
+    --kb-surface: #18211d;
+    --kb-on-surface: #f2f5f3;
+    --kb-muted: #a8b5ae;
+    --kb-line: #2a3832;
+    --kb-line-strong: #3c4d45;
+    --kb-soft: #22302a;
+    --kb-primary: #3dbe86;
+    --kb-primary-strong: #8ee0b8;
+    --kb-on-primary: #06281a;
+    --kb-primary-line: #3dbe86;
+    --kb-primary-soft: #16382c;
+    --kb-accent: #e6c48a;
+    --kb-accent-soft: #3a2e18;
+    --kb-safe: #7ddeaf;
+    --kb-safe-soft: #16382c;
+    --kb-check: #e6c48a;
+    --kb-check-soft: #3a2e18;
+    --kb-avoid: #f0a8a4;
+    --kb-avoid-soft: #3a1c1c;
+    --kb-band: #16382c;
+    --kb-on-band: #f2f5f3;
+    --kb-frame: #101614;
+    --kb-tint-path: #163028;
+    --kb-tint-week: #2c2618;
+    --kb-tint-center: #22302a;
+    --kb-focus: #8ee0b8;
+    --kb-disabled-text: #8a9a93;
+    --kb-bar: rgba(16, 22, 20, 0.92);
+    --kb-overlay: rgba(0, 0, 0, 0.55);
+  }
+}
+
+html[data-reduce-motion='true'] *,
+html[data-reduce-motion='true'] *::before,
+html[data-reduce-motion='true'] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  :root {
+    --kb-motion-fast: 0ms;
+    --kb-motion-base: 0ms;
+  }
+}
+
+html {
+  font-size: 16px;
+}
+
+html[data-font='large'],
+html[data-easy='true'] {
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  background: var(--kb-bg);
+  color: var(--kb-on-surface);
+  font-family: var(--kb-font);
+  font-size: var(--kb-text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html[lang^='ar'] body {
+  font-family: var(--kb-font-ar);
+}
+
+html[lang^='zh-Hans'] body {
+  font-family: var(--kb-font-sc);
+}
+
+html[lang^='zh-Hant'] body {
+  font-family: var(--kb-font-tc);
+}
+
+html[lang^='ru'] body,
+html[lang^='mn'] body,
+html[lang^='vi'] body {
+  font-family: var(--kb-font-intl);
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+html[lang^='ar'] :is(h1, h2, h3),
+html[lang^='zh'] :is(h1, h2, h3) {
+  letter-spacing: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--kb-focus);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--kb-primary-soft);
+  color: var(--kb-on-surface);
+}

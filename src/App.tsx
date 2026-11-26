@@ -1,12 +1,9 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useLanguage } from './kbridge';
-import { REGION_IDS, type RegionId } from './data/freshness';
-import { STUDENT_TYPES } from './data/studentType';
-import { navCopy } from './i18n/navCopy';
-import { planCopy } from './i18n/planCopy';
+import { type RegionId } from './data/freshness';
 import { accountsCopy } from './i18n/accountsCopy';
+import { navCopy } from './i18n/navCopy';
 import { regionLabel } from './i18n/regionLabels';
-import { STUDENT_TYPE_COPY } from './i18n/studentTypeCopy';
 import { readCompare, readSaved, toggleId, writeCompare, writeSaved, COMPARE_MAX, type ToggleStatus } from './library/tracks';
 import { activeAccount, profileFor, setAccountLang } from './accounts/model';
 import { readDemo } from './accounts/persist';
@@ -23,6 +20,7 @@ import { DemoHost } from './shell/demo/DemoHost';
 import { DemoMyCard } from './shell/demo/DemoMyCard';
 import { useTrackExplanation } from './shell/useTracks';
 import { Onboarding } from './shell/Onboarding';
+import { TopBar, type BarLink } from './shell/TopBar';
 import { TrackDetail } from './shell/TrackDetail';
 import { parseRoute, routeHash, type AppRoute } from './shell/route';
 import './styles/app.css';
@@ -49,7 +47,7 @@ function asNationwide(region: RegionId | null): Exclude<RegionId, 'seoul' | 'gye
 }
 
 export function App() {
-  const { lang, setLang } = useLanguage('kvisa-path.lang');
+  const { lang, meta, setLang } = useLanguage('kvisa-path.lang');
   const { db, replace } = useDemo();
   const [profile, setProfile] = useState<StudentProfile>(initialProfile);
   const [prefs, setPrefs] = useState<DevicePrefs>(() => readPrefs());
@@ -57,15 +55,13 @@ export function App() {
   const [compareIds, setCompareIds] = useState<string[]>(() => readCompare());
   const [savedIds, setSavedIds] = useState<string[]>(() => readSaved());
   const copy = navCopy(lang);
-  const plan = planCopy(lang);
   const accountCopy = accountsCopy(lang);
-  const types = STUDENT_TYPE_COPY[lang];
   const active = activeAccount(db);
   const appliedStudent = useRef(active?.role === 'student' ? active.id : null);
   const nationwide = asNationwide(profile.region);
   const accountScreen = route.name === 'accounts' || route.name === 'class' || route.name === 'join' || route.name === 'family';
   const showSetup = (!profile.entered || route.name === 'onboarding') && !accountScreen;
-  const explained = useTrackExplanation(showSetup ? null : profile);
+  const explained = useTrackExplanation(showSetup || accountScreen ? null : profile);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -76,8 +72,9 @@ export function App() {
     if (prefs.easyKorean) root.setAttribute('data-easy', 'true');
     else root.removeAttribute('data-easy');
     root.setAttribute('data-font', prefs.fontScale);
-    const color = prefs.theme === 'dark' ? '#145C42' : '#0B6B4A';
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
+    const systemDark = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const dark = prefs.theme === 'dark' || (prefs.theme === 'system' && systemDark);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#101614' : '#F4F6F5');
   }, [prefs]);
 
   useEffect(() => {
@@ -147,153 +144,119 @@ export function App() {
     writeProfile(change.profile);
   };
 
-  useEffect(() => {
-    document.title = copy.dashTitle;
-  }, [copy.dashTitle]);
+  const primary: BarLink[] = [
+    { href: '#/tracks', label: copy.tracks, current: route.name === 'tracks' || route.name === 'track' },
+    { href: '#/board', label: copy.board, current: route.name === 'board' },
+    { href: '#/deadlines', label: copy.dates, current: route.name === 'deadlines' },
+    { href: '#/me', label: copy.my, current: route.name === 'me' },
+  ];
+  const accountLinks: BarLink[] = [
+    { href: '#/me', label: copy.my, current: route.name === 'me' },
+    { href: '#/accounts', label: accountCopy.navAccounts, current: route.name === 'accounts' },
+  ];
+  if (active?.role === 'teacher') accountLinks.push({ href: '#/class', label: accountCopy.navClass, current: route.name === 'class' });
+  if (active?.role === 'student') accountLinks.push({ href: '#/join', label: accountCopy.navJoin, current: route.name === 'join' });
+  if (active?.role === 'student' || active?.role === 'guardian') {
+    accountLinks.push({ href: '#/family', label: accountCopy.navFamily, current: route.name === 'family' });
+  }
 
   return (
-    <div className="shell">
+    <div className="app">
       <a className="skip" href="#main">
         {copy.skipToContent}
       </a>
-      <aside className="sidebar">
-        <p className="brand" dir="ltr">
-          K-Visa Path
-        </p>
-        <nav aria-label={copy.navLabel}>
-          <a href="#/tracks" aria-current={route.name === 'tracks' || route.name === 'track' ? 'page' : undefined}>
-            {copy.tracks}
-          </a>
-          <a href="#/compare" aria-current={route.name === 'compare' ? 'page' : undefined}>
-            {plan.navCompare}
-            {compareIds.length > 0 ? ` ${compareIds.length}` : ''}
-          </a>
-          <a href="#/deadlines" aria-current={route.name === 'deadlines' ? 'page' : undefined}>
-            {plan.navDeadlines}
-          </a>
-          <a href="#/board" aria-current={route.name === 'board' ? 'page' : undefined}>
-            {copy.board}
-          </a>
-          <a href="#/me" aria-current={route.name === 'me' ? 'page' : undefined}>
-            {copy.my}
-          </a>
-          <a href="#/accounts" aria-current={route.name === 'accounts' ? 'page' : undefined}>
-            {accountCopy.navAccounts}
-          </a>
-          {active?.role === 'teacher' ? (
-            <a href="#/class" aria-current={route.name === 'class' ? 'page' : undefined}>
-              {accountCopy.navClass}
-            </a>
-          ) : null}
-          {active?.role === 'student' ? (
-            <a href="#/join" aria-current={route.name === 'join' ? 'page' : undefined}>
-              {accountCopy.navJoin}
-            </a>
-          ) : null}
-          {active?.role === 'student' || active?.role === 'guardian' ? (
-            <a href="#/family" aria-current={route.name === 'family' ? 'page' : undefined}>
-              {accountCopy.navFamily}
-            </a>
-          ) : null}
-          {prefs.teacherMode ? <a href="#/me">{copy.teacher}</a> : null}
-        </nav>
-        <DemoChrome
-          lang={lang}
-          accounts={db.accounts}
-          activeId={db.activeId}
-          onSwitch={(id) => onSession(switchAccount(db, profile, id))}
-        />
-        <div className="side-picks" role="group" aria-label={copy.region}>
-          {STUDENT_TYPES.map((type) => (
-            <button key={type} type="button" aria-pressed={profile.studentType === type} onClick={() => saveProfile({ ...profile, studentType: type })}>
-              {types.types[type]}
-            </button>
-          ))}
-          {REGION_IDS.map((id) => (
-            <button key={id} type="button" aria-pressed={profile.region === id} onClick={() => saveProfile({ ...profile, region: id as RegionId })}>
-              {regionLabel(lang, id)}
-            </button>
-          ))}
-        </div>
-      </aside>
-      <main id="main" tabIndex={-1}>
-        {accountScreen ? (
-          <DemoHost lang={lang} route={route} db={db} profile={profile} onSession={onSession} onDb={(next) => replace(next)} go={go} />
-        ) : null}
-        {showSetup ? (
-          <Onboarding
-            lang={lang}
-            setLang={setLang}
-            profile={profile}
-            onChange={saveProfile}
-            onDone={(next) => {
-              saveProfile(next);
-              go({ name: 'tracks' });
-            }}
-          />
-        ) : null}
-        {!showSetup && route.name === 'tracks' ? (
-          <Dashboard
-            lang={lang}
-            profile={profile}
-            tracks={explained?.tracks ?? []}
-            withheld={explained?.withheld ?? []}
-            loading={!explained}
-            easy={prefs.easyKorean}
-            onEdit={() => go({ name: 'onboarding' })}
-            compareIds={compareIds}
-            savedIds={savedIds}
-            onToggleCompare={toggleCompare}
-            onToggleSave={toggleSaved}
-          />
-        ) : null}
-        {!showSetup && route.name === 'compare' ? (
-          <CompareView lang={lang} profile={profile} ids={compareIds} onRemove={toggleCompare} />
-        ) : null}
-        {!showSetup && route.name === 'deadlines' ? <DeadlinesView lang={lang} chosenIds={chosenIds} /> : null}
-        {!showSetup && route.name === 'track' ? (
-          <TrackDetail
-            lang={lang}
-            profile={profile}
-            id={route.id}
-            comparing={compareIds.includes(route.id)}
-            saved={savedIds.includes(route.id)}
-            onCompare={toggleCompare}
-            onSave={toggleSaved}
-          />
-        ) : null}
-        {!showSetup && route.name === 'board' ? (
-          <Suspense fallback={<p className="muted">{copy.loading}</p>}>
-            <BoardPage lang={lang} selectedId={route.name === 'board' ? route.id : undefined} onOpen={(id) => go({ name: 'board', id })} onClose={() => go({ name: 'board' })} />
-          </Suspense>
-        ) : null}
-        {nationwide && !accountScreen ? (
-          <Suspense fallback={null}>
-            <RegionFacts lang={lang} region={nationwide} />
-          </Suspense>
-        ) : null}
-        {!showSetup && route.name === 'me' ? (
-          <Suspense fallback={<p className="muted">{copy.loading}</p>}>
-            <MyPage
+      <TopBar
+        lang={lang}
+        nativeName={meta.nativeName}
+        setLang={setLang}
+        focused={showSetup}
+        primary={primary}
+        accountLinks={accountLinks}
+        accountExtra={
+          <DemoChrome lang={lang} accounts={db.accounts} activeId={db.activeId} onSwitch={(id) => onSession(switchAccount(db, profile, id))} />
+        }
+      />
+      <main id="main" tabIndex={-1} className={showSetup ? 'main-setup' : 'main-page'}>
+        <Suspense fallback={<p className="muted">{copy.loading}</p>}>
+          {accountScreen ? <DemoHost lang={lang} route={route} db={db} profile={profile} onSession={onSession} onDb={(next) => replace(next)} go={go} /> : null}
+          {showSetup ? (
+            <Onboarding
               lang={lang}
               setLang={setLang}
               profile={profile}
-              prefs={prefs}
-              onProfile={saveProfile}
-              onPrefs={savePrefs}
-              onClear={() => clearMyRecords()}
-              onSetup={() => go({ name: 'onboarding' })}
-              savedIds={savedIds}
-              onRemoveSaved={toggleSaved}
-              demoSlot={
-                active ? (
-                  <DemoMyCard lang={lang} db={db} onHomeLang={(next) => replace((prev) => setAccountLang(prev, active.id, next))} />
-                ) : null
-              }
+              onChange={saveProfile}
+              onDone={(next) => {
+                saveProfile(next);
+                go({ name: 'tracks' });
+              }}
             />
-          </Suspense>
-        ) : null}
+          ) : null}
+          {!showSetup && !accountScreen && route.name === 'tracks' ? (
+            <Dashboard
+              lang={lang}
+              tracks={explained?.tracks ?? []}
+              withheld={explained?.withheld ?? []}
+              loading={explained == null}
+              easy={prefs.easyKorean}
+              onEdit={() => go({ name: 'onboarding' })}
+              chosenIds={chosenIds}
+            />
+          ) : null}
+          {!showSetup && route.name === 'compare' ? (
+            <CompareView lang={lang} profile={profile} ids={compareIds} onRemove={toggleCompare} />
+          ) : null}
+          {!showSetup && route.name === 'deadlines' ? <DeadlinesView lang={lang} chosenIds={chosenIds} /> : null}
+          {!showSetup && route.name === 'track' ? (
+            <TrackDetail
+              lang={lang}
+              profile={profile}
+              id={route.id}
+              comparing={compareIds.includes(route.id)}
+              saved={savedIds.includes(route.id)}
+              onCompare={toggleCompare}
+              onSave={toggleSaved}
+            />
+          ) : null}
+          {!showSetup && route.name === 'board' ? (
+            <BoardPage
+              lang={lang}
+              selectedId={route.name === 'board' ? route.id : undefined}
+              onOpen={(id) => go({ name: 'board', id })}
+              onClose={() => go({ name: 'board' })}
+            />
+          ) : null}
+          {!showSetup && route.name === 'me' ? (
+            <>
+              <MyPage
+                lang={lang}
+                setLang={setLang}
+                profile={profile}
+                prefs={prefs}
+                onProfile={saveProfile}
+                onPrefs={savePrefs}
+                onClear={() => clearMyRecords()}
+                onSetup={() => go({ name: 'onboarding' })}
+                savedIds={savedIds}
+                onRemoveSaved={toggleSaved}
+                demoSlot={
+                  active ? <DemoMyCard lang={lang} db={db} onHomeLang={(next) => replace((prev) => setAccountLang(prev, active.id, next))} /> : null
+                }
+              />
+              {nationwide ? (
+                <details className="fold">
+                  <summary>{regionLabel(lang, nationwide)}</summary>
+                  <RegionFacts lang={lang} region={nationwide} />
+                </details>
+              ) : null}
+            </>
+          ) : null}
+        </Suspense>
       </main>
+      {showSetup ? null : (
+        <footer className="site-foot">
+          <p>{copy.privacy}</p>
+        </footer>
+      )}
     </div>
   );
 }

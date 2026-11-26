@@ -49,20 +49,22 @@ describe('compare, detail, and deadlines accessibility', () => {
       koreanNationality: true,
       koreanLevel: 'topik_3_4',
     });
-    const { getAllByRole, container } = render(
-      <Dashboard
+    const { container } = render(
+      <Dashboard lang="ko" tracks={eligibleTracks(student).slice(0, 4)} easy={false} onEdit={() => undefined} />,
+    );
+    expect(container.querySelector('h1')?.textContent).toContain('내가 쓸 수 있는 전형');
+    const detail = render(
+      <TrackDetail
         lang="ko"
         profile={student}
-        tracks={eligibleTracks(student).slice(0, 4)}
-        easy={false}
-        onEdit={() => undefined}
-        compareIds={['korea-2028-multicultural']}
-        savedIds={[]}
-        onToggleCompare={() => 'full'}
-        onToggleSave={() => undefined}
+        id="korea-2028-multicultural"
+        comparing={false}
+        saved={false}
+        onCompare={() => 'added'}
+        onSave={() => undefined}
       />,
     );
-    expect(getAllByRole('button', { name: /비교에 담기|비교 중/ }).length).toBeGreaterThan(0);
+    expect(detail.getAllByRole('button', { name: /비교에 담기|비교 중/ }).length).toBeGreaterThan(0);
     const columns = compareColumns(['ft-khu-foreign-2027'], student);
     expect(windowText('ko', columns[0]!)).toBe('2027 요강 기준');
     const results = await axe.run(container);

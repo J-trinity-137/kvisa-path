@@ -62,9 +62,11 @@ export function TeacherDesk({
         <bdi dir="ltr">{DEMO_BANNER}</bdi>
       </p>
       <header className="page-head">
-        <h1>{copy.roster}</h1>
-        <p>{copy.note}</p>
-        <p>{copy.noSecrets}</p>
+        <div>
+          <h1>{copy.roster}</h1>
+          <p className="lead">{copy.note}</p>
+          <p className="muted">{copy.noSecrets}</p>
+        </div>
       </header>
       {error ? (
         <p role="alert" className="soft">

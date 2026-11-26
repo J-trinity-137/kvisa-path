@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { EmptyState } from '../components/ui';
 import { categoryText, failText, nationalityText, quotaText, topikText, windowText } from '../compare/format';
 import { compareColumns } from '../compare/model';
 import { planCopy } from '../i18n/planCopy';
@@ -32,10 +33,14 @@ export function TrackDetail({
     return (
       <div className="detail-page">
         <h1>{copy.detail}</h1>
-        <p className="empty">{copy.emptyCompare}</p>
-        <a className="btn ghost" href="#/tracks">
-          {copy.backTracks}
-        </a>
+        <EmptyState
+          title={copy.emptyCompare}
+          action={
+            <a className="btn ghost" href="#/tracks">
+              {copy.backTracks}
+            </a>
+          }
+        />
       </div>
     );
   }
@@ -52,10 +57,12 @@ export function TrackDetail({
   return (
     <article className="detail-page">
       <header className="page-head">
-        <p className="kicker">{categoryText(lang, column)}</p>
-        <h1>{column.name}</h1>
-        {stay ? <p>{PATHWAYS_2028_COPY[lang].stayLead}</p> : null}
-        <div className="card-actions no-print">
+        <div>
+          <p className="kicker">{categoryText(lang, column)}</p>
+          <h1>{column.name}</h1>
+          {stay ? <p className="lead">{PATHWAYS_2028_COPY[lang].stayLead}</p> : null}
+        </div>
+        <div className="action-row no-print">
           <a className="btn ghost" href="#/tracks">
             {copy.backTracks}
           </a>
