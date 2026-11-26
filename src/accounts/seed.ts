@@ -116,7 +116,7 @@ export function loadSample(db: DemoDb, teacherId: string, now: string): DemoResu
       ageBand: 'u14' as const,
       consent: 'simulated' as const,
       status: 'pending' as const,
-      answers: profile({ grade: 'high', region: 'gyeonggi' }),
+      answers: profile({ grade: 'elementary', age: 12, region: 'gyeonggi', bornAbroad: false }),
     },
   ];
 

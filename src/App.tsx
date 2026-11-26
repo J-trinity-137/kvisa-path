@@ -1,9 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useLanguage } from './kbridge';
-import { RegionFacts } from './components/RegionFacts';
-import { boardPosts } from './data/board';
 import { REGION_IDS, type RegionId } from './data/freshness';
-import { NATIONWIDE_IDS, type NationwideRegionId } from './data/nationwideRegions';
 import { STUDENT_TYPES } from './data/studentType';
 import { navCopy } from './i18n/navCopy';
 import { planCopy } from './i18n/planCopy';
@@ -18,15 +15,13 @@ import { noteProfileEdit, switchAccount } from './accounts/session';
 import { readProfile, writeProfile, type StudentProfile } from './profile/profile';
 import { readPrefs, writePrefs, type DevicePrefs } from './profile/prefs';
 import { clearMyRecords, RECORDS_CLEARED_EVENT } from './privacy/records';
-import { eligibleTracks } from './rules/evaluate';
-import { BoardView } from './shell/BoardView';
 import { CompareView } from './shell/CompareView';
 import { Dashboard } from './shell/Dashboard';
 import { DeadlinesView } from './shell/DeadlinesView';
 import { DemoChrome } from './shell/demo/DemoChrome';
 import { DemoHost } from './shell/demo/DemoHost';
 import { DemoMyCard } from './shell/demo/DemoMyCard';
-import { MyPage } from './shell/MyPage';
+import { useTrackExplanation } from './shell/useTracks';
 import { Onboarding } from './shell/Onboarding';
 import { TrackDetail } from './shell/TrackDetail';
 import { parseRoute, routeHash, type AppRoute } from './shell/route';
@@ -44,6 +39,15 @@ function initialProfile(): StudentProfile {
   return next;
 }
 
+const RegionFacts = lazy(() => import('./components/RegionFacts').then((mod) => ({ default: mod.RegionFacts })));
+const BoardPage = lazy(() => import('./shell/BoardPage').then((mod) => ({ default: mod.BoardPage })));
+const MyPage = lazy(() => import('./shell/MyPage').then((mod) => ({ default: mod.MyPage })));
+
+function asNationwide(region: RegionId | null): Exclude<RegionId, 'seoul' | 'gyeonggi'> | null {
+  if (!region || region === 'seoul' || region === 'gyeonggi') return null;
+  return region;
+}
+
 export function App() {
   const { lang, setLang } = useLanguage('kvisa-path.lang');
   const { db, replace } = useDemo();
@@ -58,10 +62,10 @@ export function App() {
   const types = STUDENT_TYPE_COPY[lang];
   const active = activeAccount(db);
   const appliedStudent = useRef(active?.role === 'student' ? active.id : null);
-  const nationwide = profile.region && (NATIONWIDE_IDS as readonly string[]).includes(profile.region) ? (profile.region as NationwideRegionId) : null;
-  const posts = useMemo(() => boardPosts(), []);
-  const tracks = useMemo(() => eligibleTracks(profile), [profile]);
+  const nationwide = asNationwide(profile.region);
   const accountScreen = route.name === 'accounts' || route.name === 'class' || route.name === 'join' || route.name === 'family';
+  const showSetup = (!profile.entered || route.name === 'onboarding') && !accountScreen;
+  const explained = useTrackExplanation(showSetup ? null : profile);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -143,12 +147,14 @@ export function App() {
     writeProfile(change.profile);
   };
 
-  const showSetup = (!profile.entered || route.name === 'onboarding') && !accountScreen;
+  useEffect(() => {
+    document.title = copy.dashTitle;
+  }, [copy.dashTitle]);
 
   return (
     <div className="shell">
       <a className="skip" href="#main">
-        {copy.tracks}
+        {copy.skipToContent}
       </a>
       <aside className="sidebar">
         <p className="brand" dir="ltr">
@@ -230,7 +236,9 @@ export function App() {
           <Dashboard
             lang={lang}
             profile={profile}
-            tracks={tracks}
+            tracks={explained?.tracks ?? []}
+            withheld={explained?.withheld ?? []}
+            loading={!explained}
             easy={prefs.easyKorean}
             onEdit={() => go({ name: 'onboarding' })}
             compareIds={compareIds}
@@ -255,33 +263,35 @@ export function App() {
           />
         ) : null}
         {!showSetup && route.name === 'board' ? (
-          <BoardView
-            lang={lang}
-            posts={posts}
-            selectedId={route.id}
-            onOpen={(id) => go({ name: 'board', id })}
-            onClose={() => go({ name: 'board' })}
-          />
+          <Suspense fallback={<p className="muted">{copy.loading}</p>}>
+            <BoardPage lang={lang} selectedId={route.name === 'board' ? route.id : undefined} onOpen={(id) => go({ name: 'board', id })} onClose={() => go({ name: 'board' })} />
+          </Suspense>
         ) : null}
-        {nationwide && !accountScreen ? <RegionFacts lang={lang} region={nationwide} /> : null}
+        {nationwide && !accountScreen ? (
+          <Suspense fallback={null}>
+            <RegionFacts lang={lang} region={nationwide} />
+          </Suspense>
+        ) : null}
         {!showSetup && route.name === 'me' ? (
-          <MyPage
-            lang={lang}
-            setLang={setLang}
-            profile={profile}
-            prefs={prefs}
-            onProfile={saveProfile}
-            onPrefs={savePrefs}
-            onClear={() => clearMyRecords()}
-            onSetup={() => go({ name: 'onboarding' })}
-            savedIds={savedIds}
-            onRemoveSaved={toggleSaved}
-            demoSlot={
-              active ? (
-                <DemoMyCard lang={lang} db={db} onHomeLang={(next) => replace((prev) => setAccountLang(prev, active.id, next))} />
-              ) : null
-            }
-          />
+          <Suspense fallback={<p className="muted">{copy.loading}</p>}>
+            <MyPage
+              lang={lang}
+              setLang={setLang}
+              profile={profile}
+              prefs={prefs}
+              onProfile={saveProfile}
+              onPrefs={savePrefs}
+              onClear={() => clearMyRecords()}
+              onSetup={() => go({ name: 'onboarding' })}
+              savedIds={savedIds}
+              onRemoveSaved={toggleSaved}
+              demoSlot={
+                active ? (
+                  <DemoMyCard lang={lang} db={db} onHomeLang={(next) => replace((prev) => setAccountLang(prev, active.id, next))} />
+                ) : null
+              }
+            />
+          </Suspense>
         ) : null}
       </main>
     </div>

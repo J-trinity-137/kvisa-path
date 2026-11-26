@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { App } from '../src/App';
 import { RegionFacts } from '../src/components/RegionFacts';
@@ -34,13 +34,13 @@ describe('region facts on the page', () => {
     expect(text).toContain('041-360-3200');
   });
 
-  it('switches the region selector to Gangwon and Sejong contacts', () => {
+  it('switches the region selector to Gangwon and Sejong contacts', async () => {
     localStorage.setItem('kvisa-path.lang', 'ko');
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: '국내출생 다문화' }));
     fireEvent.click(screen.getByRole('button', { name: '강원' }));
+    await waitFor(() => expect(document.body.textContent).toContain('033-1396'));
     const gangwon = document.body.textContent ?? '';
-    expect(gangwon).toContain('033-1396');
     expect(gangwon).toContain('033-640-3315');
     expect(gangwon).toContain('양주출입국');
     expect(gangwon).toContain('031-828-9306');

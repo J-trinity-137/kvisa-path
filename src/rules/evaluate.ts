@@ -5,10 +5,11 @@ import { MULTICULTURAL_TRACKS } from '../data/multiculturalTracks';
 import { FOREIGN_TRACKS } from '../data/foreignTracks';
 import { PATHWAYS_2028 } from '../data/pathways2028';
 import { matchPathways, type PathwayRecord as SchemaPathway, type TrackCategory, type TrackQuery } from '../data/trackSchema';
-import type { GradeLevel, StudentProfile } from '../profile/profile';
+import { isUnder14, type GradeLevel, type StudentProfile } from '../profile/profile';
 import type { KoreanLevel } from '../data/admissionsData';
 import { pathwayCatalog } from './catalog';
-import type { EligibleTrack, PathwayRecord, PathwayWhen } from './types';
+import { blockForCatalog, catalogReasons, decideSchemaRow, referenceKindOf } from './situation';
+import type { EligibleTrack, PathwayRecord, PathwayWhen, WhyCode } from './types';
 
 export interface EligibilitySignals {
   backgrounds: BackgroundType[];
@@ -39,6 +40,9 @@ export function signalsFor(profile: StudentProfile): EligibilitySignals {
   }
   const needsKoreanSupport =
     profile.koreanLevel === 'beginner' || profile.supportNeeds.includes('korean_class') || profile.supportNeeds.includes('interpretation');
+  if (profile.nkThirdCountryBorn) {
+    return { backgrounds: [], koreanNational, bothParentsForeign: false, needsKoreanSupport };
+  }
   return { backgrounds, koreanNational, bothParentsForeign, needsKoreanSupport };
 }
 
@@ -125,45 +129,99 @@ export function topikFloor(level: KoreanLevel | null): number | undefined {
 
 const PUBLISHED_ROWS: readonly SchemaPathway[] = [...PATHWAYS_2028, ...FOREIGN_TRACKS];
 
-/** Published schema rows, including foreign tracks. A later file can be concatenated the same way. */
-export function tracksFromSchema(profile: StudentProfile, rows: readonly SchemaPathway[] = PUBLISHED_ROWS): EligibleTrack[] {
-  const signals = signalsFor(profile);
+function trackQuery(profile: StudentProfile, signals: EligibilitySignals): TrackQuery {
   const query: TrackQuery = {};
   if (signals.koreanNational === true) query.nationality = 'korean';
   else if (signals.koreanNational === false) query.nationality = 'foreign';
   if (signals.bothParentsForeign !== null) query.bothParentsForeign = signals.bothParentsForeign;
-  if (profile.studentType === 'domestic_multicultural' && signals.koreanNational !== false) query.multiculturalFamilyChild = true;
+  const oneForeignParent = profile.parentForeign === 'father' || profile.parentForeign === 'mother';
+  if (profile.nkThirdCountryBorn === true || signals.koreanNational === false || signals.bothParentsForeign === true || profile.parentForeign === 'neither') {
+    query.multiculturalFamilyChild = false;
+  } else if (signals.koreanNational === true && (oneForeignParent || profile.studentType === 'domestic_multicultural')) {
+    query.multiculturalFamilyChild = true;
+  }
   const topikLevel = topikFloor(profile.koreanLevel);
   if (topikLevel != null) query.topikLevel = topikLevel;
-  return matchPathways(rows, query)
-    .filter((row) => row.hasTrack !== false && gradeAllows(row.category, profile.grade))
-    .map((row) => ({
-      id: row.id,
-      kind: row.category === 'scholarship' ? 'scholarship' as const : row.category === 'multicultural' ? 'multicultural-univ' as const : 'admission' as const,
-      title: row.name,
-      reason: sentence(row.summaryKo || row.eligibility.textKo),
-      yearLabel: row.windows[0] ? `${row.windows[0].start} ~ ${row.windows[0].end}` : row.cycleYear ? String(row.cycleYear) : row.verifiedAt,
-      details: [row.language?.noteKo, row.eligibility.textKo, row.quote].filter((line): line is string => Boolean(line)),
-      sourceUrl: row.url,
-      sourceLabel: row.university ?? row.name,
-      verifiedAt: row.verifiedAt,
-      verified: row.status === 'verified',
-      sort: row.role === 'current_target' ? 4 : row.hasTrack === true ? 8 : 24,
-      category: row.category,
-    }));
+  return query;
 }
 
-export function eligibleTracks(profile: StudentProfile, catalog?: readonly PathwayRecord[]): EligibleTrack[] {
+function baseBlock(row: SchemaPathway, query: TrackQuery): WhyCode | null {
+  if (
+    query.topikLevel != null &&
+    row.language &&
+    !row.language.noMinimum &&
+    row.language.topikMin != null &&
+    query.topikLevel < row.language.topikMin
+  ) {
+    return 'topik_short';
+  }
+  if (query.nationality === 'korean' && row.eligibility.nationality === 'both_parents_and_student_foreign') return 'not_both_parents';
+  if (query.nationality === 'korean' && row.eligibility.nationality === 'foreign_national_student') return 'not_foreign_national';
+  if (query.nationality === 'foreign' && row.eligibility.nationality === 'korean_citizen_only') return 'not_korean_national';
+  if (query.bothParentsForeign === false && row.eligibility.bothParentsForeign === true) return 'not_both_parents';
+  if (
+    query.multiculturalFamilyChild === false &&
+    row.eligibility.multiculturalFamilyChild === true &&
+    row.eligibility.nationality === 'korean_citizen_only'
+  ) {
+    return 'not_multicultural_family';
+  }
+  return null;
+}
+
+function toSchemaTrack(row: SchemaPathway, reasons: WhyCode[]): EligibleTrack {
+  const referenceKind = referenceKindOf(row);
+  return {
+    id: row.id,
+    kind: row.category === 'scholarship' ? 'scholarship' : row.category === 'multicultural' ? 'multicultural-univ' : 'admission',
+    title: row.name,
+    reason: sentence(row.summaryKo || row.eligibility.textKo),
+    yearLabel: row.windows[0] ? `${row.windows[0].start} ~ ${row.windows[0].end}` : row.cycleYear ? String(row.cycleYear) : row.verifiedAt,
+    details: [row.language?.noteKo, row.eligibility.textKo, row.quote].filter((line): line is string => Boolean(line)),
+    sourceUrl: row.url || row.sourceUrl,
+    sourceLabel: row.university ?? row.name,
+    verifiedAt: row.verifiedAt,
+    verified: row.status === 'verified',
+    sort: row.role === 'current_target' ? 4 : row.hasTrack === true ? 8 : 24,
+    category: row.category,
+    reasons,
+    referenceKind,
+  };
+}
+
+export interface TrackExplanation {
+  tracks: EligibleTrack[];
+  withheld: { code: WhyCode; count: number }[];
+}
+
+/** Published schema rows, including foreign tracks. A later file can be concatenated the same way. */
+export function tracksFromSchema(profile: StudentProfile, rows: readonly SchemaPathway[] = PUBLISHED_ROWS): EligibleTrack[] {
+  return explainTracks(profile, undefined, rows).tracks.filter((track) => track.category);
+}
+
+export function explainTracks(
+  profile: StudentProfile,
+  catalog?: readonly PathwayRecord[],
+  rows: readonly SchemaPathway[] = PUBLISHED_ROWS,
+): TrackExplanation {
   const signals = signalsFor(profile);
+  const withheld = new Map<WhyCode, number>();
+  const note = (code: WhyCode) => withheld.set(code, (withheld.get(code) ?? 0) + 1);
   const source = catalog ?? pathwayCatalog();
-  const fromCatalog = source
-    .filter((record) => matches(record.when, profile, signals))
-    .map((record) => {
-      let sort = record.sort;
-      if (profile.goal === 'work' && (record.kind === 'vocational' || record.kind === 'kls')) sort -= 8;
-      if (profile.goal === 'study' && (record.kind === 'admission' || record.kind === 'multicultural-univ')) sort -= 4;
-      if (profile.gradeBand === 'lower' && record.id === 'hs-vocational-future') sort = 1;
-      return {
+  const fromCatalog = source.flatMap((record) => {
+    if (!matches(record.when, profile, signals)) return [];
+    const blocked = blockForCatalog(profile, record.id, record.kind);
+    if (blocked) {
+      note(blocked);
+      return [];
+    }
+    let sort = record.sort;
+    if (profile.goal === 'work' && (record.kind === 'vocational' || record.kind === 'kls')) sort -= 8;
+    if (profile.goal === 'study' && (record.kind === 'admission' || record.kind === 'multicultural-univ')) sort -= 4;
+    if (profile.gradeBand === 'lower' && record.id === 'hs-vocational-future') sort = 1;
+    const referenceKind = record.kind === 'multicultural-univ' || record.id.startsWith('univ-') ? ('closed' as const) : undefined;
+    return [
+      {
         id: record.id,
         kind: record.kind,
         title: record.title,
@@ -175,8 +233,45 @@ export function eligibleTracks(profile: StudentProfile, catalog?: readonly Pathw
         verifiedAt: record.verifiedAt,
         verified: record.verified,
         sort,
-      };
-    });
-  const published = catalog ? [] : tracksFromSchema(profile);
-  return [...fromCatalog, ...published].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, 'ko'));
+        reasons: catalogReasons(profile, signals, record.id),
+        referenceKind,
+      },
+    ];
+  });
+
+  const published = catalog
+    ? []
+    : rows.flatMap((row) => {
+        const foreignSchool = profile.schoolType === 'foreign_school';
+        if (row.hasTrack === false && !(foreignSchool && row.category === 'foreign_school_graduate')) return [];
+        const decision = decideSchemaRow(row, profile, signals);
+        if (decision.skip) return [];
+        if (!decision.ok) {
+          if (decision.block) note(decision.block);
+          return [];
+        }
+        if (!gradeAllows(row.category, profile.grade)) {
+          note(isUnder14(profile) ? 'too_young' : 'grade');
+          return [];
+        }
+        const blocked = baseBlock(row, trackQuery(profile, signals));
+        if (blocked) {
+          note(blocked);
+          return [];
+        }
+        if (!matchPathways([row], trackQuery(profile, signals)).length) return [];
+        return [toSchemaTrack(row, decision.reasons)];
+      });
+
+  const tracks = [...fromCatalog, ...published].sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, 'ko'));
+  return {
+    tracks,
+    withheld: [...withheld.entries()]
+      .map(([code, count]) => ({ code, count }))
+      .sort((a, b) => b.count - a.count || a.code.localeCompare(b.code)),
+  };
+}
+
+export function eligibleTracks(profile: StudentProfile, catalog?: readonly PathwayRecord[]): EligibleTrack[] {
+  return explainTracks(profile, catalog).tracks;
 }

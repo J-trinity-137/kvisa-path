@@ -7,16 +7,19 @@ import { PATHWAYS_2028_COPY } from '../i18n/pathways2028Copy';
 import { easySentence } from '../i18n/shellCopy';
 import { FreshnessLine } from '../components/FreshnessLine';
 import { SpeakButton } from '../components/SpeakButton';
+import { reasonText } from '../i18n/reasonCopy';
 import { regionLabel } from '../i18n/regionLabels';
 import type { ToggleStatus } from '../library/tracks';
 import type { StudentProfile } from '../profile/profile';
 import { isVerifiedTrack } from '../rules/reasons';
-import type { EligibleTrack } from '../rules/types';
+import type { EligibleTrack, WhyCode } from '../rules/types';
 
 export function Dashboard({
   lang,
   profile,
   tracks,
+  withheld = [],
+  loading,
   easy,
   onEdit,
   compareIds = [],
@@ -27,6 +30,8 @@ export function Dashboard({
   lang: SupportedLangCode;
   profile: StudentProfile;
   tracks: EligibleTrack[];
+  withheld?: { code: WhyCode; count: number }[];
+  loading?: boolean;
   easy: boolean;
   onEdit: () => void;
   compareIds?: readonly string[];
@@ -36,8 +41,9 @@ export function Dashboard({
 }) {
   const copy = navCopy(lang);
   const plan = planCopy(lang);
+  const pathCopy = PATHWAYS_2028_COPY[lang];
+  const groups = pathCopy.groups;
   const [note, setNote] = useState('');
-  const groups = PATHWAYS_2028_COPY[lang].groups;
   const [open, setOpen] = useState<string | null>(null);
   const typeLabel = profile.studentType ? STUDENT_TYPE_COPY[lang].types[profile.studentType] : null;
   const chips = [
@@ -85,20 +91,30 @@ export function Dashboard({
           </span>
         ))}
       </div>
-      {tracks.length === 0 ? <p className="empty">{copy.empty}</p> : null}
+      {loading ? <p className="muted">{copy.loading}</p> : null}
+      {!loading && tracks.length === 0 ? <p className="empty">{copy.empty}</p> : null}
       <div className="track-grid">
         {tracks.map((track) => {
           const reason = easy ? easySentence(track.reason) : track.reason;
           const expanded = open === track.id;
+          const referenceLabel = track.referenceKind === 'guide' ? pathCopy.guide2027 : track.referenceKind === 'closed' ? pathCopy.closedTag : undefined;
           return (
             <article key={track.id} className={`track-card kind-${track.kind}`}>
               <p className="year">{track.category ? groups[track.category] : track.yearLabel}</p>
               {track.category ? <p className="muted">{track.yearLabel}</p> : null}
               <h2>{track.title}</h2>
-              <p>{reason}</p>
+              {lang === 'ko' ? <p>{reason}</p> : null}
+              {track.reasons.length > 0 ? (
+                <ul>
+                  {track.reasons.map((code) => (
+                    <li key={code}>{reasonText(lang, code)}</li>
+                  ))}
+                </ul>
+              ) : null}
+              <FreshnessLine lang={lang} verifiedAt={track.verifiedAt} sourceUrl={track.sourceUrl} referenceLabel={referenceLabel} />
               <div className="card-actions">
                 <button type="button" className="btn primary" aria-expanded={expanded} onClick={() => setOpen(expanded ? null : track.id)}>
-                  {copy.next}
+                  {copy.details}
                 </button>
                 {track.verified && isVerifiedTrack(track.id) && onToggleCompare ? (
                   <button
@@ -133,12 +149,13 @@ export function Dashboard({
               </div>
               {expanded ? (
                 <div className="detail">
+                  {lang !== 'ko' ? <p className="muted">{copy.koreanOnly}</p> : null}
+                  {lang !== 'ko' ? <p>{reason}</p> : null}
                   <ul>
                     {track.details.slice(0, 8).map((line) => (
                       <li key={line}>{line}</li>
                     ))}
                   </ul>
-                  <FreshnessLine lang={lang} verifiedAt={track.verifiedAt} sourceUrl={track.sourceUrl} />
                   {!track.verified ? <p className="muted">{copy.checked}</p> : null}
                 </div>
               ) : null}
@@ -146,6 +163,18 @@ export function Dashboard({
           );
         })}
       </div>
+      {!loading && withheld.length > 0 ? (
+        <section className="panel" aria-label={copy.whyNotTitle}>
+          <h2>{copy.whyNotTitle}</h2>
+          <ul>
+            {withheld.map((item) => (
+              <li key={item.code}>
+                {reasonText(lang, item.code)} ({item.count})
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }

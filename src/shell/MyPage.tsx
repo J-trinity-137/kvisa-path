@@ -12,6 +12,7 @@ import type { DevicePrefs } from '../profile/prefs';
 import type { StudentProfile } from '../profile/profile';
 import { DOCS_STORAGE_KEY } from '../privacy/records';
 import { getUiMessages } from '../i18n/messages';
+import { gapUi } from '../i18n/gapUi';
 import { SavedTracks } from './SavedTracks';
 
 export function MyPage({
@@ -40,6 +41,7 @@ export function MyPage({
   demoSlot?: ReactNode;
 }) {
   const copy = navCopy(lang);
+  const gap = gapUi(lang);
   const ui = getUiMessages(lang);
   const core = getCoreCopy(lang);
   const [done, setDone] = useState<string[]>(() => {
@@ -113,6 +115,36 @@ export function MyPage({
             </select>
           </label>
           <label className="field">
+            {copy.ask.school}
+            <select value={profile.schoolType ?? ''} onChange={(event) => onProfile({ ...profile, schoolType: (event.target.value || null) as StudentProfile['schoolType'] })}>
+              <option value="">—</option>
+              {(Object.keys(copy.schools) as Array<keyof typeof copy.schools>).map((key) => (
+                <option key={key} value={key}>
+                  {copy.schools[key]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            {copy.age}
+            <input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={30}
+              value={profile.age ?? ''}
+              onChange={(event) => onProfile({ ...profile, age: event.target.value === '' ? null : Number(event.target.value) })}
+            />
+          </label>
+          <label className="check">
+            <input
+              type="checkbox"
+              checked={profile.nkThirdCountryBorn === true}
+              onChange={(event) => onProfile({ ...profile, nkThirdCountryBorn: event.target.checked })}
+            />
+            {copy.nkThird}
+          </label>
+          <label className="field">
             {copy.ask.goal}
             <select value={profile.goal ?? ''} onChange={(event) => onProfile({ ...profile, goal: (event.target.value || null) as StudentProfile['goal'] })}>
               <option value="">—</option>
@@ -180,14 +212,21 @@ export function MyPage({
           <p>{question}</p>
           <div className="choice-grid">
             {(['O', 'X'] as const).map((choice) => (
-              <button key={choice} type="button" className="choice" aria-pressed={picked === choice} onClick={() => setPicked(choice)}>
-                {choice}
+              <button
+                key={choice}
+                type="button"
+                className="choice"
+                aria-pressed={picked === choice}
+                aria-label={choice === 'O' ? gap.quizYes : gap.quizNo}
+                onClick={() => setPicked(choice)}
+              >
+                {choice === 'O' ? gap.quizYes : gap.quizNo}
               </button>
             ))}
           </div>
           {picked ? (
             <p role="status" className={picked === quiz.answer ? 'ok' : 'soft'}>
-              {picked === quiz.answer ? '맞아요' : '괜찮아요. 다시 보면 돼요.'} {explanation}
+              {picked === quiz.answer ? gap.quizOk : gap.quizBad} {explanation}
             </p>
           ) : null}
           <button

@@ -7,27 +7,31 @@ export function FreshnessLine({
   verifiedAt,
   sourceUrl,
   today,
+  referenceLabel,
 }: {
   lang: SupportedLangCode;
   verifiedAt?: string;
   sourceUrl?: string;
   today?: Date;
+  /** Closed 2027 guide kept beside the 2028 target. */
+  referenceLabel?: string;
 }) {
-  if (!verifiedAt) return null;
+  if (!verifiedAt && !sourceUrl && !referenceLabel) return null;
   const copy = FRESHNESS_COPY[lang];
-  const stale = isOlderThanYear(verifiedAt, today);
+  const stale = verifiedAt ? isOlderThanYear(verifiedAt, today) : false;
   return (
     <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
-      {copy.checked}: {verifiedAt}
+      {verifiedAt ? `${copy.checked}: ${verifiedAt}` : null}
       {sourceUrl ? (
         <>
-          {' · '}
+          {verifiedAt ? ' · ' : null}
           <a className="kv-link" href={sourceUrl} target="_blank" rel="noreferrer">
             {copy.source}
           </a>
         </>
       ) : null}
-      {stale ? <span className="kb-tag kb-status-check" style={{ marginLeft: 8 }}>{copy.stale}</span> : null}
+      {referenceLabel ? <span className="kb-tag kb-status-check" style={{ marginInlineStart: 8 }}>{referenceLabel}</span> : null}
+      {stale ? <span className="kb-tag kb-status-check" style={{ marginInlineStart: 8 }}>{copy.stale}</span> : null}
     </p>
   );
 }

@@ -6,6 +6,7 @@ import { loadSample } from '../../accounts/seed';
 import { filterRoster, rosterRows, type RosterFilter } from '../../accounts/roster';
 import { accountsCopy } from '../../i18n/accountsCopy';
 import { navCopy } from '../../i18n/navCopy';
+import { reasonText } from '../../i18n/reasonCopy';
 import type { SupportedLangCode } from '../../kbridge';
 import type { GradeLevel } from '../../profile/profile';
 import { formatDay, formatWhen } from './format';
@@ -344,9 +345,22 @@ export function TeacherDesk({
               {open.tracks.slice(0, 12).map((track) => (
                 <li key={track.id}>
                   <bdi>{track.title}</bdi>
+                  {track.reasons[0] ? <p className="muted">{reasonText(open.lang, track.reasons[0])}</p> : null}
                 </li>
               ))}
             </ul>
+            {open.withheld.length > 0 ? (
+              <>
+                <h3>{nav.whyNotTitle}</h3>
+                <ul>
+                  {open.withheld.slice(0, 6).map((item) => (
+                    <li key={item.code}>
+                      {reasonText(open.lang, item.code)} <bdi dir="ltr">({item.count})</bdi>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
             <ParentNotice
               lang={open.lang}
               nickname={open.nickname}

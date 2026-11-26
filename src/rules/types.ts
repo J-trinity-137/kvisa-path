@@ -63,4 +63,39 @@ export interface EligibleTrack {
   sort: number;
   /** Set when the card comes from a trackSchema row, including foreign tracks. */
   category?: TrackCategory;
+  /** Why this profile matches. Codes are translated in the UI. */
+  reasons: WhyCode[];
+  /** 2027 university guides are closed reference, not the 2028 target. */
+  referenceKind?: 'guide' | 'closed';
 }
+
+export const WHY_CODES = [
+  'korean_national',
+  'foreign_national',
+  'one_parent_foreign',
+  'both_parents_foreign',
+  'domestic_born',
+  'mid_entry',
+  'foreign_school',
+  'ged',
+  'nk_third_country',
+  'topik_short',
+  'too_young',
+  'grade',
+  'not_korean_national',
+  'not_foreign_national',
+  'not_both_parents',
+  'not_multicultural_family',
+  'not_mid_entry',
+  'not_foreign_school',
+  'not_ged',
+  'not_nk',
+  'ged_rejected',
+  'ged_unconfirmed',
+  'foreign_school_excluded',
+  'overseas_years_short',
+  'not_overseas_posting',
+  'not_this_overview',
+] as const;
+
+export type WhyCode = (typeof WHY_CODES)[number];

@@ -1,6 +1,7 @@
 import { DEMO_BANNER } from '../../accounts/model';
 import { navCopy } from '../../i18n/navCopy';
 import { accountsCopy } from '../../i18n/accountsCopy';
+import { reasonText } from '../../i18n/reasonCopy';
 import { regionLabel } from '../../i18n/regionLabels';
 import { languageMeta, type SupportedLangCode } from '../../kbridge';
 import type { StudentProfile } from '../../profile/profile';
@@ -73,6 +74,7 @@ export function ParentNotice({
                 · <bdi dir="ltr">{track.yearLabel}</bdi>
               </>
             ) : null}
+            {track.reasons[0] ? <p className="muted">{reasonText(lang, track.reasons[0])}</p> : null}
           </li>
         ))}
       </ol>

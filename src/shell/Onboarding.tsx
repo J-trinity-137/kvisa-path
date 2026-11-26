@@ -5,6 +5,7 @@ import { navCopy } from '../i18n/navCopy';
 import { CONSENT_COPY } from '../i18n/consentCopy';
 import { readConsent, writeConsent } from '../privacy/consent';
 import {
+  resumeStep,
   visibleSteps,
   type OnboardingStep,
   type StudentProfile,
@@ -41,12 +42,14 @@ export function Onboarding({
 }) {
   const copy = navCopy(lang);
   const steps = visibleSteps(profile);
-  const [index, setIndex] = useState(0);
+  const [stepId, setStepId] = useState<OnboardingStep>(() => resumeStep(profile));
   const [countryQuery, setCountryQuery] = useState('');
   const [consent, setConsent] = useState(() => readConsent());
-  const step = steps[Math.min(index, steps.length - 1)] ?? 'grade';
+  const resolved = steps.includes(stepId) ? stepId : resumeStep({ ...profile, onboardingStep: steps.includes(stepId) ? stepId : null });
+  const index = Math.max(0, steps.indexOf(resolved));
+  const step = steps[index] ?? 'grade';
   const total = steps.length;
-  const current = Math.min(index, total - 1) + 1;
+  const current = index + 1;
   const types = STUDENT_TYPE_COPY[lang];
 
   const countries = useMemo(() => {
@@ -58,21 +61,30 @@ export function Onboarding({
 
   const patch = (partial: Partial<StudentProfile>) => onChange({ ...profile, ...partial });
 
+  const remember = (next: StudentProfile, id: OnboardingStep) => {
+    setStepId(id);
+    if (next.onboarded) return;
+    onChange({ ...next, onboardingStep: id });
+  };
+
   const skip = () => {
     const skipped = profile.skipped.includes(step) ? profile.skipped : [...profile.skipped, step];
     const next = { ...profile, skipped, consentDecided: step === 'consent' ? true : profile.consentDecided };
-    onChange(next);
-    if (current >= total) onDone({ ...next, entered: true });
-    else setIndex((value) => value + 1);
+    if (current >= total) onDone({ ...next, entered: true, onboarded: true, onboardingStep: null });
+    else {
+      const id = steps[index + 1] ?? step;
+      setStepId(id);
+      onChange({ ...next, onboardingStep: next.onboarded ? next.onboardingStep : id });
+    }
   };
 
   const finish = (next: StudentProfile) => {
-    onDone({ ...next, entered: true, onboarded: true });
+    onDone({ ...next, entered: true, onboarded: true, onboardingStep: null });
   };
 
   const goNext = () => {
     if (current >= total) finish(profile);
-    else setIndex((value) => value + 1);
+    else remember(profile, steps[index + 1] ?? step);
   };
 
   return (
@@ -115,13 +127,18 @@ export function Onboarding({
         patch={patch}
       />
       <div className="setup-actions">
-        <button type="button" className="btn ghost" onClick={() => setIndex((value) => Math.max(0, value - 1))} disabled={index === 0}>
+        <button
+          type="button"
+          className="btn ghost"
+          onClick={() => remember(profile, steps[Math.max(0, index - 1)] ?? step)}
+          disabled={index === 0}
+        >
           {copy.back}
         </button>
         <button type="button" className="btn ghost" onClick={skip}>
           {copy.skip}
         </button>
-        <button type="button" className="btn ghost" onClick={() => onDone({ ...profile, entered: true })}>
+        <button type="button" className="btn ghost" onClick={() => onDone({ ...profile, entered: true, onboardingStep: profile.onboarded ? null : step })}>
           {copy.later}
         </button>
         <button type="button" className="btn primary" onClick={goNext}>
