@@ -37,6 +37,7 @@ import type { StudentType } from '../data/studentType';
 import { FreshnessLine } from './FreshnessLine';
 import { GyeonggiGuide } from './GyeonggiGuide';
 import { MulticulturalPathView } from './MulticulturalPath';
+import { Pathways2028View } from './Pathways2028View';
 import { SpeakButton } from './SpeakButton';
 import { loadVocationalSnapshot } from '../services/neisClient';
 
@@ -289,6 +290,7 @@ export function AdmissionsTab({ lang, studentType, region, easy, onEventLogged, 
       </section>
 
       {showMulticultural ? <MulticulturalPathView lang={lang} easy={easy} /> : null}
+      <Pathways2028View lang={lang} easy={easy} />
 
       {/* Pre-flight 치명적 함정 경고 */}
       {hideVisa ? null : (background === 'both_foreign' || background === 'mid_entry') ? (

@@ -38,7 +38,7 @@ export function MulticulturalPathView({ lang, easy }: { lang: SupportedLangCode;
   const withoutTrack = MULTICULTURAL_TRACKS.filter((track) => !track.hasTrack);
 
   return (
-    <section className="kb-section" aria-label={copy.tracksTitle}>
+    <section className="kb-section" aria-label={copy.tracksTitle} data-cycle="2027" data-role="closed_reference">
       <h2 className="kb-section-title">{copy.tracksTitle}</h2>
       <p className="kb-subtitle">{labels.closed2027}</p>
       <p style={{ marginTop: 0 }}>{lead}</p>

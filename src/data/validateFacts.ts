@@ -89,7 +89,12 @@ export function collectFactErrors(): string[] {
   if (byId['sched-voc-apply']?.dateStr !== '2026-11-23' || byId['sched-voc-apply']?.endDateStr !== '2026-11-24') {
     errors.push('vocational application window');
   }
-  if (byId['sched-susi-2028']?.dateStr !== '2027-09-20') errors.push('2028 susi start');
+  if (byId['sched-susi-2028']?.dateStr !== '2027-09-20' || byId['sched-susi-2028']?.endDateStr !== '2027-09-23') {
+    errors.push('2028 susi window');
+  }
+  if (byId['sched-jeongsi-2028']?.dateStr !== '2028-01-03' || byId['sched-jeongsi-2028']?.endDateStr !== '2028-01-06') {
+    errors.push('2028 jeongsi window');
+  }
   if (DDAY_SCHEDULES.some((schedule) => schedule.dateStr === '2027-01-17' || schedule.dateStr === '2027-09-08')) {
     errors.push('retired wrong schedule date is still present');
   }

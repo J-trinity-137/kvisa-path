@@ -225,6 +225,16 @@ export const DDAY_SCHEDULES: DDaySchedule[] = [
     sourceLabel: '대교협 2028학년도 대학입학전형기본사항. 9.20.~9.23. 중 3일 이상',
     verifiedOn: '2026-11-26',
   },
+  {
+    id: 'sched-jeongsi-2028',
+    title: '2028학년도 정시모집 원서접수',
+    target: '고3 (대입)',
+    dateStr: '2028-01-03',
+    endDateStr: '2028-01-06',
+    sourceUrl: 'https://www.kcue.or.kr/_upload/news/2026/04/30/application_ea0382f8ef4d92cda46a7e015aec3fef.pdf',
+    sourceLabel: '대교협 2028학년도 대학입학전형시행계획. 1.3.~1.6. 중 3일 이상',
+    verifiedOn: '2026-11-26',
+  },
 ];
 
 export const CAREER_RECOMMENDATIONS: Record<InterestField, CareerSuggestion> = {
