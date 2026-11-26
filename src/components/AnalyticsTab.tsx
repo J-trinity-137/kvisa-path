@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { recordAnonymousEvent, type AnonymousEvent, type SupportedLangCode } from '../kbridge';
+import { ADMISSION_TERMS } from '../data/admissionsData';
+import { gapUi } from '../i18n/gapUi';
+import { shareOrCopy } from '../share/parentShare';
 import {
   WEEKLY_DID_SERIES,
   computeDidEffect,
@@ -26,6 +29,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
     ),
   );
 
+  const gap = gapUi(lang);
   const termRows = computeTermBottlenecks(liveEvents);
   const allFunnelRows = computeDistrictFunnels(liveEvents);
   const funnelRows = allFunnelRows.filter((row) => {
@@ -81,8 +85,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
   return (
     <div className="kb-stack">
       <div className="kv-notice-box" role="note">
-        <strong>가상·예시 데이터:</strong> DiD 효과와 TF-IDF F1은 작은 합성 표본으로 만든 예시예요. 실제 합격·상담 결과가 아닙니다.
-        가상 중·고교 6곳(432명) 12주 합성 데이터에 이 브라우저의 주제 코드 {liveEvents.length}건을 더했습니다.
+        <strong>{gap.counselorNotice}</strong> {gap.exampleFigure}. {liveEvents.length}
       </div>
 
       {/* KPI 4개 */}
@@ -117,7 +120,7 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
           <p className="kv-kpi-label">진로정보 격차 지수(CIGI)</p>
           <p className="kv-kpi-value">0.38</p>
           <p className="kb-subtitle" style={{ margin: '4px 0 0' }}>
-            대학 희망 71.6% 대비 전형 이해 완료 44.4%
+            0.38 · 71.6% · 44.4% — {gap.exampleFigure}
           </p>
         </div>
       </section>
@@ -179,9 +182,14 @@ export function AnalyticsTab({ lang, liveEvents, onEventLogged }: AnalyticsTabPr
                         <button
                           type="button"
                           className="kv-term-btn"
-                          onClick={() => handleApplyIntervention(row.termId)}
+                          onClick={() => {
+                            handleApplyIntervention(row.termId);
+                            const term = ADMISSION_TERMS[row.termId];
+                            const text = term ? `${term.term}\n${term.easyKo}` : row.term;
+                            void shareOrCopy(text);
+                          }}
                         >
-                          쉬운 카드 배포
+                          {gap.shareCard}
                         </button>
                       )}
                     </td>

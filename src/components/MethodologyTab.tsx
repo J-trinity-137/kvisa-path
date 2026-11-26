@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import type { AnonymousEvent } from '../kbridge';
+import type { AnonymousEvent, SupportedLangCode } from '../kbridge';
+import { gapUi } from '../i18n/gapUi';
 import { VALIDATION_SUMMARY, computeDistrictFunnels, computeTermBottlenecks } from '../data/syntheticAnalytics';
 
 export interface MethodologyTabProps {
+  lang: SupportedLangCode;
   liveEvents: AnonymousEvent[];
   onClearEvents: () => void;
 }
 
 export function MethodologyTab({
+  lang,
   liveEvents,
   onClearEvents,
 }: MethodologyTabProps) {
+  const gap = gapUi(lang);
   const [exportedMsg, setExportedMsg] = useState<string | null>(null);
 
   const handleExportJson = () => {
@@ -66,7 +70,7 @@ export function MethodologyTab({
       <section className="kb-section">
         <h2 className="kb-section-title">2. 합성 데이터 검증 결과 <span className="kb-tag kb-status-check">가상·예시 데이터</span></h2>
         <p className="kb-subtitle">
-          TF-IDF macro-F1과 DiD 수치는 아주 작은 가상 표본으로 만든 예시예요. 실제 학생의 합격이나 상담 결과가 아닙니다.
+          {gap.counselorNotice} {gap.exampleFigure}. TF-IDF macro-F1 {VALIDATION_SUMMARY.tfidfMacroF1}.
         </p>
         <div className="kv-grid-4">
           <div className="kb-card">

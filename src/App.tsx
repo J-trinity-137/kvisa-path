@@ -111,7 +111,7 @@ export function App() {
           <AnalyticsTab lang={lang} liveEvents={liveEvents} onEventLogged={refreshEvents} />
         ) : null}
         {audience === 'counselor' && counselorTab === 'methodology' ? (
-          <MethodologyTab liveEvents={liveEvents} onClearEvents={clearEvents} />
+          <MethodologyTab lang={lang} liveEvents={liveEvents} onClearEvents={clearEvents} />
         ) : null}
       </div>
 

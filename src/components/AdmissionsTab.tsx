@@ -20,9 +20,13 @@ import {
 } from '../data/admissionsData';
 import { SEOUL_DISTRICTS, SEOUL_SUPPORT_CENTERS } from '../data/centersData';
 import { HELP_LINKS } from '../data/helpLinks';
+import { OFFICIAL_FORMS, proceduresFor } from '../data/procedures';
 import { filterAdmissionTracks, filterVocationalSchools } from '../data/trackFilter';
+import { EASY_VISA_PATHS, optionsForVisa, VISA_PATHS, type ProcedureLevel, type VisaCode } from '../data/visaPaths';
 import { getCoreCopy } from '../i18n/coreCopy';
+import { gapUi } from '../i18n/gapUi';
 import { getUiMessages } from '../i18n/messages';
+import { pageLink, shareOrCopy } from '../share/parentShare';
 import { loadVocationalSnapshot } from '../services/neisClient';
 
 export interface AdmissionsTabProps {
@@ -52,20 +56,27 @@ const FIELD_OPTIONS: { value: InterestField; label: string }[] = [
 ];
 
 export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
-  const [schoolLevel, setSchoolLevel] = useState<SchoolLevel>('high');
+  const [stage, setStage] = useState<ProcedureLevel>('high');
+  const [visa, setVisa] = useState<VisaCode>('F-1');
   const [background, setBackground] = useState<BackgroundType>('both_foreign');
   const [koreanLevel, setKoreanLevel] = useState<KoreanLevel>('topik_3_4');
   const [field, setField] = useState<InterestField>('it');
   const [district, setDistrict] = useState<string>(SEOUL_DISTRICTS[0]);
   const [originCountry, setOriginCountry] = useState<string>('VN');
   const [schoolSearch, setSchoolSearch] = useState<string>('');
+  const [shareNote, setShareNote] = useState<string | null>(null);
 
   const [activeTermId, setActiveTermId] = useState<string | null>(null);
   const [referralFeedback, setReferralFeedback] = useState<string | null>(null);
   const snapshot = loadVocationalSnapshot();
   const copy = getCoreCopy(lang);
-
-  const { matched: matchedTracks, gaps: gapTracks } = filterAdmissionTracks(schoolLevel, background, koreanLevel);
+  const gap = gapUi(lang);
+  const schoolLevel: SchoolLevel = stage === 'elementary' ? 'middle' : stage;
+  const trackResult =
+    stage === 'elementary' ? { matched: [], gaps: [] } : filterAdmissionTracks(schoolLevel, background, koreanLevel);
+  const matchedTracks = trackResult.matched;
+  const gapTracks = trackResult.gaps;
+  const visaCards = optionsForVisa(visa, stage);
   const filteredVocationalSchools = filterVocationalSchools(field, schoolSearch);
   const query = schoolSearch.trim().toLowerCase();
 
@@ -156,17 +167,20 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                             : 'School level'}
             </span>
             <div className="kb-row">
-              <button type="button" className="kb-chip" aria-pressed={schoolLevel === 'middle'} onClick={() => setSchoolLevel('middle')}>
+              <button type="button" className="kb-chip" aria-pressed={stage === 'elementary'} onClick={() => setStage('elementary')}>
+                {gap.elementary}
+              </button>
+              <button type="button" className="kb-chip" aria-pressed={stage === 'middle'} onClick={() => setStage('middle')}>
                 {copy?.levelMiddle ?? '중학생 (고교 입학전형)'}
               </button>
-              <button type="button" className="kb-chip" aria-pressed={schoolLevel === 'high'} onClick={() => setSchoolLevel('high')}>
+              <button type="button" className="kb-chip" aria-pressed={stage === 'high'} onClick={() => setStage('high')}>
                 {copy?.levelHigh ?? '고등학생 (대학 입학전형 · TOPIK 장학)'}
               </button>
             </div>
           </div>
 
           <div>
-            <span className="kv-label">{copy?.backgroundHeading ?? '가정·학력 배경 (서버 미저장)'}</span>
+            <span className="kv-label">{gap.easyPath}</span>
             <div className="kb-row">
               {BACKGROUND_OPTIONS.map((opt) => (
                 <button
@@ -174,9 +188,34 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
                   type="button"
                   className="kb-chip"
                   aria-pressed={background === opt.value}
-                  onClick={() => setBackground(opt.value)}
+                  onClick={() => {
+                    setBackground(opt.value);
+                    setVisa(EASY_VISA_PATHS[opt.value][0]);
+                  }}
                 >
                   {copy?.backgrounds[opt.value] ?? opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <span className="kv-label">{gap.visaPicker}</span>
+            <p className="kb-subtitle" style={{ marginTop: 0 }}>{gap.visaPrivate}</p>
+            <div className="kb-row">
+              {VISA_PATHS.map((item) => (
+                <button
+                  key={item.code}
+                  type="button"
+                  className="kb-chip"
+                  aria-pressed={visa === item.code}
+                  onClick={() => {
+                    setVisa(item.code);
+                    if (item.code === 'undocumented' || item.code === 'G-1') setBackground('undocumented');
+                    else if (item.code === 'F-6') setBackground('multicultural');
+                  }}
+                >
+                  {item.code}
                 </button>
               ))}
             </div>
@@ -236,6 +275,70 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
           </ul>
         </div>
       ) : null}
+
+      <section className="kb-section">
+        <h2 className="kb-section-title">{gap.procedures}</h2>
+        <div className="kb-stack">
+          {visaCards.map((item) => (
+            <article key={item.code} className="kb-card kb-stack">
+              <div className="kb-row" style={{ justifyContent: 'space-between' }}>
+                <strong>{item.code} · {item.title}</strong>
+                <span className={`kb-tag ${item.verification === 'verified' ? 'kb-status-safe' : 'kb-status-check'}`}>
+                  {item.verification === 'verified' ? (copy?.verified ?? '확인') : (copy?.unverified ?? '미확인')}
+                </span>
+              </div>
+              <p style={{ margin: 0 }}>{item.summary}</p>
+              <ul className="kv-list">
+                {item.steps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
+              {item.sourceUrl ? (
+                <a className="kv-link" href={item.sourceUrl} target="_blank" rel="noreferrer">
+                  {item.sourceLabel} · {item.verifiedOn}
+                </a>
+              ) : (
+                <p className="kb-subtitle" style={{ margin: 0 }}>{item.unverifiedReason}</p>
+              )}
+            </article>
+          ))}
+          {proceduresFor(stage).map((step) => (
+            <article key={step.id} className="kb-card kb-stack">
+              <div className="kb-row" style={{ justifyContent: 'space-between' }}>
+                <strong>{step.title}</strong>
+                <span className={`kb-tag ${step.verification === 'verified' ? 'kb-status-safe' : 'kb-status-check'}`}>
+                  {step.verification === 'verified' ? (copy?.verified ?? '확인') : (copy?.unverified ?? '미확인')}
+                </span>
+              </div>
+              <p style={{ margin: 0 }}>{step.body}</p>
+              <a className="kv-link" href={step.sourceUrl} target="_blank" rel="noreferrer">
+                {step.sourceLabel} · {step.verifiedOn}
+              </a>
+            </article>
+          ))}
+          <article className="kb-card kb-stack">
+            <strong>{gap.forms}</strong>
+            {OFFICIAL_FORMS.map((form) => (
+              <p key={form.id} style={{ margin: 0 }}>
+                <a className="kv-link" href={form.url} target="_blank" rel="noreferrer">{form.title}</a>
+                {' — '}
+                {form.note}
+              </p>
+            ))}
+            <button
+              type="button"
+              className="kb-chip"
+              onClick={() => {
+                const text = `${visaCards[0]?.title ?? ''}\n${visaCards[0]?.summary ?? ''}\n${pageLink()}`;
+                void shareOrCopy(text).then((result) => setShareNote(result));
+              }}
+            >
+              {gap.shareParents}
+            </button>
+            {shareNote ? <p className="kb-subtitle" style={{ margin: 0 }}>{shareNote}</p> : null}
+          </article>
+        </div>
+      </section>
 
       {/* 2. 지원 가능 입학전형 조회 결과 + Gap 진단 */}
       <section className="kb-section">
@@ -404,13 +507,13 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
               <table className="kv-table">
                 <thead>
                   <tr>
-                    <th>대학</th>
+                    <th>{gap.tableUniversity}</th>
                     <th>{copy?.gedHead ?? '검정고시'}</th>
-                    <th className="num">TOPIK 3급</th>
+                    <th className="num">{gap.topik3}</th>
                     <th className="num">4급</th>
                     <th className="num">5급</th>
                     <th className="num">6급</th>
-                    <th>특성화고졸 · 비고</th>
+                    <th>{gap.tableRest}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -595,7 +698,12 @@ export function AdmissionsTab({ lang, onEventLogged }: AdmissionsTabProps) {
             <span className="kb-tag">{center.asOfDate}</span>
           </div>
           <p style={{ margin: 0, fontSize: 14 }}>
-            대표 전화: <strong>{center.phone}</strong> · 운영: {center.hours}
+            {gap.call}: <a className="kv-link" href={`tel:${center.phone.replaceAll('-', '')}`}>{center.phone}</a>
+            {' · '}
+            <a className="kv-link" href="https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do" target="_blank" rel="noreferrer">{gap.centerSite}</a>
+            {' · '}
+            {center.hours}
+            {center.phoneVerifiedOn ? ` · ${center.phoneVerifiedOn}` : ` · ${center.asOfDate}`}
           </p>
           <p className="kb-subtitle" style={{ margin: 0 }}>
             진로 프로그램: {center.freeCareerProgram}

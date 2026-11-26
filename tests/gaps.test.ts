@@ -1,0 +1,66 @@
+import { describe, expect, it } from 'vitest';
+import { classifyQuestionTopic } from '../src/data/interactiveModules';
+import { DDAY_SCHEDULES } from '../src/data/interactiveModules';
+import { PROCEDURES } from '../src/data/procedures';
+import { SEOUL_SUPPORT_CENTERS } from '../src/data/centersData';
+import { optionsForVisa, VISA_CODES, VISA_PATHS } from '../src/data/visaPaths';
+import { partTimeHours } from '../src/data/workHours';
+import { scheduleToIcs } from '../src/share/ics';
+import { isSpecificHttpUrl } from '../src/data/validateFacts';
+
+const REQUIRED = ['F-1', 'F-2', 'F-3', 'F-4', 'F-5', 'F-6', 'D-2', 'D-4', 'D-10', 'E-7', 'E-9', 'H-2', 'G-1', 'undocumented'] as const;
+
+describe('visa picker', () => {
+  it('covers every requested status and keeps unverified rows explicit', () => {
+    expect(VISA_CODES).toEqual([...REQUIRED]);
+    for (const code of REQUIRED) {
+      const path = VISA_PATHS.find((item) => item.code === code);
+      expect(path, code).toBeTruthy();
+      expect(path?.verifiedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (path?.verification === 'verified') {
+        expect(isSpecificHttpUrl(path.sourceUrl)).toBe(true);
+      } else {
+        expect(path?.unverifiedReason?.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('shows a real option to an undocumented high-school student', () => {
+    const options = optionsForVisa('undocumented', 'high');
+    expect(options.map((item) => item.code)).toContain('undocumented');
+    expect(options.length).toBeGreaterThan(0);
+    expect(options[0]?.summary).toContain('2028-03-31');
+  });
+});
+
+describe('new checked facts', () => {
+  it('uses the HiKorea-cited hour table for a bachelor student', () => {
+    expect(partTimeHours('d2_ba_12', true, false)).toMatchObject({ hours: 25, weekendUnlimited: true, verified: true });
+    expect(partTimeHours('d2_ba_12', true, true)).toMatchObject({ hours: 30, verified: true });
+    expect(partTimeHours('d2_ba_12', false, true)).toMatchObject({ hours: 10, weekendUnlimited: false });
+    expect(partTimeHours('d4_lang', true, false)).toMatchObject({ hours: 20, weekendUnlimited: false, verified: true });
+    expect(partTimeHours('high_school', true, false).verified).toBe(false);
+    expect(partTimeHours('d2_kcore', true, false).verified).toBe(false);
+  });
+
+  it('classifies questions written in the supported languages', () => {
+    expect(classifyQuestionTopic('Tôi cần học bổng').topicCode).toBe('scholarship');
+    expect(classifyQuestionTopic('我想打工').topicCode).toBe('part_time');
+    expect(classifyQuestionTopic('Нужна виза').topicCode).toBe('visa_status');
+    expect(classifyQuestionTopic('апостил хаана авах вэ').topicCode).toBe('documents');
+  });
+
+  it('builds a calendar file without personal data', () => {
+    const ics = scheduleToIcs(DDAY_SCHEDULES[0]!);
+    expect(ics).toContain('BEGIN:VCALENDAR');
+    expect(ics).not.toContain('F-2');
+    expect(ics).not.toContain('미등록');
+  });
+
+  it('links procedures and newly checked center phones to a page', () => {
+    expect(PROCEDURES.every((item) => isSpecificHttpUrl(item.sourceUrl))).toBe(true);
+    const checked = SEOUL_SUPPORT_CENTERS.filter((center) => center.phoneVerifiedOn);
+    expect(checked.length).toBeGreaterThan(6);
+    expect(checked.every((center) => center.phoneSourceUrl && isSpecificHttpUrl(center.phoneSourceUrl))).toBe(true);
+  });
+});
