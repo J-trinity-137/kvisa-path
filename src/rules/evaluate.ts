@@ -105,7 +105,7 @@ const HIGH_ONLY = new Set<TrackCategory>([
   'junior_college',
 ]);
 
-function gradeAllows(category: TrackCategory, grade: GradeLevel | null): boolean {
+export function gradeAllows(category: TrackCategory, grade: GradeLevel | null): boolean {
   if (!grade || grade === 'high') return category !== 'post_graduation_stay';
   if (HIGH_ONLY.has(category)) return false;
   return category !== 'post_graduation_stay';
@@ -116,7 +116,7 @@ function sentence(text: string): string {
   return cut.length > 160 ? `${cut.slice(0, 160)}…` : cut;
 }
 
-function topikFloor(level: KoreanLevel | null): number | undefined {
+export function topikFloor(level: KoreanLevel | null): number | undefined {
   if (level === 'beginner') return 1;
   if (level === 'topik_3_4') return 3;
   if (level === 'topik_5_6') return 5;
