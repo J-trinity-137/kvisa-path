@@ -1,5 +1,6 @@
 import type { BackgroundType, InterestField, KoreanLevel } from '../data/admissionsData';
 import type { DocBarrierReason, QuestionTopicCode } from '../data/interactiveModules';
+import { EXTRA_DOCS, EXTRA_QUIZ } from './extraCopy';
 import type { SupportedLangCode } from '../kbridge';
 
 export interface TrackCopy {
@@ -1713,7 +1714,12 @@ const COPIES: Record<Exclude<SupportedLangCode, 'ko'>, CoreCopy> = {
 
 export function getCoreCopy(lang: SupportedLangCode): CoreCopy | null {
   if (lang === 'ko') return null;
-  return COPIES[lang];
+  const base = COPIES[lang];
+  return {
+    ...base,
+    docs: { ...base.docs, ...EXTRA_DOCS[lang] },
+    quiz: { ...base.quiz, ...EXTRA_QUIZ[lang] },
+  };
 }
 
 export const TRANSLATED_LANGS = Object.keys(COPIES) as Array<Exclude<SupportedLangCode, 'ko'>>;

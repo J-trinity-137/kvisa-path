@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { classifyQuestionTopic } from '../src/data/interactiveModules';
 import { DDAY_SCHEDULES } from '../src/data/interactiveModules';
 import { PROCEDURES } from '../src/data/procedures';
+import { UNIVERSITY_SCHOLARSHIP_RULES, UNIVERSITY_TOPIK_TABLE } from '../src/data/admissionsData';
 import { SEOUL_SUPPORT_CENTERS } from '../src/data/centersData';
 import { optionsForVisa, VISA_CODES, VISA_PATHS } from '../src/data/visaPaths';
 import { partTimeHours } from '../src/data/workHours';
@@ -64,6 +65,15 @@ describe('new checked facts', () => {
     const checked = SEOUL_SUPPORT_CENTERS.filter((center) => center.phoneVerifiedOn);
     expect(checked.length).toBeGreaterThan(6);
     expect(checked.every((center) => center.phoneSourceUrl && isSpecificHttpUrl(center.phoneSourceUrl))).toBe(true);
+    expect(SEOUL_SUPPORT_CENTERS).toHaveLength(25);
+    expect(SEOUL_SUPPORT_CENTERS.every((center) => Object.keys(center.interpreters).length === 0)).toBe(true);
+    expect(SEOUL_SUPPORT_CENTERS.filter((center) => center.phone === '')).toHaveLength(12);
+    const skku = UNIVERSITY_TOPIK_TABLE.find((row) => row.id === 'skku');
+    expect(skku?.topik6).toBe('100%');
+    expect(skku?.topik5).toBe('50%');
+    expect(skku?.gedAccepted).toBe('미확인');
+    expect(UNIVERSITY_SCHOLARSHIP_RULES.skku.verification).toBe('verified');
+    expect(isSpecificHttpUrl(UNIVERSITY_SCHOLARSHIP_RULES.skku.sourceUrl)).toBe(true);
   });
 
   it('translates counselor headers and university notes', () => {

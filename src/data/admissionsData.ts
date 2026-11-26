@@ -63,7 +63,7 @@ export interface SeoulVocationalSchool {
 export interface UniversityTopikRow {
   id: string;
   university: string;
-  gedAccepted: '불인정' | '원칙 불인정(정규고)';
+  gedAccepted: '불인정' | '원칙 불인정(정규고)' | '미확인';
   topik3: string;
   topik4: string;
   topik5: string;
@@ -652,16 +652,16 @@ export const UNIVERSITY_TOPIK_TABLE: UniversityTopikRow[] = [
   {
     id: 'skku',
     university: '성균관대',
-    gedAccepted: '불인정',
-    topik3: '미지급',
-    topik4: '미지급',
+    gedAccepted: '미확인',
+    topik3: '없음',
+    topik4: '없음',
     topik5: '50%',
     topik6: '100%',
-    minTopik: '한국어트랙 TOPIK 제출',
+    minTopik: '입학 최저 급수는 이 장학 페이지에 없음',
     vocationalTrack: '정시 나군 17명(수능 100%)',
-    multiculturalTrack: '학종 기회균형 14명(서류 100%)',
+    multiculturalTrack: '2027 수시 원문은 이번 점검에서 열지 못함',
     fields: ['it', 'business', 'design'],
-    note: '2027 전기 학부 외국인 요강 PDF가 이 환경에서 404라 급수·검정고시를 확정하지 못함. 표의 숫자는 이전 정리. 재외국민 요강의 검정고시 문장은 다른 전형이라 쓰지 않음.',
+    note: '외국인 입학 장학 페이지: 해외 고교 졸업(예정) 합격자, 입학 첫 학기. TOPIK 6급 또는 성균어학원 6급 100%, TOPIK 5급 또는 성균어학원 5급·진학준비반 50%. 3·4급 비율은 없음. 검정고시 조항은 이 페이지에 없음. 다문화 트랙 URL도 없음.',
   },
   {
     id: 'cau',
@@ -770,7 +770,7 @@ export const UNIVERSITY_GED_RULES: Record<UniversityId, SourcedClaim> = {
     verifiedOn: '2026-11-26',
     applicableTerm: '미확인',
     verification: 'unverified',
-    unverifiedReason: '2027 전기 학부 외국인 신입학 안내 글은 있으나 모집요강 PDF가 이 환경에서 404였습니다. 재외국민 요강은 다른 전형이라 검정고시 문장으로 쓰지 않았습니다.',
+    unverifiedReason: '외국인 장학 페이지에는 검정고시 조항이 없고, 2027 전기 학부 모집요강 PDF는 이 환경에서 404였습니다.',
   },
   cau: {
     sourceUrl: 'https://oias.cau.ac.kr/cauoie/under/notice.do?articleNo=51004&attachNo=62965&mode=download',
@@ -842,11 +842,10 @@ export const UNIVERSITY_SCHOLARSHIP_RULES: Record<UniversityId, SourcedClaim> = 
     verification: 'verified',
   },
   skku: {
-    sourceUrl: '',
+    sourceUrl: 'https://admission-global.skku.edu/chn/grad/scholarship_undergrad.html',
     verifiedOn: '2026-11-26',
-    applicableTerm: '미확인',
-    verification: 'unverified',
-    unverifiedReason: '2027 전기 학부 외국인 모집요강 PDF가 이 환경에서 404였습니다. 제3자 요약은 쓰지 않았고, 급수별 숫자는 이전 정리입니다.',
+    applicableTerm: '입학 첫 학기(해외 고교 졸업 합격자)',
+    verification: 'verified',
   },
   cau: {
     sourceUrl: 'https://oias.cau.ac.kr/cauoie/under/notice.do?articleNo=51004&attachNo=62965&mode=download',

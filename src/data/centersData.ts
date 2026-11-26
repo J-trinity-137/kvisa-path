@@ -7,7 +7,7 @@ export interface SupportCenter {
   phone: string;
   hours: string;
   asOfDate: string;
-  /** 언어별 통번역지원사 배치 인원 (0은 배치 0명, undefined는 해당 언어 자료 미제공) */
+  /** Left empty. Per-language headcounts were not on the pages opened in this pass. */
   interpreters: Partial<Record<SupportedLangCode | 'th' | 'id', number>>;
   freeCareerProgram: string;
   /** Set only when this pass opened an official page that showed the number. */
@@ -31,7 +31,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phoneSourceUrl: 'https://www.guro.go.kr/www/contents.do?key=2375',
     hours: '평일 09:00~18:00 (수요일 20:00까지)',
     asOfDate: '2026-11-26 센터 소개 페이지. 보육 안내(key=2336, 2026-09-23 수정)는 02-830-0456을 따로 적음',
-    interpreters: { 'zh-Hans': 4, 'zh-Hant': 2, vi: 2, mn: 1, ru: 1, en: 1 },
+    interpreters: {},
     freeCareerProgram: '이주배경 중·고등학생 특성화고·대입 1:1 통역 컨설팅',
   },
   {
@@ -43,7 +43,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phoneSourceUrl: 'https://ydpfc.familynet.or.kr/center/lay1/program/S295T315C321/center_info/view.do',
     hours: '평일 09:00~18:00',
     asOfDate: '2026-11-26 센터 오시는 길',
-    interpreters: { 'zh-Hans': 5, vi: 2, ru: 1, mn: 1, th: 1, en: 1 },
+    interpreters: {},
     freeCareerProgram: '중도입국 청소년 학력인정·고입 특례 서류 동행 지원',
   },
   {
@@ -53,7 +53,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phone: '02-803-7747',
     hours: '평일 09:00~18:00',
     asOfDate: '2026-11-26 다누리 센터검색',
-    interpreters: { 'zh-Hans': 3, vi: 2, ru: 0, mn: 0, ar: 0 },
+    interpreters: {},
     phoneVerifiedOn: '2026-11-26',
     phoneSourceUrl: 'https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do',
     freeCareerProgram: '외국인가정 학부모 고입·장학금 설명회(중국어·베트남어)',
@@ -67,7 +67,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phoneSourceUrl: 'https://yongsan.familynet.or.kr/center/',
     hours: '평일 09:00~18:00',
     asOfDate: '2026-11-26 센터 홈페이지',
-    interpreters: { en: 2, vi: 1, ar: 0, ru: 1, id: 1, 'zh-Hans': 1 },
+    interpreters: {},
     freeCareerProgram: '다국적·무슬림 청소년 진로 및 체류자격 무료 상담',
   },
   {
@@ -77,7 +77,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phone: '02-957-1073',
     hours: '평일 09:00~18:00',
     asOfDate: '2026-11-26 다누리 센터검색',
-    interpreters: { 'zh-Hans': 2, vi: 2, mn: 2, ru: 1 },
+    interpreters: {},
     phoneVerifiedOn: '2026-11-26',
     phoneSourceUrl: 'https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do',
     freeCareerProgram: '몽골·러시아어권 청소년 대입 외국인전형 멘토링',
@@ -89,7 +89,7 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phone: '02-883-9383',
     hours: '평일 09:00~18:00',
     asOfDate: '2026-11-26 다누리 센터검색',
-    interpreters: { 'zh-Hans': 2, vi: 2, ru: 1, en: 1, th: 0 },
+    interpreters: {},
     freeCareerProgram: '이전 스냅샷의 프로그램 문구입니다. 이 앱이 적성검사를 실행하지는 않습니다.',
     phoneVerifiedOn: '2026-11-26',
     phoneSourceUrl: 'https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do',
@@ -178,6 +178,30 @@ export const SEOUL_SUPPORT_CENTERS: SupportCenter[] = [
     phoneVerifiedOn: '2026-11-26',
     phoneSourceUrl: 'https://liveinkorea.kr/centerIntro/centerNearListViewHtml.do',
   },
+  ...[
+    '강서구',
+    '광진구',
+    '노원구',
+    '동작구',
+    '마포구',
+    '서초구',
+    '성북구',
+    '송파구',
+    '양천구',
+    '은평구',
+    '중구',
+    '중랑구',
+  ].map((district) => ({
+    id: `center-${district}`,
+    district,
+    name: `${district}가족센터`,
+    phone: '',
+    hours: '',
+    asOfDate: '2026-11-26',
+    interpreters: {},
+    freeCareerProgram: '대표전화와 프로그램은 이번 점검에서 구청·센터 원문으로 확인하지 못했습니다.',
+    phoneUnverifiedReason: '다누리 센터찾기에서 자치구를 고르세요. 전화번호를 추정해 적지 않았습니다.',
+  })),
 ];
 
 export const SEOUL_DISTRICTS = SEOUL_SUPPORT_CENTERS.map((c) => c.district);

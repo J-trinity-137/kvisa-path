@@ -13,7 +13,7 @@
 ## 호출하지 않는 것
 
 - 커리어넷 Open API는 연결하지 않습니다. 직업·학과 이름은 앱 안의 고정 예시입니다.
-- 서울열린데이터광장 `OA-21713`도 호출하지 않습니다. 자치구 가족센터 전화는 이전 스냅샷이며, 방문 전에 공식 페이지에서 다시 확인해야 합니다.
+- 서울열린데이터광장 `OA-21713`도 호출하지 않습니다. 확인한 가족센터 전화만 적고, 나머지는 다누리 센터찾기로 연결합니다. 언어별 통역 인원 숫자는 공식 표에서 확인하지 못해 빼 두었습니다.
 - 분석 탭의 DiD와 TF-IDF F1은 작은 가상 표본으로 만든 예시입니다. 실제 합격이나 상담 결과가 아닙니다.
 
 ## 언어
@@ -29,4 +29,4 @@ npm run build
 npm test
 ```
 
-GitHub Pages는 `gh-pages` 브랜치에서 `https://j-trinity-137.github.io/kvisa-path/` 로 열립니다. 빌드의 `base`는 `/kvisa-path/` 입니다.
+GitHub Pages는 지금 `gh-pages` 브랜치 루트를 소스로 씁니다. `main`에 푸시되면 `.github/workflows/pages.yml`이 `npm run build` 결과를 그 브랜치에 올립니다. 주소는 `https://j-trinity-137.github.io/kvisa-path/` 이고, 빌드 `base`는 `/kvisa-path/` 입니다. Pages 소스를 GitHub Actions로 바꾸지 않아도 됩니다.

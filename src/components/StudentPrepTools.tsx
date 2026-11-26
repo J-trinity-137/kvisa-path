@@ -13,7 +13,9 @@ import {
   schedulePhase,
   type DocBarrierReason,
 } from '../data/interactiveModules';
+import { SEOUL_VOCATIONAL_SCHOOLS } from '../data/admissionsData';
 import { getCoreCopy } from '../i18n/coreCopy';
+import { SCHOOL_MAJOR_LEAD } from '../i18n/extraCopy';
 import { gapUi } from '../i18n/gapUi';
 import { workStageLabel } from '../i18n/workLabels';
 import { getUiMessages } from '../i18n/messages';
@@ -410,6 +412,10 @@ export function StudentPrepTools({ lang, onEventLogged }: StudentPrepToolsProps)
             </p>
             <p className="kb-subtitle" style={{ margin: 0 }}>
               {copy?.career[careerField]?.note ?? careerInfo.note}
+            </p>
+            <p className="kb-subtitle" style={{ margin: 0 }}>
+              {SCHOOL_MAJOR_LEAD[lang]}{' '}
+              {SEOUL_VOCATIONAL_SCHOOLS.slice(0, 4).map((school) => `${school.name} ${school.majors[0]}`).join(' · ')}
             </p>
           </div>
         </div>

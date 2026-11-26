@@ -99,7 +99,7 @@ export function collectFactErrors(): string[] {
     errors.push('university id list does not match the table');
   }
   for (const row of UNIVERSITY_TOPIK_TABLE) {
-    if (row.gedAccepted !== '불인정' && row.gedAccepted !== '원칙 불인정(정규고)') {
+    if (row.gedAccepted !== '불인정' && row.gedAccepted !== '원칙 불인정(정규고)' && row.gedAccepted !== '미확인') {
       errors.push(`ged label: ${row.id}`);
     }
     const id = row.id as (typeof UNIVERSITY_IDS)[number];
