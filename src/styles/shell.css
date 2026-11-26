@@ -294,9 +294,9 @@
 
 .home-head {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--kb-space-4) var(--kb-space-6);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kb-space-3);
 }
 
 .home-grid {
@@ -330,10 +330,24 @@
 .rank-card h2 {
   margin: var(--kb-space-2) 0;
   font-size: var(--kb-text-xl);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.rank-card p {
+.rank-card p,
+.rank-card h2 {
   margin: 0;
+}
+
+.rank-why,
+.post-card .muted {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--kb-muted);
 }
 
 .next-card {
@@ -354,6 +368,19 @@
   font-size: var(--kb-text-2xl);
   font-weight: 700;
   letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.next-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.rank-when {
+  margin: 0;
+  color: var(--kb-primary-strong);
+  font-size: var(--kb-text-sm);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 

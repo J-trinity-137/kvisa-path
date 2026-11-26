@@ -52,7 +52,7 @@ Account and class tools are not a fifth destination. The account control opens a
 ### 내 전형
 
 - Purpose: say how many tracks fit this device’s answers.
-- Primary: the H1, `내가 쓸 수 있는 전형 {n}개`.
+- Primary: the H1, `내가 쓸 수 있는 전형 {n}개`. The count is admission tracks only. Calendar rows, support centers, stay notes, and overview explainers are not tracks.
 - Primary action: 자세히 on the first track that has a detail page. If none do, the action is 답 수정.
 - Secondary: the first three tracks, and one next-date card that opens 일정.
 - Tertiary, closed: the rest of the tracks.
