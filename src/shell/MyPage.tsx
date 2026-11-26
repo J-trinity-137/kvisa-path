@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { PrivacyTools } from '../components/PrivacyTools';
 import { TeacherVaultPanel } from '../components/TeacherVaultPanel';
 import { ADMISSION_QUIZ_ITEMS, DOC_CHECKLIST_ITEMS } from '../data/interactiveModules';
@@ -25,6 +25,7 @@ export function MyPage({
   onSetup,
   savedIds = [],
   onRemoveSaved,
+  demoSlot,
 }: {
   lang: SupportedLangCode;
   setLang: (lang: SupportedLangCode) => void;
@@ -36,6 +37,7 @@ export function MyPage({
   onSetup: () => void;
   savedIds?: readonly string[];
   onRemoveSaved?: (id: string) => void;
+  demoSlot?: ReactNode;
 }) {
   const copy = navCopy(lang);
   const ui = getUiMessages(lang);
@@ -69,6 +71,7 @@ export function MyPage({
           {copy.edit}
         </button>
       </header>
+      {demoSlot}
       <SavedTracks lang={lang} profile={profile} ids={savedIds} onRemove={onRemoveSaved} />
       <div className="my-grid">
         <section className="panel">

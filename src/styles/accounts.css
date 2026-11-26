@@ -1,0 +1,248 @@
+.demo-banner,
+.demo-flag {
+  font-weight: 800;
+}
+
+.demo-banner {
+  background: var(--kb-accent-soft);
+  color: var(--kb-accent);
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.demo-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.demo-flag {
+  margin: 0;
+  color: #fff6e5;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.demo-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.demo-switch select,
+.field input,
+.field select,
+.filters select,
+.filters input {
+  min-height: 44px;
+  font: inherit;
+  color: var(--kb-on-surface);
+  background: var(--kb-surface);
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+.demo-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-panel h1,
+.desk h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.desk {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desk-tools .btn.ghost {
+  background: var(--kb-surface);
+  color: var(--kb-primary);
+  border: 2px solid var(--kb-primary);
+}
+
+.code-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  background: var(--kb-surface);
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.code-line {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.qr {
+  width: 168px;
+  height: 168px;
+  background: #ffffff;
+}
+
+.roster-wrap {
+  overflow-x: auto;
+  background: var(--kb-surface);
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 16px;
+}
+
+.roster {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.roster th,
+.roster td {
+  text-align: start;
+  vertical-align: top;
+  padding: 12px;
+  border-bottom: 1px solid var(--kb-line);
+}
+
+.roster thead th {
+  background: var(--kb-soft);
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meter {
+  width: 120px;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--kb-line);
+  overflow: hidden;
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  background: var(--kb-primary);
+}
+
+.drawer-back {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 20, 16, 0.35);
+  z-index: 20;
+}
+
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(440px, 100%);
+  overflow: auto;
+  background: var(--kb-surface);
+  color: var(--kb-on-surface);
+  padding: 24px;
+  z-index: 21;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.16);
+}
+
+.kv-parent-notice {
+  margin-top: 16px;
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.kv-parent-notice h2,
+.kv-parent-notice h3,
+.kv-parent-notice p {
+  margin: 8px 0;
+}
+
+.scan-video {
+  width: min(100%, 320px);
+  background: #111;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.demo-panel a.btn,
+.panel a.btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+fieldset {
+  border: 1px solid var(--kb-line-strong);
+  border-radius: 12px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .desk-tools {
+    grid-template-columns: 1fr;
+  }
+}
+
+@page parent-notice {
+  size: A4;
+  margin: 14mm;
+}
+
+.kv-parent-notice {
+  page: parent-notice;
+}
+
+@media print {
+  body.kv-printing-notice * {
+    visibility: hidden;
+  }
+
+  body.kv-printing-notice .kv-parent-notice,
+  body.kv-printing-notice .kv-parent-notice * {
+    visibility: visible;
+  }
+
+  body.kv-printing-notice .kv-parent-notice {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    margin: 0;
+    border: 0;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body.kv-printing-notice .kv-parent-notice * {
+    color: #111111 !important;
+    background: transparent !important;
+  }
+}

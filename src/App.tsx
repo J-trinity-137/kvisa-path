@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from './kbridge';
 import { RegionFacts } from './components/RegionFacts';
 import { boardPosts } from './data/board';
@@ -7,9 +7,14 @@ import { NATIONWIDE_IDS, type NationwideRegionId } from './data/nationwideRegion
 import { STUDENT_TYPES } from './data/studentType';
 import { navCopy } from './i18n/navCopy';
 import { planCopy } from './i18n/planCopy';
+import { accountsCopy } from './i18n/accountsCopy';
 import { regionLabel } from './i18n/regionLabels';
 import { STUDENT_TYPE_COPY } from './i18n/studentTypeCopy';
 import { readCompare, readSaved, toggleId, writeCompare, writeSaved, COMPARE_MAX, type ToggleStatus } from './library/tracks';
+import { activeAccount, profileFor, setAccountLang } from './accounts/model';
+import { readDemo } from './accounts/persist';
+import { useDemo } from './accounts/useDemo';
+import { noteProfileEdit, switchAccount } from './accounts/session';
 import { readProfile, writeProfile, type StudentProfile } from './profile/profile';
 import { readPrefs, writePrefs, type DevicePrefs } from './profile/prefs';
 import { clearMyRecords, RECORDS_CLEARED_EVENT } from './privacy/records';
@@ -18,6 +23,9 @@ import { BoardView } from './shell/BoardView';
 import { CompareView } from './shell/CompareView';
 import { Dashboard } from './shell/Dashboard';
 import { DeadlinesView } from './shell/DeadlinesView';
+import { DemoChrome } from './shell/demo/DemoChrome';
+import { DemoHost } from './shell/demo/DemoHost';
+import { DemoMyCard } from './shell/demo/DemoMyCard';
 import { MyPage } from './shell/MyPage';
 import { Onboarding } from './shell/Onboarding';
 import { TrackDetail } from './shell/TrackDetail';
@@ -25,20 +33,35 @@ import { parseRoute, routeHash, type AppRoute } from './shell/route';
 import './styles/app.css';
 import './styles/shell.css';
 import './styles/plan.css';
+import './styles/accounts.css';
+
+function initialProfile(): StudentProfile {
+  const demo = readDemo();
+  const active = activeAccount(demo);
+  if (active?.role !== 'student') return readProfile();
+  const next = profileFor(demo, active.id);
+  writeProfile(next);
+  return next;
+}
 
 export function App() {
   const { lang, setLang } = useLanguage('kvisa-path.lang');
-  const [profile, setProfile] = useState<StudentProfile>(() => readProfile());
+  const { db, replace } = useDemo();
+  const [profile, setProfile] = useState<StudentProfile>(initialProfile);
   const [prefs, setPrefs] = useState<DevicePrefs>(() => readPrefs());
   const [route, setRoute] = useState<AppRoute>(() => parseRoute(typeof window === 'undefined' ? '' : window.location.hash));
   const [compareIds, setCompareIds] = useState<string[]>(() => readCompare());
   const [savedIds, setSavedIds] = useState<string[]>(() => readSaved());
   const copy = navCopy(lang);
   const plan = planCopy(lang);
+  const accountCopy = accountsCopy(lang);
   const types = STUDENT_TYPE_COPY[lang];
+  const active = activeAccount(db);
+  const appliedStudent = useRef(active?.role === 'student' ? active.id : null);
   const nationwide = profile.region && (NATIONWIDE_IDS as readonly string[]).includes(profile.region) ? (profile.region as NationwideRegionId) : null;
   const posts = useMemo(() => boardPosts(), []);
   const tracks = useMemo(() => eligibleTracks(profile), [profile]);
+  const accountScreen = route.name === 'accounts' || route.name === 'class' || route.name === 'join' || route.name === 'family';
 
   useEffect(() => {
     const root = document.documentElement;
@@ -61,19 +84,32 @@ export function App() {
 
   useEffect(() => {
     const onCleared = () => {
-      setProfile(readProfile());
+      const cleared = readProfile();
+      setProfile(cleared);
       setPrefs(readPrefs());
       setCompareIds([]);
       setSavedIds([]);
+      replace((prev) => noteProfileEdit(prev, cleared));
       window.location.hash = '#/onboarding';
     };
     window.addEventListener(RECORDS_CLEARED_EVENT, onCleared);
     return () => window.removeEventListener(RECORDS_CLEARED_EVENT, onCleared);
-  }, []);
+  }, [replace]);
+
+  useEffect(() => {
+    const studentId = active?.role === 'student' ? active.id : null;
+    if (studentId === appliedStudent.current) return;
+    appliedStudent.current = studentId;
+    if (!studentId) return;
+    const next = profileFor(db, studentId);
+    setProfile(next);
+    writeProfile(next);
+  }, [active, db]);
 
   const saveProfile = (next: StudentProfile) => {
     setProfile(next);
     writeProfile(next);
+    replace((prev) => noteProfileEdit(prev, next));
   };
   const savePrefs = (next: DevicePrefs) => {
     setPrefs(next);
@@ -100,8 +136,14 @@ export function App() {
     if (window.location.hash !== hash) window.location.hash = hash;
     else setRoute(next);
   };
+  const onSession = (change: { db: typeof db; profile: StudentProfile }) => {
+    appliedStudent.current = activeAccount(change.db)?.role === 'student' ? change.db.activeId : null;
+    replace(change.db);
+    setProfile(change.profile);
+    writeProfile(change.profile);
+  };
 
-  const showSetup = !profile.entered || route.name === 'onboarding';
+  const showSetup = (!profile.entered || route.name === 'onboarding') && !accountScreen;
 
   return (
     <div className="shell">
@@ -129,8 +171,32 @@ export function App() {
           <a href="#/me" aria-current={route.name === 'me' ? 'page' : undefined}>
             {copy.my}
           </a>
+          <a href="#/accounts" aria-current={route.name === 'accounts' ? 'page' : undefined}>
+            {accountCopy.navAccounts}
+          </a>
+          {active?.role === 'teacher' ? (
+            <a href="#/class" aria-current={route.name === 'class' ? 'page' : undefined}>
+              {accountCopy.navClass}
+            </a>
+          ) : null}
+          {active?.role === 'student' ? (
+            <a href="#/join" aria-current={route.name === 'join' ? 'page' : undefined}>
+              {accountCopy.navJoin}
+            </a>
+          ) : null}
+          {active?.role === 'student' || active?.role === 'guardian' ? (
+            <a href="#/family" aria-current={route.name === 'family' ? 'page' : undefined}>
+              {accountCopy.navFamily}
+            </a>
+          ) : null}
           {prefs.teacherMode ? <a href="#/me">{copy.teacher}</a> : null}
         </nav>
+        <DemoChrome
+          lang={lang}
+          accounts={db.accounts}
+          activeId={db.activeId}
+          onSwitch={(id) => onSession(switchAccount(db, profile, id))}
+        />
         <div className="side-picks" role="group" aria-label={copy.region}>
           {STUDENT_TYPES.map((type) => (
             <button key={type} type="button" aria-pressed={profile.studentType === type} onClick={() => saveProfile({ ...profile, studentType: type })}>
@@ -145,6 +211,9 @@ export function App() {
         </div>
       </aside>
       <main id="main" tabIndex={-1}>
+        {accountScreen ? (
+          <DemoHost lang={lang} route={route} db={db} profile={profile} onSession={onSession} onDb={(next) => replace(next)} go={go} />
+        ) : null}
         {showSetup ? (
           <Onboarding
             lang={lang}
@@ -194,7 +263,7 @@ export function App() {
             onClose={() => go({ name: 'board' })}
           />
         ) : null}
-        {nationwide ? <RegionFacts lang={lang} region={nationwide} /> : null}
+        {nationwide && !accountScreen ? <RegionFacts lang={lang} region={nationwide} /> : null}
         {!showSetup && route.name === 'me' ? (
           <MyPage
             lang={lang}
@@ -207,6 +276,11 @@ export function App() {
             onSetup={() => go({ name: 'onboarding' })}
             savedIds={savedIds}
             onRemoveSaved={toggleSaved}
+            demoSlot={
+              active ? (
+                <DemoMyCard lang={lang} db={db} onHomeLang={(next) => replace((prev) => setAccountLang(prev, active.id, next))} />
+              ) : null
+            }
           />
         ) : null}
       </main>
